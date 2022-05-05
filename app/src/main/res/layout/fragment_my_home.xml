@@ -92,10 +92,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <Spinner
-            android:id="@+id/my_home_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+
 
     </ScrollView>
 
