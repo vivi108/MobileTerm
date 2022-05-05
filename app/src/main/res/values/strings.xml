@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">MobileTerm</string>
+    <string name="searchEditText">검색어를 입력하세요 :</string>
+    <string name="filterButton">Filter +</string>
+    <string name="title">Title</string>
+    <string name="content">본문</string>
+    <string name="titleEditText">제목을 입력하세요 :</string>
+    <string name="bodyEditText">내용을 입력하세요 :</string>
 </resources>
