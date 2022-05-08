@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
+import com.example.mobileterm.MainActivity;
 import com.example.mobileterm.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -39,14 +41,19 @@ public class AuthActivity extends AppCompatActivity {
                     if (task.isSuccessful()){
                         DocumentSnapshot document = task.getResult();
                         if (document != null){
-
+                            if(document.exists()){
+                                StartActivity(MainActivity.class);
+                            }else{
+                                FirebaseAuth.getInstance().signOut();
+                                StartActivity(LoginActivity.class);
+                            }
                         }
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-
+                    Log.e("login","Failure: null value");
                 }
             });
         }else{
