@@ -21,6 +21,8 @@
         <activity
             android:name=".Init.LoginActivity"
             android:exported="true" />
+        <activity android:name=".MainActivity"
+            android:exported="true"/>
         <activity
             android:name=".Init.AuthActivity"
             android:exported="true">
