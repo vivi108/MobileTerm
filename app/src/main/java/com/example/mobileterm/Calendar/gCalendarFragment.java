@@ -1,4 +1,4 @@
-package com.example.mobileterm;
+package com.example.mobileterm.Calendar;
 
 import static android.content.Context.MODE_NO_LOCALIZED_COLLATORS;
 
@@ -11,31 +11,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
+import com.example.mobileterm.MainActivity;
+import com.example.mobileterm.R;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
-import com.prolificinteractive.materialcalendarview.DayViewDecorator;
-import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.Collection;
 import java.util.Collections;
 
 public class gCalendarFragment extends Fragment {
@@ -70,7 +62,7 @@ public class gCalendarFragment extends Fragment {
                 int radioId = ctype.getCheckedRadioButtonId();
                 if(radIndividual.getId()==radioId) {
                     MainActivity activity = (MainActivity) getActivity();
-                    activity.onFragmentChanged(0);
+//                    activity.onFragmentChanged(0);
                 }
             }
         });
