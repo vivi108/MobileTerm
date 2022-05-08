@@ -12,7 +12,7 @@
         android:layout_marginTop="30dp">
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/searchEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
@@ -53,14 +53,14 @@
 
     </LinearLayout>
 
-    <ScrollView
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/scrollView"
+        android:layout_height="0dp"
+        android:id="@+id/listView"
         android:layout_weight="2">
 
 
-    </ScrollView>
+    </ListView>
 
 
 
