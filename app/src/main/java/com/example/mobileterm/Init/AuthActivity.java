@@ -52,7 +52,7 @@ public class AuthActivity extends AppCompatActivity {
                             }else{
                                 Log.d(TAG, "should start login");
                                 FirebaseAuth.getInstance().signOut();
-                                StartActivity(LoginActivity.class);
+                                StartActivity(LoginSelectionActivity.class);
                             }
                         }else{
                             Log.d(TAG,"document null");
@@ -67,7 +67,7 @@ public class AuthActivity extends AppCompatActivity {
             });
         }else{
             Log.d(TAG, "user null");
-            StartActivity(LoginActivity.class);
+            StartActivity(LoginSelectionActivity.class);
         }
     }
 
