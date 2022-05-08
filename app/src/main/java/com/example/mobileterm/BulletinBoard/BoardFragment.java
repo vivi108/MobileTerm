@@ -1,6 +1,7 @@
 package com.example.mobileterm.BulletinBoard;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +65,7 @@ public class BoardFragment extends Fragment {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                             MainActivity activity = (MainActivity) getActivity();
+                            Log.d("boardItemClicked","by setOnItemCLick");
                             activity.onFragmentChanged(arrayList);
                         }
                     });
@@ -82,7 +84,12 @@ public class BoardFragment extends Fragment {
         @Override
         public void onClick(View view) {
             switch (view.getId()){
-
+                case R.id.searchButton:
+                    break;
+                case R.id.filterButton:
+                    break;
+                case R.id.startWriteButton:
+                    break;
             }
         }
     };

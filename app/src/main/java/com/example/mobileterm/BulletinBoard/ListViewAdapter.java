@@ -52,12 +52,13 @@ public class ListViewAdapter extends BaseAdapter {
 
         Log.d(TAG, "view - "+position+" - "+boardItem.getName());
 
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(context, boardItem.getName(), Toast.LENGTH_SHORT).show();
-            }
-        });
+//        itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////                Toast.makeText(context, boardItem.getName(), Toast.LENGTH_SHORT).show();
+//                Log.d("boardItemClicked","by onclick");
+//            }
+//        });
 
 
         return itemView;

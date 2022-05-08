@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.mobileterm.BulletinBoard.BoardFragment;
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onFragmentChanged(ArrayList<BoardInfo> data){
         arrayList = data;
+
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment).commit();
     }
 }
