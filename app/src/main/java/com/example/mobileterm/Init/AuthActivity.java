@@ -47,6 +47,7 @@ public class AuthActivity extends AppCompatActivity {
                         DocumentSnapshot document = task.getResult();
                         if (document != null){
                             if(document.exists()){
+                                //원래 여기서 바로 메인 액티비티로 넘어가는 코드가 있어야하는데, 로그인 기능 확인할때는 이렇게 LoginSelectionActivity 실행해서 확인 가능
                                 Log.d(TAG,"Should start main");
                                 StartActivity(LoginSelectionActivity.class);
                             }else{

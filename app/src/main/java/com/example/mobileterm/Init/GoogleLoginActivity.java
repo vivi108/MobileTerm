@@ -28,6 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 public class GoogleLoginActivity extends AppCompatActivity {
+    // 구글 로그인 구현하고 메인 액티비티 실행시키는 액티비티
     private static final String TAG = "GoogleLoginActivity";
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
