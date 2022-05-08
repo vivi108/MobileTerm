@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class PasswordInitActivity extends AppCompatActivity {
+    // 비밀번호 초기화를 위한 액티비티,
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     static String email = "";

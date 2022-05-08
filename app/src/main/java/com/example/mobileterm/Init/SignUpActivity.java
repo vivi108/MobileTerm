@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SignUpActivity extends AppCompatActivity {
+    // 회원가입하는 액티비티, 회원가입이 완료 되면 메인 액티비티가 실행된다
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private FirebaseFirestore db;

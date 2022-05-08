@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +22,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AuthActivity extends AppCompatActivity {
+    // 로그인 되어있으면 메인 액티비티 실행하고 아니면 로그인 액티비티를 실행하는 액티비티
     private FirebaseAuth firebaseAuth;
     private FirebaseUser user;
     private static final String TAG = "AuthActivity";
