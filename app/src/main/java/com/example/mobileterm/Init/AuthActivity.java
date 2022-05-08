@@ -48,7 +48,7 @@ public class AuthActivity extends AppCompatActivity {
                         if (document != null){
                             if(document.exists()){
                                 Log.d(TAG,"Should start main");
-                                StartActivity(MainActivity.class);
+                                StartActivity(LoginSelectionActivity.class);
                             }else{
                                 Log.d(TAG, "should start login");
                                 FirebaseAuth.getInstance().signOut();
