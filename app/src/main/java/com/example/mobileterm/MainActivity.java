@@ -5,17 +5,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.mobileterm.BulletinBoard.BoardFragment;
+import com.example.mobileterm.BulletinBoard.BoardInfo;
+import com.example.mobileterm.BulletinBoard.BoardItemFragment;
 import com.example.mobileterm.Calendar.CalendarFragment;
 import com.example.mobileterm.Calendar.gCalendarFragment;
 import com.example.mobileterm.Calendar.iCalendarFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-public class MainActivity extends AppCompatActivity {
-    private static Fragment studyFragment, boardFragment, calendarFragment, myHomeFragment;
+import java.util.ArrayList;
 
+public class MainActivity extends AppCompatActivity {
+    private static Fragment studyFragment, boardFragment, calendarFragment, myHomeFragment, boardItemFragment;
+    ArrayList<BoardInfo> arrayList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
         studyFragment = new StudyFragment();
         myHomeFragment = new MyHomeFragment();
         calendarFragment = new CalendarFragment();
+        boardFragment = new BoardFragment();
+        boardItemFragment = new BoardItemFragment();
     }
 
     private void initiate_nav_menu() {
@@ -52,6 +60,10 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case R.id.nav_menu_board:
                         // BoardFragment로 교체
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.main_frame_layout, boardFragment)
+                                .commit();
                         return true;
                     case R.id.nav_menu_calendar:
                         // CalendarFragment로 교체
@@ -81,5 +93,11 @@ public class MainActivity extends AppCompatActivity {
         } else if (index == 1) {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, gCalendarFragment).commit();
         }
+    }
+
+    public void onFragmentChanged(ArrayList<BoardInfo> data){
+        arrayList = data;
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment).commit();
     }
 }
