@@ -62,7 +62,7 @@ public class iCalendarFragment extends Fragment {
                 int radioId = ctype.getCheckedRadioButtonId();
                 if(radGroup.getId()==radioId) {
                     MainActivity activity = (MainActivity) getActivity();
-//                    activity.onFragmentChanged(1);
+                    activity.onFragmentChanged(1);
                 }
             }
         });

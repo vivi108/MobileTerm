@@ -7,6 +7,9 @@ import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.mobileterm.Calendar.CalendarFragment;
+import com.example.mobileterm.Calendar.gCalendarFragment;
+import com.example.mobileterm.Calendar.iCalendarFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -24,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private void initiate_fragment() {
         studyFragment = new StudyFragment();
         myHomeFragment = new MyHomeFragment();
+        calendarFragment = new CalendarFragment();
     }
 
     private void initiate_nav_menu() {
@@ -51,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case R.id.nav_menu_calendar:
                         // CalendarFragment로 교체
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.main_frame_layout, calendarFragment)
+                                .commit();
                         return true;
                     case R.id.nav_menu_my_home:
                         getSupportFragmentManager()
@@ -63,5 +71,15 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+    com.example.mobileterm.Calendar.iCalendarFragment iCalendarFragment;
+    com.example.mobileterm.Calendar.gCalendarFragment gCalendarFragment;
+
+    public void onFragmentChanged(int index) {
+        if (index == 0) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, iCalendarFragment).commit();
+        } else if (index == 1) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, gCalendarFragment).commit();
+        }
     }
 }

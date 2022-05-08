@@ -19,16 +19,9 @@ public class CalendarFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         iCalendarFragment = new iCalendarFragment();
-//        getSupportFragmentManager().beginTransaction().replace(R.id.container,iCalendarFragment).commit();
+        getFragmentManager().beginTransaction().replace(R.id.container,iCalendarFragment).commit();
         gCalendarFragment = new gCalendarFragment();
         return inflater.inflate(R.layout.fragment_calendar, container, false);
     }
 
-    public void onFragmentChanged(int index) {
-        if (index == 0) {
-//            getSupportFragmentManager().beginTransaction().replace(R.id.container, iCalendarFragment).commit();
-        } else if (index == 1) {
-//            getSupportFragmentManager().beginTransaction().replace(R.id.container, gCalendarFragment).commit();
-        }
-    }
 }
