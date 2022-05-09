@@ -1,6 +1,7 @@
 package com.example.mobileterm;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -21,10 +22,13 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static Fragment studyFragment, boardFragment, calendarFragment, myHomeFragment, boardItemFragment;
-    ArrayList<BoardInfo> arrayList;
+    public ArrayList<BoardInfo> arrayList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        ActionBar actionBar = getSupportActionBar();
+//        actionBar.hide();
+
         setContentView(R.layout.activity_main);
         initiate_fragment();
         initiate_nav_menu();
@@ -99,5 +103,9 @@ public class MainActivity extends AppCompatActivity {
         arrayList = data;
 
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment).commit();
+    }
+
+    public ArrayList<BoardInfo> sendBoardItem(){
+        return arrayList;
     }
 }
