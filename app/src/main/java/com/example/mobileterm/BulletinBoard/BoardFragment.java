@@ -66,7 +66,7 @@ public class BoardFragment extends Fragment {
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                             MainActivity activity = (MainActivity) getActivity();
                             Log.d("boardItemClicked","by setOnItemCLick");
-                            activity.onFragmentChanged(arrayList);
+                            activity.onFragmentChanged(arrayList.get(i));
                         }
                     });
                 }

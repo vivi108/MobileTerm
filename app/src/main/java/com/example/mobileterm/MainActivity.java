@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static Fragment studyFragment, boardFragment, calendarFragment, myHomeFragment, boardItemFragment;
-    public ArrayList<BoardInfo> arrayList;
+    public BoardInfo selectedBoardItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,13 +99,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void onFragmentChanged(ArrayList<BoardInfo> data){
-        arrayList = data;
+    public void onFragmentChanged(BoardInfo data){
+        selectedBoardItem = data;
 
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment).commit();
     }
 
-    public ArrayList<BoardInfo> sendBoardItem(){
-        return arrayList;
+    public BoardInfo sendBoardItem(){
+        return selectedBoardItem;
     }
 }
