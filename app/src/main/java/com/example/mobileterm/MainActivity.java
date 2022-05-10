@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.mobileterm.BulletinBoard.BoardAddItemFragment;
 import com.example.mobileterm.BulletinBoard.BoardFragment;
 import com.example.mobileterm.BulletinBoard.BoardInfo;
 import com.example.mobileterm.BulletinBoard.BoardItemFragment;
@@ -21,7 +22,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private static Fragment studyFragment, boardFragment, calendarFragment, myHomeFragment, boardItemFragment;
+    private static Fragment studyFragment, boardFragment, calendarFragment, myHomeFragment, boardItemFragment, boardAddItemFragment;
     public BoardInfo selectedBoardItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         calendarFragment = new CalendarFragment();
         boardFragment = new BoardFragment();
         boardItemFragment = new BoardItemFragment();
+        boardAddItemFragment = new BoardAddItemFragment();
     }
 
     private void initiate_nav_menu() {
@@ -96,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, iCalendarFragment).commit();
         } else if (index == 1) {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, gCalendarFragment).commit();
+        } else if (index == 201) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, boardAddItemFragment).commit();
         }
     }
 
@@ -104,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment).commit();
     }
+
 
     public BoardInfo sendBoardItem(){
         return selectedBoardItem;
