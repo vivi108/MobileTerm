@@ -85,10 +85,14 @@ public class BoardFragment extends Fragment {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.searchButton:
+
                     break;
                 case R.id.filterButton:
+
                     break;
                 case R.id.startWriteButton:
+                    MainActivity activity = (MainActivity) getActivity();
+                    activity.onFragmentChanged(201);
                     break;
             }
         }
