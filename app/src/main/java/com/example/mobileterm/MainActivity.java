@@ -24,6 +24,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private static Fragment studyFragment, boardFragment, calendarFragment, myHomeFragment, boardItemFragment, boardAddItemFragment;
     public BoardInfo selectedBoardItem;
+    private static final String TAG = "MainActivity:";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
         } else if (index == 1) {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, gCalendarFragment).commit();
         } else if (index == 201) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, boardAddItemFragment).commit();
+            Log.d(TAG, "should show board add item fragment");
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardAddItemFragment).commit();
         }
     }
 
