@@ -29,20 +29,18 @@
             android:layout_marginTop="5dp"
             android:background="#cdcdcd" />
 
-        <ScrollView
-            android:id="@+id/scv_studies"
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/ll_joined_study_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:fillViewport="true">
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
 
-            <ListView
-                android:id="@+id/lv_studies"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+        </androidx.fragment.app.FragmentContainerView>
 
-        </ScrollView>
+
+
 
     </LinearLayout>
 

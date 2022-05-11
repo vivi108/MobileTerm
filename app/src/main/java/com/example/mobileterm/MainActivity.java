@@ -5,15 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.mobileterm.BulletinBoard.BoardFragment;
 import com.example.mobileterm.BulletinBoard.BoardInfo;
 import com.example.mobileterm.BulletinBoard.BoardItemFragment;
 import com.example.mobileterm.Calendar.CalendarFragment;
-import com.example.mobileterm.Calendar.gCalendarFragment;
-import com.example.mobileterm.Calendar.iCalendarFragment;
+import com.example.mobileterm.studygroup.StudyFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
