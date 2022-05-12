@@ -97,9 +97,17 @@ public class GoogleLoginActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user){
         if (user != null){
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, GoogleLoginSetupActivity.class);
+            Bundle data = new Bundle();
+            data.putString("uid",user.getUid());
+            data.putString("name",user.getDisplayName());
+            data.putString("email",user.getEmail());
+            data.putString("email",user.getPhoneNumber());
+            intent.putExtras(data);
             startActivity(intent);
-            finish();
+
+        }else{
+            Log.d(TAG, "login failed");
         }
     }
 
