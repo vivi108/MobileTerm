@@ -105,7 +105,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void dbInsertion(String name, String date, String phone, String email, String nickname, String regDate){
-        if (name.length() > 0 && date.length() >= 6 && phone.length() >= 8 && email.contains("@")){
+        if (name.length() > 0 && date.length() >= 6 && phone.length() >= 8 && email.contains("@") && nickname.length() < 10){
             UserInfoClass userInfo = new UserInfoClass(name, date, phone, email, nickname, regDate);
             db = FirebaseFirestore.getInstance();
             db.collection("Users").document(user.getUid()).set(userInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -114,6 +114,9 @@ public class SignUpActivity extends AppCompatActivity {
                     StartToast("회원가입에 성공하였습니다.");
                     Bundle data = new Bundle();
                     data.putString("uid",user.getUid());
+                    data.putString("name",user.getDisplayName());
+                    data.putString("email",user.getEmail());
+                    data.putString("phone",user.getPhoneNumber());
                     StartActivity(MainActivity.class, data);
                     finish();
                 }
@@ -125,12 +128,12 @@ public class SignUpActivity extends AppCompatActivity {
                 }
             });
         }else{
-            CheckSignUpMemberInfoCondition(name, date, phone, email);
+            CheckSignUpMemberInfoCondition(name, date, phone, email, nickname);
         }
     }
 
 
-    private void CheckSignUpMemberInfoCondition(String name, String date, String phone, String email) {
+    private void CheckSignUpMemberInfoCondition(String name, String date, String phone, String email, String nickname) {
         // 메서드가 호출되는 시점에는 회원가입이 이루어진 상태이다.
         // 따라서 중간에 문제가 생겼다면 해당 계정을 삭제해주어야 한다.
         Log.e("temp", "CheckSignUpMemberInfoCondition: " + user.getEmail());
@@ -147,6 +150,8 @@ public class SignUpActivity extends AppCompatActivity {
         }
         else if(email.contains("@") == false){
             StartToast("이메일 형식을 확인해주세요");
+        }else if (nickname.length() < 10) {
+            StartToast("닉네임 길이를 확인해주세요.");
         }
     }
 
