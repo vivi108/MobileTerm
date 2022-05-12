@@ -103,7 +103,9 @@ public class SignUpActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     StartToast("회원가입에 성공하였습니다.");
-                    StartActivity(MainActivity.class);
+                    Bundle data = new Bundle();
+                    data.putString("uid",user.getUid());
+                    StartActivity(MainActivity.class, data);
                     finish();
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -117,6 +119,7 @@ public class SignUpActivity extends AppCompatActivity {
             CheckSignUpMemberInfoCondition(name, date, phone, email);
         }
     }
+
 
     private void CheckSignUpMemberInfoCondition(String name, String date, String phone, String email) {
         // 메서드가 호출되는 시점에는 회원가입이 이루어진 상태이다.
@@ -168,6 +171,12 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void StartActivity(Class c){
         Intent intent = new Intent(this, c);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+    private void StartActivity(Class c, Bundle data){
+        Intent intent = new Intent(this, c);
+        intent.putExtras(data);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
