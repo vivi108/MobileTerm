@@ -23,8 +23,7 @@
         android:theme="@style/Theme.MobileTerm">
         <activity
             android:name=".Init.GoogleLoginSetupActivity"
-            android:exported="false"
-            android:theme="@android:style/Theme.Dialog" />
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -36,9 +35,6 @@
                 android:resource="@xml/file_path"></meta-data>
         </provider>
 
-        <activity
-            android:name=".Init.GoogleLoginActivity"
-            android:exported="false" />
         <activity
             android:name=".Init.LoginSelectionActivity"
             android:exported="false" />

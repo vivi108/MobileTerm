@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="300dp"
-    android:layout_height="450dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="10dp"
@@ -50,13 +50,7 @@
                     android:text="user name"
                     android:textSize="20dp"/>
 
-                <TextView
-                    android:id="@+id/UserPhone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:text="user phone"
-                    android:textSize="20dp"/>
+
 
                 <TextView
                     android:layout_width="match_parent"
@@ -67,11 +61,19 @@
                     android:textColor="#673AB7" />
 
                 <EditText
+                    android:id="@+id/MemberInfoPhoneGoogle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="전화번호"
+                    android:inputType="textPersonName" />
+
+                <EditText
                     android:id="@+id/MemberInfoNickNameGoogle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:hint="닉네임 10자 이상"
+                    android:hint="닉네임 10자 이내"
                     android:inputType="textPersonName" />
 
                 <EditText
@@ -79,7 +81,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:hint="생년월일 : 6자리 이상"
+                    android:hint="생년월일 : 6자리 "
                     android:inputType="date"/>
 
 
