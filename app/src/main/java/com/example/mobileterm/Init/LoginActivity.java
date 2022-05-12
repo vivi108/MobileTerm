@@ -111,7 +111,9 @@ public class LoginActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document != null){
                         if (document.exists()){
-                            StartActivity(MainActivity.class);
+                            Bundle data = new Bundle();
+                            data.putString("uid", firebaseUser.getUid());
+                            StartActivity(MainActivity.class, data);
                         }
                     }
                 }
@@ -122,6 +124,13 @@ public class LoginActivity extends AppCompatActivity {
     private void StartActivity(Class c){
         Intent intent = new Intent(this, c);
         // 동일한 창이 여러번 뜨게 하지 않고 기존에 켜져있던 창을 앞으로 끌어와주는 기능
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    private void StartActivity(Class c, Bundle data){
+        Intent intent = new Intent(this, c);
+        intent.putExtras(data);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
