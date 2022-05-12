@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
     private String uid;
     private String name;
     private String email;
-    private String phone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +67,7 @@ public class MainActivity extends AppCompatActivity {
         uid = data.getString("uid");
         name = data.getString("name");
         email = data.getString("email");
-        phone = data.getString("phone");
-        Log.d(TAG,"main : "+name+", "+email);
+        Log.d(TAG,"main : "+name+", "+email+", "+uid);
 
         setContentView(R.layout.activity_main);
         initiate_fragment();

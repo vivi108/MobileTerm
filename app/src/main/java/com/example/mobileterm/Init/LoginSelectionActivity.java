@@ -1,9 +1,11 @@
 package com.example.mobileterm.Init;
 
+import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.mobileterm.MainActivity;
 import com.example.mobileterm.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -19,16 +22,21 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginSelectionActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
+    private FirebaseUser user;
     private static final int RC_SIGN_IN = 9001;
     SignInButton googleButton;
     private String TAG = "LoginSelectionActivity";
@@ -56,7 +64,44 @@ public class LoginSelectionActivity extends AppCompatActivity {
                     StartActivity(LoginActivity.class);
                     break;
                 case R.id.googleButton:
-                    signIn();
+                    user = mAuth.getCurrentUser();
+                    if (user != null){
+                        Log.d(TAG, "user not null");
+                        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+                        DocumentReference documentReference = fb.collection("Users").document(user.getUid());
+                        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()){
+                                    Log.d(TAG, "task success");
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document != null){
+                                        if(document.exists()){
+                                            Log.d(TAG,"Should start main");
+                                            Bundle data = new Bundle();
+                                            data.putString("uid",user.getUid());
+                                            data.putString("name",user.getDisplayName());
+                                            data.putString("email",user.getEmail());
+//                                            signIn();
+                                            StartActivity(MainActivity.class, data);
+                                        }else{
+                                            Log.d(TAG, "should start login");
+                                            signIn();
+                                        }
+                                    }else{
+                                        Log.d(TAG,"document null");
+                                    }
+                                }
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e(TAG,"Failure: null value");
+                            }
+                        });
+                    }else{
+                        signIn();
+                    }
                     break;
             }
         }
@@ -125,6 +170,12 @@ public class LoginSelectionActivity extends AppCompatActivity {
     private void StartActivity(Class c){
         Intent intent = new Intent(this, c);
         // 동일한 창이 여러번 뜨게 하지 않고 기존에 켜져있던 창을 앞으로 끌어와주는 기능
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+    private void StartActivity(Class c, Bundle data){
+        Intent intent = new Intent(this, c);
+        intent.putExtras(data);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
