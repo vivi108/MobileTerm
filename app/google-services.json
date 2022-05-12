@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "55292890787",
+    "firebase_url": "https://mptermproject-75489-default-rtdb.firebaseio.com",
+    "project_id": "mptermproject-75489",
+    "storage_bucket": "mptermproject-75489.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:55292890787:android:1efe37ecf509404404b916",
+        "android_client_info": {
+          "package_name": "com.example.mobileterm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "55292890787-98bstr0fm5lt2mk27k5ic53qd3qoknad.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mobileterm",
+            "certificate_hash": "0eeeab0b49ea2602bcad0a22309e31daa8216cfb"
+          }
+        },
+        {
+          "client_id": "55292890787-ucuo0o4sp8lqsf5mt8qm61udjvc2domt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUlUsz-57Vo1UFKyGcA1KhYMY9XULHYQg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "55292890787-ucuo0o4sp8lqsf5mt8qm61udjvc2domt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

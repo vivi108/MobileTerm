@@ -70,7 +70,7 @@ public class ProfileSettingFragment extends Fragment {
                     }
                 });
                 pop.show();
-                checkPermission();
+                //checkPermission();
             }
         });
 
