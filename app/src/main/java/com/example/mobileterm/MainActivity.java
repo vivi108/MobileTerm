@@ -52,11 +52,17 @@ public class MainActivity extends AppCompatActivity {
     public BoardInfo selectedBoardItem;
     private static final String TAG = "MainActivity:";
 
+    private String uid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        ActionBar actionBar = getSupportActionBar();
 //        actionBar.hide();
+
+        Intent intent = getIntent();
+        Bundle data = intent.getExtras();
+        uid = data.getString("uid");
 
         setContentView(R.layout.activity_main);
         initiate_fragment();
