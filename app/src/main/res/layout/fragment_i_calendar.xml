@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:ignore="ExtraText">
+
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:mcv_selectionColor="#a9dbf0cb"
+        app:mcv_showOtherDates="defaults"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ctype"/>
+
+    <RadioGroup
+        android:id="@+id/ctype"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints">
+        <RadioButton
+            android:id="@+id/radIndividual"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Indiv">
+        </RadioButton>
+        <RadioButton
+            android:id="@+id/radGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Group">
+        </RadioButton>
+    </RadioGroup>
+
+    //선택 날짜 보여줌
+    <TextView
+        android:id="@+id/diaryTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/calendarView" />
+
+    //선택 날짜 일정 수정하는 칸
+    <EditText
+        android:id="@+id/contextEditText"
+        android:layout_width="0dp"
+        android:layout_height="116dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:ems="10"
+        android:hint="내용을 입력하세요.iiiiiiii"
+        android:inputType="textMultiLine"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/diaryTextView" />
+
+    //일정 추가된 날짜 클릭 시 어떤 일정있나 보여주는 칸
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/contextEditText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/contextEditText"
+        app:layout_constraintTop_toTopOf="@+id/contextEditText" />
+
+
+    //수정 후 저장 버튼
+    <Button
+        android:id="@+id/save_Btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="20dp"
+        android:text="저장"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/contextEditText" />
+
+
+    //있는 일정에서 수정버튼
+    <Button
+        android:id="@+id/cha_Btn"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="수정"
+        android:visibility="invisible"
+        app:layout_constraintBaseline_toBaselineOf="@+id/save_Btn"
+        app:layout_constraintEnd_toStartOf="@+id/del_Btn"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    //있는 일정 삭제 버튼
+    <Button
+        android:id="@+id/del_Btn"
+        android:layout_width="176dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="삭제"
+        android:visibility="invisible"
+        app:layout_constraintBaseline_toBaselineOf="@+id/cha_Btn"
+        app:layout_constraintEnd_toEndOf="@+id/save_Btn"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

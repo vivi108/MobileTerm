@@ -10,6 +10,9 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.VIBLATE"/>
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -29,7 +32,25 @@
             </meta-data>
         </provider>
         <activity
+            android:name=".Init.GoogleLoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Init.LoginSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Init.PasswordInitActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Init.SignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Init.LoginActivity"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
+            android:exported="true" />
+        <activity
+            android:name=".Init.AuthActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="400dp"
+    android:layout_gravity="center"
+    android:orientation="horizontal">
+
+    <View
+        android:id="@+id/divider5"
+        android:layout_width="3dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="#000000" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="8"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/divider7"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="#000000" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="8">
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="X 버튼"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/btn_dialog" />
+
+            <EditText
+                android:id="@+id/editTextTextMultiLine"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="23dp"
+                android:layout_marginEnd="23dp"
+                android:layout_marginBottom="30dp"
+                android:background="@android:color/transparent"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                android:text="이 스터디는 비공개 스터디입니다. 입장 코드를 입력해 주세요."
+                android:textSize="15dp"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+                app:layout_constraintEnd_toEndOf="@+id/linearLayout"
+                app:layout_constraintStart_toStartOf="@+id/linearLayout"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/button"
+                app:layout_constraintEnd_toEndOf="@id/button"
+                app:layout_constraintStart_toStartOf="@+id/button">
+
+                <View
+                    android:id="@+id/divider9"
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?android:attr/listDivider" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="8"
+                    android:orientation="vertical">
+
+                    <View
+                        android:id="@+id/divider10"
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:background="?android:attr/listDivider" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="8"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/editTextTextPassword"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:hint="입장 코드"
+                            android:inputType="textPassword"
+                            tools:ignore="TouchTargetSizeCheck" />
+
+                        <ImageButton
+                            android:id="@+id/imageButton2"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:contentDescription="비밀번호 확인"
+                            app:srcCompat="@drawable/ic_eye_crossed" />
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/divider11"
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:background="?android:attr/listDivider" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/divider12"
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?android:attr/listDivider" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="80dp"
+                android:text="Button"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/divider8"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="#000000" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider6"
+        android:layout_width="3dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="#000000" />
+
+
+</LinearLayout>

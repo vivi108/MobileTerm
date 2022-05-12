@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -11,30 +12,33 @@
         android:layout_marginTop="30dp">
 
         <ImageButton
+            android:id="@+id/exitButton"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:id="@+id/exitButton"
+            android:layout_marginStart="20dp"
             android:background="@drawable/back_icon"
-            android:scaleType="fitXY"
-            android:layout_marginStart="20dp"/>
+            android:contentDescription="back button"
+            android:scaleType="fitXY" />
 
         <ImageButton
+            android:id="@+id/endWriteButton"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:id="@+id/endWriteButton"
+            android:layout_marginStart="250dp"
             android:background="@drawable/write_icon"
-            android:scaleType="fitXY"
-            android:layout_marginStart="250dp"/>
+            android:contentDescription="end writte button"
+            android:scaleType="fitXY" />
 
     </LinearLayout>
 
     <EditText
+        android:id="@+id/titleEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/titleEditText"
         android:layout_marginTop="15dp"
         android:hint="@string/titleEditText"
-        android:inputType="text"/>
+        android:inputType="text"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <EditText
         android:layout_width="match_parent"
@@ -53,11 +57,12 @@
         android:orientation="horizontal">
 
         <ImageButton
+            android:id="@+id/referenceAddButton"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:id="@+id/referenceAddButton"
-            android:src="@drawable/reference_icon"
-            android:scaleType="fitXY"/>
+            android:contentDescription="adding reference button"
+            android:scaleType="fitXY"
+            android:src="@drawable/reference_icon" />
 
 
 

@@ -30,7 +30,7 @@ android {
 
 dependencies {
 
-    //implementation 'com.prolificinteractive:material-calendarview:1.4.3'
+    implementation 'com.prolificinteractive:material-calendarview:1.4.3'
     implementation platform('com.google.firebase:firebase-bom:30.0.0')
     implementation 'com.google.android.gms:play-services-auth:20.2.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
@@ -46,5 +46,4 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:2.4.2"
     implementation "androidx.navigation:navigation-ui-ktx:2.4.2"
 
-    
 }

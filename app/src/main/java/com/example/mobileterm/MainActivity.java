@@ -12,15 +12,24 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.Menu;
+import android.util.Log;
+
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.mobileterm.BulletinBoard.BoardAddItemFragment;
+import com.example.mobileterm.BulletinBoard.BoardFragment;
+import com.example.mobileterm.BulletinBoard.BoardInfo;
+import com.example.mobileterm.BulletinBoard.BoardItemFragment;
+import com.example.mobileterm.Calendar.CalendarFragment;
+import com.example.mobileterm.Calendar.gCalendarFragment;
+import com.example.mobileterm.Calendar.iCalendarFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-
 
 import java.io.File;
 import java.io.IOError;
@@ -28,8 +37,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
-    private static Fragment studyFragment, boardFragment, calendarFragment, myHomeFragment;
+    private static Fragment studyFragment, boardFragment, calendarFragment, myHomeFragment, boardItemFragment, boardAddItemFragment;
     private static final int MY_PERMISSION_CAMERA = 1111;
     private static final int REQUEST_TAKE_PHOTO = 2222;
     private static final int REQUEST_TAKE_ALBUM = 3333;
@@ -38,10 +49,15 @@ public class MainActivity extends AppCompatActivity {
     String mCurrentPhotoPath;
     Uri imageUri;
     Uri photoURI, albumURI;
+    public BoardInfo selectedBoardItem;
+    private static final String TAG = "MainActivity:";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        ActionBar actionBar = getSupportActionBar();
+//        actionBar.hide();
+
         setContentView(R.layout.activity_main);
         initiate_fragment();
         initiate_nav_menu();
@@ -50,6 +66,10 @@ public class MainActivity extends AppCompatActivity {
     private void initiate_fragment() {
         studyFragment = new StudyFragment();
         myHomeFragment = new MyHomeFragment();
+        calendarFragment = new CalendarFragment();
+        boardFragment = new BoardFragment();
+        boardItemFragment = new BoardItemFragment();
+        boardAddItemFragment = new BoardAddItemFragment();
     }
 
     private void initiate_nav_menu() {
@@ -74,9 +94,17 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case R.id.nav_menu_board:
                         // BoardFragment로 교체
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.main_frame_layout, boardFragment)
+                                .commit();
                         return true;
                     case R.id.nav_menu_calendar:
                         // CalendarFragment로 교체
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.main_frame_layout, calendarFragment)
+                                .commit();
                         return true;
                     case R.id.nav_menu_my_home:
                         getSupportFragmentManager()
@@ -90,11 +118,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-//---------------------------------------------------------------------------------
-    //    @Override
-//    public boolean onCreateOptionsMenu(Menu menu){
-//        getMenuInflater().inflate(R.menu.main)
-//    }
+
     void captureCamera() {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
@@ -165,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void noti(){
+    public void noti() {
         NotificationManager notificationManager;
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (!notificationManager.isNotificationPolicyAccessGranted()) {
@@ -175,4 +199,31 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
+    com.example.mobileterm.Calendar.iCalendarFragment iCalendarFragment;
+    com.example.mobileterm.Calendar.gCalendarFragment gCalendarFragment;
+
+    public void onFragmentChanged(int index) {
+        if (index == 0) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, iCalendarFragment).commit();
+        } else if (index == 1) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, gCalendarFragment).commit();
+        } else if (index == 201) {
+            Log.d(TAG, "should show board add item fragment");
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardAddItemFragment).commit();
+        }
+    }
+
+    public void onFragmentChanged(BoardInfo data) {
+        selectedBoardItem = data;
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment).commit();
+    }
+
+
+    public BoardInfo sendBoardItem() {
+        return selectedBoardItem;
+    }
 }
+
