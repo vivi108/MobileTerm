@@ -21,6 +21,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+
 public class SignUpActivity extends AppCompatActivity {
     // 회원가입하는 액티비티, 회원가입이 완료 되면 메인 액티비티가 실행된다
     private FirebaseAuth mAuth;
@@ -30,9 +32,11 @@ public class SignUpActivity extends AppCompatActivity {
     EditText passwordEditText;
     EditText passwordCheckedEditText;
 
+
     EditText memberInfoName;
     EditText memberInfoDate;
     EditText memberInfoPhone;
+    EditText memberInfoNickname;
     private static final String TAG = "SignUpActivity";
 
     @Override
@@ -46,9 +50,11 @@ public class SignUpActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.PasswordEditText);
         passwordCheckedEditText = findViewById(R.id.PasswordCheckEditText);
 
+
         memberInfoName = findViewById(R.id.MemberInfoName);
         memberInfoDate = findViewById(R.id.MemberInfoDate);
         memberInfoPhone = findViewById(R.id.MemberInfoPhone);
+        memberInfoNickname = findViewById(R.id.MemberInfoNickname);
 
         mAuth = FirebaseAuth.getInstance();
         findViewById(R.id.RegisterButton).setOnClickListener(onClickListener);
@@ -66,12 +72,15 @@ public class SignUpActivity extends AppCompatActivity {
         String email = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
         String passwordCheck = passwordCheckedEditText.getText().toString();
-
-
+        CalendarDay calendarDay = CalendarDay.today();
+        String year = Integer.toString(calendarDay.getYear());
+        String month = Integer.toString(calendarDay.getMonth()+1);
+        String day = Integer.toString(calendarDay.getDay());
+        String regDate = year+month+day;
         String name = memberInfoName.getText().toString();
         String date = memberInfoDate.getText().toString();
         String phone = memberInfoPhone.getText().toString();
-
+        String nickname = memberInfoNickname.getText().toString();
         if (email.length() > 0 && password.length() > 0 ){
             if (password.equals(passwordCheck)){
                 Log.d(TAG, "Password check");
@@ -81,7 +90,7 @@ public class SignUpActivity extends AppCompatActivity {
                         if (task.isSuccessful()){
                             Log.d(TAG, "create user with email success");
                             user = mAuth.getCurrentUser();
-                            dbInsertion(name, date, phone, email);
+                            dbInsertion(name, date, phone, email, nickname, regDate);
                         }else{
                             StartToast("회원가입에 실패하였습니다.");
                         }
@@ -95,9 +104,9 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    private void dbInsertion(String name, String date, String phone, String email){
+    private void dbInsertion(String name, String date, String phone, String email, String nickname, String regDate){
         if (name.length() > 0 && date.length() >= 6 && phone.length() >= 8 && email.contains("@")){
-            UserInfoClass userInfo = new UserInfoClass(name, date, phone, email);
+            UserInfoClass userInfo = new UserInfoClass(name, date, phone, email, nickname, regDate);
             db = FirebaseFirestore.getInstance();
             db.collection("Users").document(user.getUid()).set(userInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
