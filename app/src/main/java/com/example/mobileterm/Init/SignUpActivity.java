@@ -116,7 +116,7 @@ public class SignUpActivity extends AppCompatActivity {
                     data.putString("uid",user.getUid());
                     data.putString("name",user.getDisplayName());
                     data.putString("email",user.getEmail());
-                    data.putString("phone",user.getPhoneNumber());
+//                    data.putString("phone",user.getPhoneNumber());
                     StartActivity(MainActivity.class, data);
                     finish();
                 }
