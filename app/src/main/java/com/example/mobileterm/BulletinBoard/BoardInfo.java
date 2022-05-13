@@ -2,30 +2,50 @@ package com.example.mobileterm.BulletinBoard;
 
 public class BoardInfo {
     private String title;
-    private String tags;
     private String content;
     private String name;
-    public BoardInfo(String title, String tags, String content, String name){
+    private String did;
+
+
+
+    public BoardInfo(String title, String content, String name, String did) {
         this.title = title;
-        this.tags = tags;
         this.content = content;
         this.name = name;
+        this.did = did;
     }
-    public String getTitle() { return this.title;}
 
-    public String getTags() { return this.tags;}
 
-    public String getContent() { return this.content; }
+    public String getTitle() {
+        return title;
+    }
 
-    public String getName(){ return this.name;}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public void setTitle(String title){ this.title = title;}
+    public String getContent() {
+        return content;
+    }
 
-    public void setTags(String tags) { this.tags = tags; }
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-    public void setContent(String content) {this.content = content;}
+    public String getName() {
+        return name;
+    }
 
-    public void setName(String name) {this.name = name;}
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public String getDid() {
+        return did;
+    }
+
+    public void setDid(String did) {
+        this.did = did;
+    }
 
 }
