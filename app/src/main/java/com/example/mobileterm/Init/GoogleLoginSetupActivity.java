@@ -92,7 +92,7 @@ public class GoogleLoginSetupActivity extends AppCompatActivity {
 
     private void dbInsertion(String name, String date, String phone, String email, String nickname, String regDate){
         Log.e("temp",date);
-        if (name.length() > 0 && date.length() == 6 && phone.length() >= 8 && email.contains("@") && nickname.length() < 10){
+        if (name.length() > 0 && date.length() == 6 && phone.length() >= 8 && email.contains("@") && nickname.length() < 20){
             UserInfoClass userInfo = new UserInfoClass(name, date, phone, email, nickname, regDate);
             db = FirebaseFirestore.getInstance();
             db.collection("Users").document(user.getUid()).set(userInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -136,7 +136,7 @@ public class GoogleLoginSetupActivity extends AppCompatActivity {
         }
         else if(email.contains("@") == false){
             StartToast("이메일 형식을 확인해주세요");
-        }else if (nickname.length() < 10) {
+        }else if (nickname.length() < 20) {
             StartToast("닉네임 길이를 확인해주세요.");
         }
     }

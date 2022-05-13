@@ -99,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/MemberInfoNickname"
                     android:ems="10"
-                    android:hint="닉네임 10자 이내"
+                    android:hint="닉네임 20자 이내"
                     android:inputType="text"/>
 
                 <Button

@@ -29,7 +29,7 @@ public class AuthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_auth);
+        setContentView(R.layout.activity_splash);
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
         startLoading();
@@ -91,8 +91,8 @@ public class AuthActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                finish();
+//                finish();
             }
-        }, 5000);
+        }, 1000);
     }
 }
