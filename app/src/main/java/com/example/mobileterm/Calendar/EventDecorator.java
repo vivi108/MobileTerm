@@ -1,4 +1,4 @@
-package com.example.mobileterm;
+package com.example.mobileterm.Calendar;
 
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;

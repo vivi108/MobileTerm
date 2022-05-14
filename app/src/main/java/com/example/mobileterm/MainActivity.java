@@ -3,8 +3,13 @@ package com.example.mobileterm;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+
 import android.os.Bundle;
 import android.view.MenuItem;
+
+import com.example.mobileterm.Calendar.CalendarFragment;
+import com.example.mobileterm.Calendar.gCalendarFragment;
+import com.example.mobileterm.Calendar.iCalendarFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -67,10 +72,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    iCalendarFragment iCalendarFragment;
-    gCalendarFragment gCalendarFragment;
-
-
+    com.example.mobileterm.Calendar.iCalendarFragment iCalendarFragment;
+    com.example.mobileterm.Calendar.gCalendarFragment gCalendarFragment;
 
     public void onFragmentChanged(int index) {
         if (index == 0) {

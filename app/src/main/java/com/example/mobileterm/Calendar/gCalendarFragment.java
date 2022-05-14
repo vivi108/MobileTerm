@@ -1,43 +1,36 @@
-package com.example.mobileterm;
+package com.example.mobileterm.Calendar;
 
 import static android.content.Context.MODE_NO_LOCALIZED_COLLATORS;
 
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-
+import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 
+import com.example.mobileterm.MainActivity;
+import com.example.mobileterm.R;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
-import com.prolificinteractive.materialcalendarview.DayViewDecorator;
-import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.Collection;
 import java.util.Collections;
 
-public class iCalendarFragment extends Fragment {
+public class gCalendarFragment extends Fragment {
     public String readDay = null;
     public String str = null;
     MaterialCalendarView calendarView;
@@ -49,7 +42,7 @@ public class iCalendarFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_i_calendar, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_g_calendar, container, false);
 
         calendarView = rootView.findViewById(R.id.calendarView);
         diaryTextView = rootView.findViewById(R.id.diaryTextView); //중간에 몇월 몇일 보여주는
@@ -63,16 +56,17 @@ public class iCalendarFragment extends Fragment {
         radIndividual = rootView.findViewById(R.id.radIndividual);
         radGroup = rootView.findViewById(R.id.radGroup);
 
-        radGroup.setOnClickListener(new View.OnClickListener() {
+        radIndividual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int radioId = ctype.getCheckedRadioButtonId();
-                if(radGroup.getId()==radioId) {
+                if(radIndividual.getId()==radioId) {
                     MainActivity activity = (MainActivity) getActivity();
-                    activity.onFragmentChanged(1);
+                    activity.onFragmentChanged(0);
                 }
             }
         });
+
 
         // 날짜가 변경될 때 이벤트를 받기 위한 리스너
         calendarView.setOnDateChangedListener(new OnDateSelectedListener()
@@ -117,6 +111,7 @@ public class iCalendarFragment extends Fragment {
                 textView2.setVisibility(View.VISIBLE);
             }
         });
+
 
 
         return rootView;
@@ -244,3 +239,4 @@ public class iCalendarFragment extends Fragment {
         }
     }
 }
+

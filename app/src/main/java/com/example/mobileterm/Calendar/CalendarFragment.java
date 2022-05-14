@@ -1,4 +1,4 @@
-package com.example.mobileterm;
+package com.example.mobileterm.Calendar;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.mobileterm.R;
+
 
 public class CalendarFragment extends Fragment {
     iCalendarFragment iCalendarFragment;
     gCalendarFragment gCalendarFragment;
 
-//0508
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -21,6 +23,5 @@ public class CalendarFragment extends Fragment {
         gCalendarFragment = new gCalendarFragment();
         return inflater.inflate(R.layout.fragment_calendar, container, false);
     }
-
 
 }
