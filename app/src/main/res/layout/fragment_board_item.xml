@@ -46,6 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:id="@+id/tagTextViewBoardItem"
                 android:text="태그가 들어갈 위치, 어떻게 표현할지 미정"
                 android:textSize="12dp"/>
 

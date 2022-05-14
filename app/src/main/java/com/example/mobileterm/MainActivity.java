@@ -49,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
     String mCurrentPhotoPath;
     Uri imageUri;
     Uri photoURI, albumURI;
-    public BoardInfo selectedBoardItem;
+    private BoardInfo selectedBoardItem;
+    private String selectedBoardItemDid;
     private static final String TAG = "MainActivity:";
 
     private String uid;
@@ -226,9 +227,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void onFragmentChanged(BoardInfo data) {
+    public void onFragmentChanged(BoardInfo data, String did) {
         selectedBoardItem = data;
-
+        selectedBoardItemDid = did;
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment).commit();
     }
 
@@ -236,5 +237,7 @@ public class MainActivity extends AppCompatActivity {
     public BoardInfo sendBoardItem() {
         return selectedBoardItem;
     }
+
+    public String sendDid(){ return selectedBoardItemDid; }
 }
 
