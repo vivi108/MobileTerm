@@ -1,5 +1,6 @@
 package com.example.mobileterm.Calendar;
 
+import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_NO_LOCALIZED_COLLATORS;
 
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,14 @@ import androidx.annotation.NonNull;
 
 import com.example.mobileterm.MainActivity;
 import com.example.mobileterm.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -29,6 +39,8 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class iCalendarFragment extends Fragment {
     public String readDay = null;
@@ -41,8 +53,8 @@ public class iCalendarFragment extends Fragment {
     public RadioButton radIndividual, radGroup;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_i_calendar, container, false);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup main_frame_layout, @Nullable Bundle savedInstanceState) {
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_i_calendar, main_frame_layout, false);
 
         calendarView = rootView.findViewById(R.id.calendarView);
         diaryTextView = rootView.findViewById(R.id.diaryTextView); //중간에 몇월 몇일 보여주는
@@ -56,7 +68,10 @@ public class iCalendarFragment extends Fragment {
         radIndividual = rootView.findViewById(R.id.radIndividual);
         radGroup = rootView.findViewById(R.id.radGroup);
 
-        radGroup.setOnClickListener(new View.OnClickListener() {
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
+        radGroup.setOnClickListener(new View.OnClickListener() { //그룹버튼 누르면 그룹캘린더로 전환
             @Override
             public void onClick(View view) {
                 int radioId = ctype.getCheckedRadioButtonId();
@@ -67,13 +82,15 @@ public class iCalendarFragment extends Fragment {
             }
         });
 
-        // 날짜가 변경될 때 이벤트를 받기 위한 리스너
+
+
+        // 날짜 클릭할 때 일어날 일들
         calendarView.setOnDateChangedListener(new OnDateSelectedListener()
         {
-            // 선택된 날짜를 알려주는 메서드
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected)
             {
+                //1111111111111111111
                 //중간 날짜 표시, 저장 버튼, 일정 수정 - 보이도록
                 diaryTextView.setVisibility(View.VISIBLE);
                 save_Btn.setVisibility(View.VISIBLE);
@@ -82,40 +99,68 @@ public class iCalendarFragment extends Fragment {
                 textView2.setVisibility(View.INVISIBLE);
                 cha_Btn.setVisibility(View.INVISIBLE);
                 del_Btn.setVisibility(View.INVISIBLE);
+
                 //중간 날짜 어케 보여줄지 + 일정 추가되는 칸 초기화
                 diaryTextView.setText(String.format("%d / %d / %d",  date.getYear(), date.getMonth() + 1, date.getDay()));
                 contextEditText.setText("");
                 //빨간 점 찍기 -------------
                 calendarView.setSelectedDate(CalendarDay.today());
                 calendarView.addDecorator(new EventDecorator(Color.RED, Collections.singleton(CalendarDay.today())));
-                //이제 날짜 체크 후 일정 삽입 or 수정 작업
+
+                //날짜 체크 후 일정 삽입 or 수정 작업
                 checkDay(date.getYear(), date.getMonth() + 1, date.getDay());
+
+                //저장 버튼 클릭 시
+                save_Btn.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        saveDiary(readDay); //일정 저장
+                        str = contextEditText.getText().toString(); //일정을 쓰면 그 내용을 str로 저장
+                        textView2.setText(str); //t2(일정 보여주는)에 str 저장
+
+//                //파베에 add 함 (쓰기)
+//                int i = CalendarDay.getYear();
+//                Map<String, Object> scd = new HashMap<>();
+//                scd.put("date", (String)date.getMonth()+1);
+//                scd.put("isDone", "false");
+//
+//                db.collection("Schedule")
+//                        .add(scd);
+//
+//
+//                db.collection("Schedule")
+//                        .get()
+//                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                if(task.isSuccessful()){
+//                                    for(QueryDocumentSnapshot document : task.getResult()){
+//                                        Log.d(TAG, document.getId() + "- "+ document.getData());
+//
+//                                    }
+//                                }
+//                            }
+//                        });
+
+
+
+                        //2222222222222222222
+                        //저장 버튼을 클릭 한 후 - 저장버튼과 edittext 안보이고 / 수정, 삭제 버튼, 일정 보여주는 거 보이게함
+                        save_Btn.setVisibility(View.INVISIBLE);
+                        cha_Btn.setVisibility(View.VISIBLE);
+                        del_Btn.setVisibility(View.VISIBLE);
+                        contextEditText.setVisibility(View.INVISIBLE);
+                        textView2.setVisibility(View.VISIBLE);
+                    }
+                });
             }
         });
-
-        //저장 버튼 클릭 시
-        save_Btn.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                saveDiary(readDay); //아마 일정 저장
-                str = contextEditText.getText().toString(); //일정을 쓰면 그 내용을 str로 저장
-                textView2.setText(str); //t2(일정 보여주는)에 str 저장
-                //저장 버튼을 클릭 한 후 - 저장버튼과 edittext 안보이고 수정, 삭제 버튼, 일정 보여주는 거 보이게함
-                save_Btn.setVisibility(View.INVISIBLE);
-                cha_Btn.setVisibility(View.VISIBLE);
-                del_Btn.setVisibility(View.VISIBLE);
-                contextEditText.setVisibility(View.INVISIBLE);
-                textView2.setVisibility(View.VISIBLE);
-            }
-        });
-
 
 
 
         return rootView;
-
     }
 
 
@@ -125,6 +170,7 @@ public class iCalendarFragment extends Fragment {
         readDay = "" + cYear + "-" + (cMonth + 1) + "" + "-" + cDay + ".txt";
         //파일 내용 읽으려나 봄
         FileInputStream fis;
+
 
         try
         {
@@ -138,11 +184,15 @@ public class iCalendarFragment extends Fragment {
 
             //fileData의 연월일 정보를 str에 넣음
             str = new String(fileData);
+                // 무튼 위 코드들은 str을 파일에 넣고
 
+
+
+            //2222222222222
             //일정 수정 또는 삽입 후 일정 보여주는 그 시점
             contextEditText.setVisibility(View.INVISIBLE);
             textView2.setVisibility(View.VISIBLE);
-            textView2.setText(str); //일정 보여주는 칸에 연월일 정보인 str 넣음
+            textView2.setText(str);               //입력한 str을 일정으로 보여줌
             save_Btn.setVisibility(View.INVISIBLE);
             cha_Btn.setVisibility(View.VISIBLE);
             del_Btn.setVisibility(View.VISIBLE);
@@ -153,6 +203,7 @@ public class iCalendarFragment extends Fragment {
                 @Override
                 public void onClick(View view)
                 {
+                    //1111111111111111
                     //원래 있던 일정(str)이 edittext에 그대로 나오고
                     //마지막에 edit의 스트링을 text2에 넣어줌
                     //마찬가지로 수정 눌리면 edit과 저장버튼만 보이게 해주는거..
@@ -173,6 +224,7 @@ public class iCalendarFragment extends Fragment {
                 @Override
                 public void onClick(View view)
                 {
+                    //11111111111111
                     //text2 안보이고 edit이 비게 되고,
                     //edit과 저장버튼만 보이게됨
                     //readDay의 스트링은 삭제됨
