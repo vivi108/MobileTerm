@@ -120,29 +120,33 @@ public class iCalendarFragment extends Fragment {
                         str = contextEditText.getText().toString(); //일정을 쓰면 그 내용을 str로 저장
                         textView2.setText(str); //t2(일정 보여주는)에 str 저장
 
-//                //파베에 add 함 (쓰기)
-//                int i = CalendarDay.getYear();
-//                Map<String, Object> scd = new HashMap<>();
-//                scd.put("date", (String)date.getMonth()+1);
-//                scd.put("isDone", "false");
-//
-//                db.collection("Schedule")
-//                        .add(scd);
-//
-//
-//                db.collection("Schedule")
-//                        .get()
-//                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                                if(task.isSuccessful()){
-//                                    for(QueryDocumentSnapshot document : task.getResult()){
-//                                        Log.d(TAG, document.getId() + "- "+ document.getData());
-//
-//                                    }
-//                                }
-//                            }
-//                        });
+                        //파베에 add 함 (쓰기)
+                        Map<String, Object> scd = new HashMap<>();
+                        scd.put("date", "date.getMonth()+1" + "date.getDay()");
+                        scd.put("isDone", false);
+                        scd.put("context", str);
+
+                        db.collection("Schedule")
+                                .add(scd);
+
+
+                        db.collection("Schedule")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if(task.isSuccessful()){
+                                            for(QueryDocumentSnapshot document : task.getResult()){
+                                                if (document.exists()) {
+                                                    //String date = (String) document.getData().get("date");
+                                                    String context = (String) document.getData().get("context");
+                                                    //boolean isDone = (boolean) document.getData().get("isDone");
+                                                    System.out.println(date + " " + context);
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
 
 
 
