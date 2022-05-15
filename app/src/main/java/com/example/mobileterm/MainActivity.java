@@ -40,7 +40,7 @@ import java.util.Date;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private static Fragment studyFragment, boardFragment, calendarFragment, myHomeFragment, boardItemFragment, boardAddItemFragment;
+    private static Fragment studyFragment, boardFragment, iCalendarFragment, gCalendarFragment, myHomeFragment, boardItemFragment, boardAddItemFragment;
     private static final int MY_PERMISSION_CAMERA = 1111;
     private static final int REQUEST_TAKE_PHOTO = 2222;
     private static final int REQUEST_TAKE_ALBUM = 3333;
@@ -77,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
     private void initiate_fragment() {
         studyFragment = new StudyFragment();
         myHomeFragment = new MyHomeFragment();
-        calendarFragment = new CalendarFragment();
+        gCalendarFragment = new gCalendarFragment();
+        iCalendarFragment = new iCalendarFragment();
         boardFragment = new BoardFragment();
         boardItemFragment = new BoardItemFragment();
         boardAddItemFragment = new BoardAddItemFragment();
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                         // CalendarFragment로 교체
                         getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.main_frame_layout, calendarFragment)
+                                .replace(R.id.main_frame_layout, iCalendarFragment)
                                 .commit();
                         return true;
                     case R.id.nav_menu_my_home:
@@ -212,14 +213,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    com.example.mobileterm.Calendar.iCalendarFragment iCalendarFragment;
-    com.example.mobileterm.Calendar.gCalendarFragment gCalendarFragment;
 
     public void onFragmentChanged(int index) {
         if (index == 0) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, iCalendarFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, iCalendarFragment).commit();
         } else if (index == 1) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, gCalendarFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, gCalendarFragment).commit();
         } else if (index == 201) {
             Log.d(TAG, "should show board add item fragment");
             getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardAddItemFragment).commit();
