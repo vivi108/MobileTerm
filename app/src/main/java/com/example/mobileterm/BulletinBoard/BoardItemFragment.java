@@ -136,15 +136,31 @@ public class BoardItemFragment extends Fragment {
 //                            commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList);
 //                            commentListView.setAdapter(commentListViewAdapter);
                             commentListViewAdapter.addComment(newComment);
+                            DBinsertion(commentEditText.getText().toString(), userName);
 //                            commentListView.
                         }
                     }
                 });
 
 
+
+
             }
         });
 
         return rootView;
+    }
+
+    private void DBinsertion(String content, String userName) {
+        CommentInfo newComment = new CommentInfo(content, userName);
+        db.collection("BulletinBoard/"+did+"/Comments").add(newComment).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentReference> task) {
+                if (task.isSuccessful()) {
+                    Log.e(TAG, "댓글 등록 성공");
+                }
+            }
+        });
+
     }
 }
