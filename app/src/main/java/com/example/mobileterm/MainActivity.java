@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.app.NotificationManager;
 import android.content.Context;
@@ -103,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.main_frame_layout, studyFragment)
+                                .addToBackStack(null)
                                 .commit();
                         return true;
                     case R.id.nav_menu_board:
@@ -110,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.main_frame_layout, boardFragment)
+                                .addToBackStack(null)
                                 .commit();
                         return true;
                     case R.id.nav_menu_calendar:
@@ -117,12 +120,14 @@ public class MainActivity extends AppCompatActivity {
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.main_frame_layout, iCalendarFragment)
+                                .addToBackStack(null)
                                 .commit();
                         return true;
                     case R.id.nav_menu_my_home:
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.main_frame_layout, myHomeFragment)
+                                .addToBackStack(null)
                                 .commit();
                         return true;
                 }
@@ -217,21 +222,32 @@ public class MainActivity extends AppCompatActivity {
 
     public void onFragmentChanged(int index) {
         if (index == 0) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, iCalendarFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, iCalendarFragment).addToBackStack(null).commit();
         } else if (index == 1) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, gCalendarFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, gCalendarFragment).addToBackStack(null).commit();
         } else if (index == 201) {
             Log.d(TAG, "should show board add item fragment");
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardAddItemFragment).commit();
+//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardAddItemFragment);
+//            transaction.addToBackStack(null).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardAddItemFragment).addToBackStack(null).commit();
+
         }
     }
 
     public void onFragmentChanged(BoardInfo data, String did) {
         selectedBoardItem = data;
         selectedBoardItemDid = did;
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment).commit();
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment);
+//        transaction.addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment).addToBackStack(null).commit();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+
+    }
 
     public BoardInfo sendBoardItem() {
         return selectedBoardItem;
