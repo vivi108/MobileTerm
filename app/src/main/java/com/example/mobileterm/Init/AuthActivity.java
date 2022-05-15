@@ -51,8 +51,8 @@ public class AuthActivity extends AppCompatActivity {
                                 Log.d(TAG,"Should start main");
                                 Bundle data = new Bundle();
                                 data.putString("uid",user.getUid());
-                                StartActivity(LoginSelectionActivity.class);
-//                                StartActivity(MainActivity.class, data);
+//                                StartActivity(LoginSelectionActivity.class);
+                                StartActivity(MainActivity.class, data);
                             }else{
                                 Log.d(TAG, "should start login");
                                 FirebaseAuth.getInstance().signOut();

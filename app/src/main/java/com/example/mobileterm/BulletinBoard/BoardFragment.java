@@ -82,7 +82,7 @@ public class BoardFragment extends Fragment {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                             MainActivity activity = (MainActivity) getActivity();
-                            Log.d("boardItemClicked","by setOnItemCLick");
+                            Log.e("boardItemClicked","by setOnItemCLick");
 
                             activity.onFragmentChanged(arrayList.get(i), arrayList.get(i).getDid());
                         }

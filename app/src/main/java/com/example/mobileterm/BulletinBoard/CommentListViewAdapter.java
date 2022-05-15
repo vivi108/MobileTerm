@@ -65,4 +65,9 @@ public class CommentListViewAdapter extends BaseAdapter {
 
         return itemView;
     }
+
+    public void addComment(CommentInfo newComment){
+        dataList.add(newComment);
+        notifyDataSetChanged();
+    }
 }
