@@ -19,6 +19,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class SettingFragment extends Fragment {
     TextView email;
     TextView phone;
@@ -31,6 +34,8 @@ public class SettingFragment extends Fragment {
     Switch sound;
     Switch viberate;
 
+    FirebaseAuth auth;
+    FirebaseUser user;
 
     @Nullable
     @Override
@@ -47,11 +52,10 @@ public class SettingFragment extends Fragment {
         sound = (Switch) rootView.findViewById(R.id.setting_alarm_sound_switch);
         viberate = (Switch) rootView.findViewById(R.id.setting_alarm_ring_switch);
 
+        auth =FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
 
         //소리, 무음, 진동 제어
-
-
-
 
         AudioManager audioManager;
         audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
@@ -73,6 +77,23 @@ public class SettingFragment extends Fragment {
                 else audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
             }
         });
+
+        //이메일 변경 설정
+        emailchange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        //휴대폰 변경 설정정
+        phonechange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
         return rootView;
     }
+
 }

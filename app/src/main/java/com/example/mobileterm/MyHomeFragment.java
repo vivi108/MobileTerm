@@ -128,7 +128,7 @@ public class MyHomeFragment extends Fragment {
         return rootView;
     }
     //서버에서 기본 이미지 로드하기
-    public void loadbasicImage() {
+    private void loadbasicImage() {
 
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://mptermproject-75489.appspot.com"); //firebase storate 경로
         StorageReference storageRef = storage.getReference();
@@ -155,7 +155,7 @@ public class MyHomeFragment extends Fragment {
         }
     }
     //서버에서 사용자 지정 프로필 이미지 로드하기
-    public void loadImage(String uid){
+    private void loadImage(String uid){
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://mptermproject-75489.appspot.com"); //firebase storate 경로
         StorageReference storageRef = storage.getReference();
 
