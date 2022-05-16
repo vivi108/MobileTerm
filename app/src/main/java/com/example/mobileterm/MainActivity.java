@@ -24,6 +24,7 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.util.Log;
 
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -37,6 +38,8 @@ import com.example.mobileterm.BulletinBoard.BoardItemFragment;
 import com.example.mobileterm.Calendar.CalendarFragment;
 import com.example.mobileterm.Calendar.gCalendarFragment;
 import com.example.mobileterm.Calendar.iCalendarFragment;
+import com.example.mobileterm.Init.LoginActivity;
+import com.example.mobileterm.Init.LoginSelectionActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -115,6 +118,35 @@ public class MainActivity extends AppCompatActivity {
         initiate_fragment();
         initiate_nav_menu();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.actionbar_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.LogoutMenu:
+                FirebaseAuth.getInstance().signOut();
+                StartActivity(LoginSelectionActivity.class);
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void StartActivity(Class c) {
+        Intent intent = new Intent(this, c);
+        // 동일한 창이 여러번 뜨게 만드는 것이 아니라 기존에 켜져있던 창을 앞으로 끌어와주는 기능.
+        // 이 플래그를 추가하지 않을 경우 창들이 중복돼서 계속 팝업되게 된다.
+        // 메인화면을 띄우는 모든 코드에서 이 플래그를 추가해줘야 하는 것 같다.
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     private void initiate_fragment() {

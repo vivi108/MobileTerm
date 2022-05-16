@@ -37,6 +37,7 @@ public class LoginSelectionActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseUser user;
+    private FirebaseFirestore db;
     private static final int RC_SIGN_IN = 9001;
     SignInButton googleButton;
     private String TAG = "LoginSelectionActivity";
@@ -50,6 +51,7 @@ public class LoginSelectionActivity extends AppCompatActivity {
         findViewById(R.id.googleButton).setOnClickListener(onClickListener);
         mAuth = FirebaseAuth.getInstance();
         googleButton = findViewById(R.id.googleButton);
+        db = FirebaseFirestore.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.client_id)).requestEmail().build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
@@ -136,7 +138,22 @@ public class LoginSelectionActivity extends AppCompatActivity {
                     // sign in success
                     Log.d(TAG,"sign in success");
                     FirebaseUser user = mAuth.getCurrentUser();
-                    updateUI(user);
+                    db.collection("Users").document(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                Bundle data = new Bundle();
+                                data.putString("uid",user.getUid());
+                                data.putString("name",user.getDisplayName());
+                                data.putString("email",user.getEmail());
+                                data.putString("phone",user.getPhoneNumber());
+                                StartActivity(MainActivity.class, data);
+                            }else{
+                                updateUI(user);
+                            }
+                        }
+                    });
+//                    updateUI(user);
                 }else{
                     // fail
                     Log.d(TAG,"sign in fail");
