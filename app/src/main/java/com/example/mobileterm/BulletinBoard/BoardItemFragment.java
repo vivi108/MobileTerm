@@ -31,7 +31,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import org.w3c.dom.Comment;
 
 import java.lang.ref.Reference;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class BoardItemFragment extends Fragment {
     private String did;
@@ -45,6 +47,10 @@ public class BoardItemFragment extends Fragment {
     String TAG = "BoardItemFragment";
 
     String userName;
+    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    long mnow;
+    Date mDate;
+    String commentId;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
@@ -153,14 +159,30 @@ public class BoardItemFragment extends Fragment {
 
     private void DBinsertion(String content, String userName) {
         CommentInfo newComment = new CommentInfo(content, userName);
-        db.collection("BulletinBoard/"+did+"/Comments").add(newComment).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+        commentId = getTime();
+        db.collection("BulletinBoard/"+did+"/Comments").document(commentId).set(newComment).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentReference> task) {
+            public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     Log.e(TAG, "댓글 등록 성공");
                 }
             }
         });
 
+//        db.collection("BulletinBoard/"+did+"/Comments").add(newComment).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentReference> task) {
+//                if (task.isSuccessful()) {
+//                    Log.e(TAG, "댓글 등록 성공");
+//                }
+//            }
+//        });
+
+    }
+
+    private String getTime() {
+        mnow = System.currentTimeMillis();
+        mDate = new Date(mnow);
+        return mFormat.format(mDate);
     }
 }
