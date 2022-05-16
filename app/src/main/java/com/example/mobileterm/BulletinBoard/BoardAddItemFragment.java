@@ -90,7 +90,7 @@ public class BoardAddItemFragment extends Fragment {
                                         DocumentReference document = task.getResult();
                                         Log.e(TAG, "did:"+document.getId());
                                         did = document.getId();
-                                        newBoardItem = new BoardInfo(title, content, nickname, did);
+//                                        newBoardItem = new BoardInfo(title, content, nickname, did);
                                         WriteBatch batch = db.batch();
                                         for (String tag: tagIter) {
                                             DocumentReference tempref = db.collection("BulletinBoard").document(did).collection("BoardTags").document(tag);
@@ -126,7 +126,7 @@ public class BoardAddItemFragment extends Fragment {
 
     public void fragmentChange() {
         BoardFragment boardFragment = new BoardFragment();
-        boardFragment.addNewItem(newBoardItem);
+//        boardFragment.addNewItem(newBoardItem);
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardFragment).addToBackStack(null).commit();
     }
 }
