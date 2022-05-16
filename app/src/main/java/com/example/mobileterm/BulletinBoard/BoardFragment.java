@@ -126,4 +126,8 @@ public class BoardFragment extends Fragment {
         }
     };
 
+    public void addNewItem(BoardInfo newItem){
+        adapter.addItem(newItem);
+    }
+
 }

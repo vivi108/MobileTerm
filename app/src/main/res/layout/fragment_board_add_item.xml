@@ -3,33 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="5dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="30dp">
 
-        <ImageButton
-            android:id="@+id/exitButton"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="20dp"
-            android:background="@drawable/back_icon"
-            android:contentDescription="back button"
-            android:scaleType="fitXY" />
 
-        <ImageButton
-            android:id="@+id/endWriteButton"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="250dp"
-            android:background="@drawable/write_icon"
-            android:contentDescription="end writte button"
-            android:scaleType="fitXY" />
 
-    </LinearLayout>
+    <ImageButton
+        android:id="@+id/endWriteButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/write_icon"
+        android:contentDescription="end writte button"
+        android:scaleType="fitXY" />
+
+
 
     <EditText
         android:id="@+id/titleEditText"
@@ -37,6 +25,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:hint="@string/titleEditText"
+        android:inputType="text"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <EditText
+        android:id="@+id/tagEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="태그를 입력하세요 #test #first"
         android:inputType="text"
         tools:ignore="TouchTargetSizeCheck" />
 
@@ -62,7 +59,7 @@
             android:layout_height="70dp"
             android:contentDescription="adding reference button"
             android:scaleType="fitXY"
-            android:src="@drawable/reference_icon" />
+            android:background="@drawable/reference_icon" />
 
 
 
