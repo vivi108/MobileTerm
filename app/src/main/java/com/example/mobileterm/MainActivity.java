@@ -6,11 +6,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-<<<<<<< HEAD
 import androidx.loader.content.CursorLoader;
-=======
 import androidx.fragment.app.FragmentTransaction;
->>>>>>> 1998b5990752d27a27591a6ef963fa2a971bfe95
 
 import android.Manifest;
 import android.app.NotificationManager;
@@ -78,29 +75,21 @@ public class MainActivity extends AppCompatActivity {
     String mCurrentPhotoPath;
     Uri imageUri;
     Uri photoURI, albumURI;
-<<<<<<< HEAD
     private String pathUri;
     private File tempFile;
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private FirebaseStorage mStorage;
-=======
-    private BoardInfo selectedBoardItem;
     private String selectedBoardItemDid;
-    private static final String TAG = "MainActivity:";
 
     private String uid;
     private String name;
     private String email;
->>>>>>> 1998b5990752d27a27591a6ef963fa2a971bfe95
 
-    private String uid;
     //유저 프로필 pram
-    private String name;
     private String nickname;
     private Uri photoUrl;
-    private String email;
     private String phone;
     private int token;
     @Override
@@ -402,11 +391,8 @@ public class MainActivity extends AppCompatActivity {
     public BoardInfo sendBoardItem() {
         return selectedBoardItem;
     }
-<<<<<<< HEAD
-}
-=======
+
 
     public String sendDid(){ return selectedBoardItemDid; }
 }
 
->>>>>>> 1998b5990752d27a27591a6ef963fa2a971bfe95
