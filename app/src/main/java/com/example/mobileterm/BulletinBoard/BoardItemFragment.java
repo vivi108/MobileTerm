@@ -1,9 +1,13 @@
 package com.example.mobileterm.BulletinBoard;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -15,6 +19,8 @@ import com.example.mobileterm.MainActivity;
 import com.example.mobileterm.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -31,10 +37,14 @@ public class BoardItemFragment extends Fragment {
     private String did;
     private BoardInfo selectedBoardItem;
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+    private FirebaseUser curUser;
     ListView commentListView;
     CommentListViewAdapter commentListViewAdapter;
     ArrayList<CommentInfo> arrayList = new ArrayList<CommentInfo>();
+    String TAG = "BoardItemFragment";
 
+    String userName;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
@@ -44,6 +54,7 @@ public class BoardItemFragment extends Fragment {
         did = mainActivity.sendDid();
         commentListView = rootView.findViewById(R.id.commentView);
         db = FirebaseFirestore.getInstance();
+
 
 
 
@@ -101,6 +112,55 @@ public class BoardItemFragment extends Fragment {
             }
         });
 
+        EditText commentEditText = rootView.findViewById(R.id.commentEditText);
+        ImageButton addCommentButtonBoardItem = rootView.findViewById(R.id.addCommentButtonBoardItem);
+        addCommentButtonBoardItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAuth = FirebaseAuth.getInstance();
+                curUser = mAuth.getCurrentUser();
+                DocumentReference docref = db.collection("Users").document(curUser.getUid());
+                Log.e(TAG, "curUser : "+curUser.getUid());
+                docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if (documentSnapshot.exists()) {
+                                userName = (String) documentSnapshot.getData().get("nickname");
+                            }else{
+                                userName = "unidentified user";
+                            }
+                            CommentInfo newComment = new CommentInfo(commentEditText.getText().toString(), userName);
+//                            arrayList.add(newComment);
+//                            commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList);
+//                            commentListView.setAdapter(commentListViewAdapter);
+                            commentListViewAdapter.addComment(newComment);
+                            DBinsertion(commentEditText.getText().toString(), userName);
+//                            commentListView.
+                        }
+                    }
+                });
+
+
+
+
+            }
+        });
+
         return rootView;
+    }
+
+    private void DBinsertion(String content, String userName) {
+        CommentInfo newComment = new CommentInfo(content, userName);
+        db.collection("BulletinBoard/"+did+"/Comments").add(newComment).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentReference> task) {
+                if (task.isSuccessful()) {
+                    Log.e(TAG, "댓글 등록 성공");
+                }
+            }
+        });
+
     }
 }

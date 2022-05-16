@@ -60,7 +60,7 @@ public class ListViewAdapter extends BaseAdapter {
         TextView tagTextView = itemView.findViewById(R.id.tagTextView);
 
         titleTextView.setText(boardItem.getTitle().toString());
-        String contentPreview = boardItem.getContent().toString().substring(0,10)+"...";
+        String contentPreview = boardItem.getContent().toString()+"...";
         contentTextView.setText(contentPreview);
         nameTextView.setText(boardItem.getName().toString());
         tagTextView.setText("");
@@ -104,4 +104,9 @@ public class ListViewAdapter extends BaseAdapter {
 
     @Override
     public BoardInfo getItem(int position) { return DataList.get(position) ;}
+
+    public void addItem(BoardInfo item) {
+        DataList.add(item);
+        notifyDataSetChanged();
+    }
 }
