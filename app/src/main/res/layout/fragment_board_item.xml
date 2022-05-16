@@ -6,9 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10dp">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,8 +44,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:id="@+id/tagTextViewBoardItem"
                 android:text="태그가 들어갈 위치, 어떻게 표현할지 미정"
-                android:textSize="12dp"/>
+                android:textSize="15dp"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -57,18 +56,26 @@
                 android:layout_marginTop="5dp"
                 android:textSize="18dp"/>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="댓글"
+                android:textSize="20dp"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="5dp">
 
-                <TextView
+                <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="댓글"
-                    android:layout_weight="1"
-                    android:layout_gravity="center"/>
+                    android:hint="댓글을 입력하세요"
+                    android:inputType="textMultiLine"
+                    android:layout_weight="2"
+                    android:id="@+id/commentEditText"/>
 
                 <ImageButton
                     android:layout_width="40dp"
@@ -85,6 +92,6 @@
                 android:id="@+id/commentView"/>
 
         </LinearLayout>
-    </ScrollView>
+
 
 </LinearLayout>

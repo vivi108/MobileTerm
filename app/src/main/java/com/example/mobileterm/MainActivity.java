@@ -6,7 +6,11 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+<<<<<<< HEAD
 import androidx.loader.content.CursorLoader;
+=======
+import androidx.fragment.app.FragmentTransaction;
+>>>>>>> 1998b5990752d27a27591a6ef963fa2a971bfe95
 
 import android.Manifest;
 import android.app.NotificationManager;
@@ -61,7 +65,7 @@ import java.util.Date;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private static Fragment studyFragment, boardFragment, calendarFragment, myHomeFragment, boardItemFragment, boardAddItemFragment;
+    private static Fragment studyFragment, boardFragment, iCalendarFragment, gCalendarFragment, myHomeFragment, boardItemFragment, boardAddItemFragment;
     private static final int MY_PERMISSION_CAMERA = 1111;
     private static final int REQUEST_TAKE_PHOTO = 2222;
     private static final int REQUEST_TAKE_ALBUM = 3333;
@@ -74,12 +78,22 @@ public class MainActivity extends AppCompatActivity {
     String mCurrentPhotoPath;
     Uri imageUri;
     Uri photoURI, albumURI;
+<<<<<<< HEAD
     private String pathUri;
     private File tempFile;
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private FirebaseStorage mStorage;
+=======
+    private BoardInfo selectedBoardItem;
+    private String selectedBoardItemDid;
+    private static final String TAG = "MainActivity:";
+
+    private String uid;
+    private String name;
+    private String email;
+>>>>>>> 1998b5990752d27a27591a6ef963fa2a971bfe95
 
     private String uid;
     //유저 프로필 pram
@@ -97,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
         Bundle data = intent.getExtras();
         //로그인 액티비티에서 메인엑티비티 호출할때 넘겨준 유저 ID값
         uid = data.getString("uid");
+        name = data.getString("name");
+        email = data.getString("email");
+        Log.d(TAG,"main : "+name+", "+email+", "+uid);
 
 
 //        Bundle putdata = new Bundle();
@@ -114,7 +131,8 @@ public class MainActivity extends AppCompatActivity {
     private void initiate_fragment() {
         studyFragment = new StudyFragment();
         myHomeFragment = new MyHomeFragment();
-        calendarFragment = new CalendarFragment();
+        gCalendarFragment = new gCalendarFragment();
+        iCalendarFragment = new iCalendarFragment();
         boardFragment = new BoardFragment();
         boardItemFragment = new BoardItemFragment();
         boardAddItemFragment = new BoardAddItemFragment();
@@ -138,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.main_frame_layout, studyFragment)
+                                .addToBackStack(null)
                                 .commit();
                         return true;
                     case R.id.nav_menu_board:
@@ -145,19 +164,22 @@ public class MainActivity extends AppCompatActivity {
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.main_frame_layout, boardFragment)
+                                .addToBackStack(null)
                                 .commit();
                         return true;
                     case R.id.nav_menu_calendar:
                         // CalendarFragment로 교체
                         getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.main_frame_layout, calendarFragment)
+                                .replace(R.id.main_frame_layout, iCalendarFragment)
+                                .addToBackStack(null)
                                 .commit();
                         return true;
                     case R.id.nav_menu_my_home:
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.main_frame_layout, myHomeFragment)
+                                .addToBackStack(null)
                                 .commit();
                         return true;
                 }
@@ -347,28 +369,44 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    com.example.mobileterm.Calendar.iCalendarFragment iCalendarFragment;
-    com.example.mobileterm.Calendar.gCalendarFragment gCalendarFragment;
 
     public void onFragmentChanged(int index) {
         if (index == 0) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, iCalendarFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, iCalendarFragment).addToBackStack(null).commit();
         } else if (index == 1) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, gCalendarFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, gCalendarFragment).addToBackStack(null).commit();
         } else if (index == 201) {
             Log.d(TAG, "should show board add item fragment");
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardAddItemFragment).commit();
+//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardAddItemFragment);
+//            transaction.addToBackStack(null).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardAddItemFragment).addToBackStack(null).commit();
+
         }
     }
 
-    public void onFragmentChanged(BoardInfo data) {
+    public void onFragmentChanged(BoardInfo data, String did) {
         selectedBoardItem = data;
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment).commit();
+        selectedBoardItemDid = did;
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment);
+//        transaction.addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment).addToBackStack(null).commit();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+
+    }
 
     public BoardInfo sendBoardItem() {
         return selectedBoardItem;
     }
+<<<<<<< HEAD
 }
+=======
+
+    public String sendDid(){ return selectedBoardItemDid; }
+}
+
+>>>>>>> 1998b5990752d27a27591a6ef963fa2a971bfe95

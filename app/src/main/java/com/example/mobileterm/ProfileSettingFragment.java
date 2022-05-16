@@ -140,10 +140,10 @@ public class ProfileSettingFragment extends Fragment {
                     //완료버튼을 누르면
                     //변경된 이미지 서버에 저장 후, 보여주기
                     //변경된 이름 서버에 저장 후 보여주기.
-                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                            .setDisplayName("Jane Q. User")
-                            .setPhotoUri(Uri.parse("https://example.com/jane-q-user/profile.jpg"))
-                            .build();
+//                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+//                            .setDisplayName("Jane Q. User")
+//                            .setPhotoUri(Uri.parse("https://example.com/jane-q-user/profile.jpg"))
+//                            .build();
                 }
             });
 

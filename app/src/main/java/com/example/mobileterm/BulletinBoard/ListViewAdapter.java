@@ -9,9 +9,21 @@ import android.content.Context;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mobileterm.R;
+import androidx.annotation.NonNull;
 
+import com.example.mobileterm.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.lang.ref.Reference;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class ListViewAdapter extends BaseAdapter {
@@ -19,13 +31,16 @@ public class ListViewAdapter extends BaseAdapter {
     Context mContext;
     LayoutInflater inflater;
     private ArrayList<BoardInfo> DataList;
+    private FirebaseFirestore db;
+    private String did;
+
 
     public ListViewAdapter(Context context, ArrayList<BoardInfo> dataList){
         mContext = context;
         inflater = LayoutInflater.from(mContext);
         this.DataList = new ArrayList<BoardInfo>();
         this.DataList.addAll(dataList);
-        Log.d(TAG, "ListViewAdapter : "+DataList.size());
+        Log.e(TAG, "ListViewAdapter : "+DataList.size());
     }
 
 
@@ -45,20 +60,37 @@ public class ListViewAdapter extends BaseAdapter {
         TextView tagTextView = itemView.findViewById(R.id.tagTextView);
 
         titleTextView.setText(boardItem.getTitle().toString());
-        String contentPreview = boardItem.getContent().toString().substring(0,10)+"...";
+        String contentPreview = boardItem.getContent().toString()+"...";
         contentTextView.setText(contentPreview);
         nameTextView.setText(boardItem.getName().toString());
-        tagTextView.setText(boardItem.getTags().toString());
+        tagTextView.setText("");
+        did = boardItem.getDid();
+        Log.e(TAG,did);
+        db = FirebaseFirestore.getInstance();
 
-        Log.d(TAG, "view - "+position+" - "+boardItem.getName());
+        CollectionReference docref = db.document("BulletinBoard/"+did).collection("BoardTags");
 
-//        itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-////                Toast.makeText(context, boardItem.getName(), Toast.LENGTH_SHORT).show();
-//                Log.d("boardItemClicked","by onclick");
-//            }
-//        });
+        docref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()){
+                        String tag = tagTextView.getText().toString();
+
+                        Log.e(TAG, "view - "+position+" - "+boardItem.getName());
+                        if (document.exists()) {
+                            tag += "#"+document.get("name")+" ";
+                            Log.e(TAG,"must be data of boardTags : "+document.getString("name"));
+                            tagTextView.setText(tag);
+                        }else{
+                            Log.e(TAG, "no doc");
+                        }
+                    }
+                }else{
+                    Log.e(TAG,"query fail");
+                }
+            }
+        });
 
 
         return itemView;
@@ -72,4 +104,9 @@ public class ListViewAdapter extends BaseAdapter {
 
     @Override
     public BoardInfo getItem(int position) { return DataList.get(position) ;}
+
+    public void addItem(BoardInfo item) {
+        DataList.add(item);
+        notifyDataSetChanged();
+    }
 }
