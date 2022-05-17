@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/item_joined"
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:background="#ffffff"
     android:orientation="horizontal">
 
     <View
-        android:id="@+id/divider2"
         android:layout_width="3dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -21,7 +19,6 @@
         android:orientation="vertical">
 
         <View
-            android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:layout_weight="1"
@@ -35,7 +32,6 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/ll_joined_study_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -57,7 +53,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll_joined_tags"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -108,7 +103,6 @@
         </LinearLayout>
 
         <View
-            android:id="@+id/divider3"
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:layout_weight="1"
@@ -117,7 +111,6 @@
     </LinearLayout>
 
     <View
-        android:id="@+id/divider4"
         android:layout_width="3dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

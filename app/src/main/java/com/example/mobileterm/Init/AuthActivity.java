@@ -29,7 +29,7 @@ public class AuthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_auth);
+        setContentView(R.layout.activity_splash);
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
         startLoading();
@@ -49,7 +49,10 @@ public class AuthActivity extends AppCompatActivity {
                             if(document.exists()){
                                 //원래 여기서 바로 메인 액티비티로 넘어가는 코드가 있어야하는데, 로그인 기능 확인할때는 이렇게 LoginSelectionActivity 실행해서 확인 가능
                                 Log.d(TAG,"Should start main");
-                                StartActivity(MainActivity.class);
+                                Bundle data = new Bundle();
+                                data.putString("uid",user.getUid());
+//                                StartActivity(LoginSelectionActivity.class);
+                                StartActivity(MainActivity.class, data);
                             }else{
                                 Log.d(TAG, "should start login");
                                 FirebaseAuth.getInstance().signOut();
@@ -77,13 +80,19 @@ public class AuthActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void StartActivity(Class c, Bundle data){
+        Intent intent = new Intent(this, c);
+        intent.putExtras(data);
+        startActivity(intent);
+    }
+
     private void startLoading(){
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                finish();
+//                finish();
             }
-        }, 5000);
+        }, 1000);
     }
 }

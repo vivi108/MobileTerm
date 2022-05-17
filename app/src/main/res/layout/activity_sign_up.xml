@@ -94,6 +94,14 @@
                     android:hint="전화번호"
                     android:inputType="phone" />
 
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/MemberInfoNickname"
+                    android:ems="10"
+                    android:hint="닉네임 20자 이내"
+                    android:inputType="text"/>
+
                 <Button
                     android:id="@+id/RegisterButton"
                     android:layout_width="match_parent"
