@@ -21,8 +21,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
+
+import java.util.ArrayList;
 
 public class GoogleLoginSetupActivity extends AppCompatActivity {
     private FirebaseFirestore db;
@@ -42,7 +46,7 @@ public class GoogleLoginSetupActivity extends AppCompatActivity {
     String phone;
     String date;
     String nickname;
-
+    ArrayList<String> nicknames;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +56,7 @@ public class GoogleLoginSetupActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+        db = FirebaseFirestore.getInstance();
         Intent intent = getIntent();
         Bundle data = intent.getExtras();
 
@@ -88,13 +93,27 @@ public class GoogleLoginSetupActivity extends AppCompatActivity {
             }
         });
 
+        nicknames = new ArrayList<>();
+        db.collection("Users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document: task.getResult()) {
+                        if (document.exists()) {
+                            nicknames.add((String) document.getData().get("nickname"));
+                        }
+                    }
+                }
+            }
+        });
+
     }
 
     private void dbInsertion(String name, String date, String phone, String email, String nickname, String regDate){
         Log.e("temp",date);
-        if (name.length() > 0 && date.length() == 6 && phone.length() >= 8 && email.contains("@") && nickname.length() < 20){
+        if (name.length() > 0 && date.length() == 6 && phone.length() >= 8 && email.contains("@") && nickname.length() < 20 && !nicknames.contains(nickname)){
             UserInfoClass userInfo = new UserInfoClass(name, date, phone, email, nickname, regDate);
-            db = FirebaseFirestore.getInstance();
+
             db.collection("Users").document(user.getUid()).set(userInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
@@ -136,7 +155,9 @@ public class GoogleLoginSetupActivity extends AppCompatActivity {
         }
         else if(email.contains("@") == false){
             StartToast("이메일 형식을 확인해주세요");
-        }else if (nickname.length() < 20) {
+        }else if (nicknames.contains(nickname)){
+            StartToast("닉네임이 중복되었습니다.");
+        } else if (nickname.length() < 20) {
             StartToast("닉네임 길이를 확인해주세요.");
         }
     }
