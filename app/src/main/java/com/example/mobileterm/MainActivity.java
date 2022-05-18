@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-    //권한 체크 함수
+        //권한 체크 함수
 //        public void checkPermission() {
 //            String[] permissionList = {Manifest.permission.READ_EXTERNAL_STORAGE};
 //
@@ -272,15 +272,15 @@ public class MainActivity extends AppCompatActivity {
     // uri 절대경로 가져오기
     private String getPath(Uri uri) {
 
-        String[] proj=  {MediaStore.Images.Media.DATA};
-        CursorLoader cursorLoader = new CursorLoader(this,uri,proj,null,null,null);
-        Cursor cursor = cursorLoader.loadInBackground();
+            String[] proj=  {MediaStore.Images.Media.DATA};
+            CursorLoader cursorLoader = new CursorLoader(this,uri,proj,null,null,null);
+            Cursor cursor = cursorLoader.loadInBackground();
 
-        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String result = cursor.getString(columnIndex);
-        cursor.close();
-        return result;
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            String result = cursor.getString(columnIndex);
+            cursor.close();
+            return result;
     }
 
     void captureCamera() {
@@ -427,3 +427,4 @@ public class MainActivity extends AppCompatActivity {
 
     public String sendDid(){ return selectedBoardItemDid; }
 }
+
