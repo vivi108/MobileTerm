@@ -1,13 +1,4 @@
 <resources>
-    <string name="app_name">SWU</string>
+    <string name="app_name">Study Application</string>
     <string name="study_name">스터디 1</string>
-    <string name="client_id">107261570322642878695</string>
-    <string name="searchEditText">검색어를 입력하세요 :</string>
-    <string name="filterButton">Filter +</string>
-    <string name="title">Title</string>
-    <string name="content">본문</string>
-    <string name="titleEditText">제목을 입력하세요 :</string>
-    <string name="bodyEditText">내용을 입력하세요 :</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
