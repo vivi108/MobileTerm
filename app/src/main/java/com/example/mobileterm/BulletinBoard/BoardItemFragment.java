@@ -29,6 +29,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Comment;
+import org.w3c.dom.Text;
 
 import java.lang.ref.Reference;
 import java.text.SimpleDateFormat;
@@ -67,8 +68,7 @@ public class BoardItemFragment extends Fragment {
         curUser = mAuth.getCurrentUser();
 
 
-
-
+        TextView timeTextView = rootView.findViewById(R.id.timeTextView);
         TextView nameTextViewBoardItem = rootView.findViewById(R.id.nameTextViewBoardItem);
         TextView contentTextViewBoardItem = rootView.findViewById(R.id.contentTextViewBoardItem);
         titleTextViewBoardItem = rootView.findViewById(R.id.titleTextViewBoardItem);
@@ -167,7 +167,7 @@ public class BoardItemFragment extends Fragment {
 
     private void DBinsertion(String content, String userName) {
         CommentInfo newComment = new CommentInfo(content, userName);
-        commentId = getTime();
+        commentId = getTime()+userName;
         db.collection("BulletinBoard/"+did+"/Comments").document(commentId).set(newComment).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -222,7 +222,7 @@ public class BoardItemFragment extends Fragment {
     }
 
     public void addToLikedItem(String title){
-         db.collection("Users").document(curUser.getUid()).collection("likedBoardItem").document(did).set(new LikedBoardItem(title)).addOnCompleteListener(new OnCompleteListener<Void>() {
+         db.collection("Users").document(curUser.getUid()).collection("likedBoardItem").document(did).set(new LikedBoardItem(title, did)).addOnCompleteListener(new OnCompleteListener<Void>() {
              @Override
              public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
