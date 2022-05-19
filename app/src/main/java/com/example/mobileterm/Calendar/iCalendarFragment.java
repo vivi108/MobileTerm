@@ -96,8 +96,7 @@ public class iCalendarFragment extends Fragment {
                 contextEditText.setVisibility(View.INVISIBLE);
                 isDone.setVisibility(View.INVISIBLE);
 
-
-                System.out.println("클릭날짜 : " + String.valueOf(date.getYear()) + "-" + String.valueOf(date.getMonth() + 1) + "-" + String.valueOf(date.getDay()));
+                //System.out.println("클릭날짜 : " + String.valueOf(date.getYear()) + "-" + String.valueOf(date.getMonth() + 1) + "-" + String.valueOf(date.getDay()));
 
                 //클릭한 날짜의 일정을 txt2에 써놓음
                 db.collection("Schedule")
@@ -112,13 +111,12 @@ public class iCalendarFragment extends Fragment {
                                             if (String.valueOf(document.getData().get("date")).equals(String.valueOf(date.getYear()) + "-" + String.valueOf(date.getMonth() + 1) + "-" + String.valueOf(date.getDay())))
                                             {
                                                 String context = (String) document.getData().get("context"); //그 일정을 가져오겠다
-                                                System.out.println("가져온 일정은" + (String) document.getData().get("context"));
+                                                //System.out.println("가져온 일정은" + (String) document.getData().get("context"));
                                                 textView2.setText(context+"됨"); //그 일정을 txt2에 넣겠다
-                                                System.out.println("This " + String.valueOf(document.getData().get("date"))+" !! "+context);
+                                                //System.out.println("This " + String.valueOf(document.getData().get("date"))+" !! "+context);
                                                 //String isDone =  (String) document.getData().get("isDone");
                                             }
-                                            //else {textView2.setText("해당일정없음");}
-
+                                             //else {textView2.setText("해당일정없음");}
                                         }
                                     }
                                 }
