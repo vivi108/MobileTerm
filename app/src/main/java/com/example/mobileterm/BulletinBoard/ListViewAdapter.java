@@ -40,7 +40,7 @@ public class ListViewAdapter extends BaseAdapter {
         inflater = LayoutInflater.from(mContext);
         this.DataList = new ArrayList<BoardInfo>();
         this.DataList.addAll(dataList);
-        Log.e(TAG, "ListViewAdapter : "+DataList.size());
+        Log.d(TAG, "ListViewAdapter : "+DataList.size());
     }
 
 
@@ -65,7 +65,7 @@ public class ListViewAdapter extends BaseAdapter {
         nameTextView.setText(boardItem.getName().toString());
         tagTextView.setText("");
         did = boardItem.getDid();
-        Log.e(TAG,did);
+        Log.d(TAG,did);
         db = FirebaseFirestore.getInstance();
 
         CollectionReference docref = db.document("BulletinBoard/"+did).collection("BoardTags");
@@ -77,17 +77,17 @@ public class ListViewAdapter extends BaseAdapter {
                     for (DocumentSnapshot document : task.getResult()){
                         String tag = tagTextView.getText().toString();
 
-                        Log.e(TAG, "view - "+position+" - "+boardItem.getName());
+                        Log.d(TAG, "view - "+position+" - "+boardItem.getName());
                         if (document.exists()) {
                             tag += "#"+document.get("name")+" ";
-                            Log.e(TAG,"must be data of boardTags : "+document.getString("name"));
+                            Log.d(TAG,"must be data of boardTags : "+document.getString("name"));
                             tagTextView.setText(tag);
                         }else{
-                            Log.e(TAG, "no doc");
+                            Log.d(TAG, "no doc");
                         }
                     }
                 }else{
-                    Log.e(TAG,"query fail");
+                    Log.d(TAG,"query fail");
                 }
             }
         });

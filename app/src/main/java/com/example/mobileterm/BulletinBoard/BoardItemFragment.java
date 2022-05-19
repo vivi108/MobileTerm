@@ -51,6 +51,9 @@ public class BoardItemFragment extends Fragment {
     long mnow;
     Date mDate;
     String commentId;
+    EditText commentEditText;
+    TextView titleTextViewBoardItem;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
@@ -60,14 +63,22 @@ public class BoardItemFragment extends Fragment {
         did = mainActivity.sendDid();
         commentListView = rootView.findViewById(R.id.commentView);
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        curUser = mAuth.getCurrentUser();
 
 
 
 
         TextView nameTextViewBoardItem = rootView.findViewById(R.id.nameTextViewBoardItem);
         TextView contentTextViewBoardItem = rootView.findViewById(R.id.contentTextViewBoardItem);
-        TextView titleTextViewBoardItem = rootView.findViewById(R.id.titleTextViewBoardItem);
+        titleTextViewBoardItem = rootView.findViewById(R.id.titleTextViewBoardItem);
         TextView tagTextViewBoardItem = rootView.findViewById(R.id.tagTextViewBoardItem);
+        Button likeButton = rootView.findViewById(R.id.likeButton);
+        commentEditText = rootView.findViewById(R.id.commentEditText);
+        ImageButton addCommentButtonBoardItem = rootView.findViewById(R.id.addCommentButtonBoardItem);
+
+        likeButton.setOnClickListener(onClickListener);
+        addCommentButtonBoardItem.setOnClickListener(onClickListener);
 
 
         nameTextViewBoardItem.setText(selectedBoardItem.getName());
@@ -118,41 +129,38 @@ public class BoardItemFragment extends Fragment {
             }
         });
 
-        EditText commentEditText = rootView.findViewById(R.id.commentEditText);
-        ImageButton addCommentButtonBoardItem = rootView.findViewById(R.id.addCommentButtonBoardItem);
-        addCommentButtonBoardItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mAuth = FirebaseAuth.getInstance();
-                curUser = mAuth.getCurrentUser();
-                DocumentReference docref = db.collection("Users").document(curUser.getUid());
-                Log.e(TAG, "curUser : "+curUser.getUid());
-                docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot documentSnapshot = task.getResult();
-                            if (documentSnapshot.exists()) {
-                                userName = (String) documentSnapshot.getData().get("nickname");
-                            }else{
-                                userName = "unidentified user";
-                            }
-                            CommentInfo newComment = new CommentInfo(commentEditText.getText().toString(), userName);
-//                            arrayList.add(newComment);
-//                            commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList);
-//                            commentListView.setAdapter(commentListViewAdapter);
-                            commentListViewAdapter.addComment(newComment);
-                            DBinsertion(commentEditText.getText().toString(), userName);
-//                            commentListView.
-                        }
-                    }
-                });
 
-
-
-
-            }
-        });
+//        addCommentButtonBoardItem.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                DocumentReference docref = db.collection("Users").document(curUser.getUid());
+//                Log.e(TAG, "curUser : "+curUser.getUid());
+//                docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            DocumentSnapshot documentSnapshot = task.getResult();
+//                            if (documentSnapshot.exists()) {
+//                                userName = (String) documentSnapshot.getData().get("nickname");
+//                            }else{
+//                                userName = "unidentified user";
+//                            }
+//                            CommentInfo newComment = new CommentInfo(commentEditText.getText().toString(), userName);
+////                            arrayList.add(newComment);
+////                            commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList);
+////                            commentListView.setAdapter(commentListViewAdapter);
+//                            commentListViewAdapter.addComment(newComment);
+//                            DBinsertion(commentEditText.getText().toString(), userName);
+////                            commentListView.
+//                        }
+//                    }
+//                });
+//
+//
+//
+//
+//            }
+//        });
 
         return rootView;
     }
@@ -169,15 +177,59 @@ public class BoardItemFragment extends Fragment {
             }
         });
 
-//        db.collection("BulletinBoard/"+did+"/Comments").add(newComment).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentReference> task) {
-//                if (task.isSuccessful()) {
-//                    Log.e(TAG, "댓글 등록 성공");
-//                }
-//            }
-//        });
+    }
 
+    View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.addCommentButtonBoardItem:
+                    addComment();
+                    break;
+                case R.id.likeButton:
+                    String title = titleTextViewBoardItem.getText().toString();
+                    addToLikedItem(title);
+                    break;
+
+            }
+        }
+    };
+
+    private void addComment(){
+        DocumentReference docref = db.collection("Users").document(curUser.getUid());
+        Log.e(TAG, "curUser : "+curUser.getUid());
+        docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    if (documentSnapshot.exists()) {
+                        userName = (String) documentSnapshot.getData().get("nickname");
+                    }else{
+                        userName = "unidentified user";
+                    }
+                    CommentInfo newComment = new CommentInfo(commentEditText.getText().toString(), userName);
+//                            arrayList.add(newComment);
+//                            commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList);
+//                            commentListView.setAdapter(commentListViewAdapter);
+                    commentListViewAdapter.addComment(newComment);
+                    DBinsertion(commentEditText.getText().toString(), userName);
+//                            commentListView.
+                }
+            }
+        });
+
+    }
+
+    public void addToLikedItem(String title){
+         db.collection("Users").document(curUser.getUid()).collection("likedBoardItem").document(did).set(new LikedBoardItem(title)).addOnCompleteListener(new OnCompleteListener<Void>() {
+             @Override
+             public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "successfully added");
+                }
+             }
+         });
     }
 
     private String getTime() {
