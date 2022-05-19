@@ -61,20 +61,20 @@
     //선택 날짜 일정 수정하는 칸
     <EditText
         android:id="@+id/contextEditText"
-        android:layout_width="0dp"
-        android:layout_height="116dp"
+        android:layout_width="237dp"
+        android:layout_height="112dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:ems="10"
-        android:hint="내용을 입력하세요.iiiiiiii"
+        android:hint="indiv 일정"
         android:inputType="textMultiLine"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/diaryTextView" />
+
 
     //일정 추가된 날짜 클릭 시 어떤 일정있나 보여주는 칸
     <TextView
@@ -86,10 +86,22 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:visibility="invisible"
+        android:textSize="12pt"
         app:layout_constraintBottom_toBottomOf="@+id/contextEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/contextEditText"
         app:layout_constraintTop_toTopOf="@+id/contextEditText" />
+
+    <CheckBox
+        android:id="@+id/isDone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="isDone"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@+id/contextEditText"
+        app:layout_constraintTop_toTopOf="@+id/contextEditText"
+        android:visibility="invisible"
+        />
 
 
     //수정 후 저장 버튼
@@ -110,16 +122,16 @@
         app:layout_constraintTop_toBottomOf="@+id/contextEditText" />
 
 
-    //있는 일정에서 수정버튼
+    //일정 추가 버튼
     <Button
-        android:id="@+id/cha_Btn"
+        android:id="@+id/add_Btn"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:text="수정"
+        android:text="추가"
         android:visibility="invisible"
         app:layout_constraintBaseline_toBaselineOf="@+id/save_Btn"
         app:layout_constraintEnd_toStartOf="@+id/del_Btn"
@@ -134,7 +146,7 @@
         android:layout_marginRight="8dp"
         android:text="삭제"
         android:visibility="invisible"
-        app:layout_constraintBaseline_toBaselineOf="@+id/cha_Btn"
+        app:layout_constraintBaseline_toBaselineOf="@+id/add_Btn"
         app:layout_constraintEnd_toEndOf="@+id/save_Btn"/>
 
 
