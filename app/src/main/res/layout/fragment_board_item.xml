@@ -22,12 +22,20 @@
                     android:scaleType="fitXY"
                     android:background="@drawable/anonymous_icon"/>
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/nameTextViewBoardItem"
                     android:text="name"
                     android:textSize="18dp"
                     android:layout_marginLeft="10dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/timeTextView"
+                    android:text="test"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="18dp"/>
 
 
             </LinearLayout>
@@ -56,13 +64,29 @@
                 android:layout_marginTop="5dp"
                 android:textSize="18dp"/>
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="댓글"
-                android:textSize="20dp"/>
+                android:orientation="horizontal"
 
+                android:layout_marginTop="10dp">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="댓글"
+                    android:textSize="20dp"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="좋아요"
+                    android:id="@+id/likeButton"
+                    android:layout_marginLeft="20dp"/>
+
+
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
