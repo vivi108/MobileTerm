@@ -70,6 +70,7 @@ public class MyHomeFragment extends Fragment {
         //Firebase 로그인한 사용자 정보
         mAuth = FirebaseAuth.getInstance();
        user = FirebaseAuth.getInstance().getCurrentUser();
+
         if (user != null) {
             String name = user.getDisplayName();
             String email = user.getEmail();
