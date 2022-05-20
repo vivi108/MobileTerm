@@ -58,12 +58,20 @@ public class ListViewAdapter extends BaseAdapter {
         TextView contentTextView = itemView.findViewById(R.id.contentTextView);
         TextView nameTextView = itemView.findViewById(R.id.nameTextView);
         TextView tagTextView = itemView.findViewById(R.id.tagTextView);
+        TextView writtenTimeTextView = itemView.findViewById(R.id.writtenTimeTextView);
+        TextView likedCountView = itemView.findViewById(R.id.likedCountView);
+
+
+
 
         titleTextView.setText(boardItem.getTitle().toString());
         String contentPreview = boardItem.getContent().toString()+"...";
         contentTextView.setText(contentPreview);
         nameTextView.setText(boardItem.getName().toString());
         tagTextView.setText("");
+        writtenTimeTextView.setText(boardItem.getWrittenTime());
+        String tempLike = Long.toString(boardItem.getLikeCount());
+        likedCountView.setText(tempLike);
         did = boardItem.getDid();
         Log.d(TAG,did);
         db = FirebaseFirestore.getInstance();
