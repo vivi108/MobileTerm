@@ -25,12 +25,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 //해결해야하는 문제
@@ -46,21 +51,21 @@ public class ProfileSettingFragment extends Fragment {
 //    Uri imageUri;
 //    Uri photoURI, albumURI;
 
-    FirebaseUser user ;
+    FirebaseUser user;
     ImageView profile;
     ImageView camera_menu;
-    EditText nickname;
+    TextView nickname;
     PopupMenu pop;
     TextView ok;
 
     // Id of the provider (ex: google.com)
-    String providerId ;
+    String providerId;
     // UID specific to the provider
-    String uid ;
+    String uid;
     // Name, email address, and profile photo Url
-    String name ;
+    String name;
     String email;
-    Uri photoUrl ;
+    Uri photoUrl;
 
     @Nullable
     @Override
@@ -68,87 +73,74 @@ public class ProfileSettingFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_profile_setting, container, false);
         profile = (ImageView) rootView.findViewById(R.id.profile_setting_iv);
         camera_menu = (ImageView) rootView.findViewById(R.id.profile_setting_camera_iv);
-        nickname = (EditText) rootView.findViewById(R.id.profile_setting_name_tv);
+        nickname = (TextView) rootView.findViewById(R.id.profile_setting_name_tv);
         ok = (TextView) rootView.findViewById(R.id.profile_setting_OK_tv);
 
         // 유저의 닉네임을 서버에서 불러와서 보여주기
         // 유저 닉네임 변경하면 setText 후 서버에 저장하기.
         user = FirebaseAuth.getInstance().getCurrentUser();
-        //Gmail로 로그인했을때도 되는건지 확인해야함.
-//        if (user != null) {
-//            for (UserInfo profile : user.getProviderData()) {
-//                // Id of the provider (ex: google.com)
-//                providerId = profile.getProviderId();
-//
-//                // UID specific to the provider
-//                uid = profile.getUid();
-//
-//                // Name, email address, and profile photo Url
-//                name = profile.getDisplayName();
-//                email = profile.getEmail();
-//                photoUrl = profile.getPhotoUrl();
-//
-//
-//            }
-            if (user != null) {
-                // Name, email address, and profile photo Url
-                name = user.getDisplayName();
-                email = user.getEmail();
-                photoUrl = user.getPhotoUrl();
 
-                // Check if user's email is verified
-                boolean emailVerified = user.isEmailVerified();
+        Getname(user);
 
-                // The user's ID, unique to the Firebase project. Do NOT use this value to
-                // authenticate with your backend server, if you have one. Use
-                // FirebaseUser.getIdToken() instead.
-                uid = user.getUid();
-            }
+        if (user != null) {
+            // Name, email address, and profile photo Url
+            name = user.getDisplayName();
+            email = user.getEmail();
+            photoUrl = user.getPhotoUrl();
 
-            loadImage(uid);
-            setHasOptionsMenu(true); //프래그먼트에서 메뉴사용
-            camera_menu.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    pop = new PopupMenu(rootView.getContext(), view);
-                    pop.getMenuInflater().inflate(R.menu.profile_popup_menu, pop.getMenu());
+            // Check if user's email is verified
+            boolean emailVerified = user.isEmailVerified();
 
-                    pop.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem menuItem) {
-                            switch (menuItem.getItemId()) {
-                                case R.id.profile_menu_camera:
-                                    ((MainActivity) getActivity()).captureCamera(); // 카메라 구동함수 추후처리
-                                    break;
-                                case R.id.profile_menu_gallery:
-                                    ((MainActivity) getActivity()).getAlbum();
-                                    break;
-                                case R.id.profile_menu_basic:// 기본이미지 설정
-                                    profile.setImageResource(R.drawable.ic_profile_person);
-                            }
-                            return true;
+            // The user's ID, unique to the Firebase project. Do NOT use this value to
+            // authenticate with your backend server, if you have one. Use
+            // FirebaseUser.getIdToken() instead.
+            uid = user.getUid();
+        }
+
+        loadImage(uid);
+        setHasOptionsMenu(true); //프래그먼트에서 메뉴사용
+        camera_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pop = new PopupMenu(rootView.getContext(), view);
+                pop.getMenuInflater().inflate(R.menu.profile_popup_menu, pop.getMenu());
+
+                pop.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.profile_menu_camera:
+                                ((MainActivity) getActivity()).captureCamera(); // 카메라 구동함수 추후처리
+                                break;
+                            case R.id.profile_menu_gallery:
+                                ((MainActivity) getActivity()).getAlbum();
+                                break;
+                            case R.id.profile_menu_basic:// 기본이미지 설정
+                                profile.setImageResource(R.drawable.ic_profile_person);
                         }
-                    });
-                    pop.show();
-                    //checkPermission();
-                }
-            });
+                        return true;
+                    }
+                });
+                pop.show();
+                //checkPermission();
+            }
+        });
 
-            ok.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //완료버튼을 누르면
-                    //변경된 이미지 서버에 저장 후, 보여주기
-                    //변경된 이름 서버에 저장 후 보여주기.
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //완료버튼을 누르면
+                //변경된 이미지 서버에 저장 후, 보여주기
+                //변경된 이름 서버에 저장 후 보여주기.
 //                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
 //                            .setDisplayName("Jane Q. User")
 //                            .setPhotoUri(Uri.parse("https://example.com/jane-q-user/profile.jpg"))
 //                            .build();
-                }
-            });
+            }
+        });
 
-            return rootView;
-        }
+        return rootView;
+    }
 
 
     private void loadbasicImage() {
@@ -177,13 +169,14 @@ public class ProfileSettingFragment extends Fragment {
             });
         }
     }
-    private void loadImage(String uid){
+
+    private void loadImage(String uid) {
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://mptermproject-75489.appspot.com"); //firebase storate 경로
         StorageReference storageRef = storage.getReference();
 
         //파일 명 만들기
-        String filename = "profile" +uid +".jpg"; //ex) profile1.jpg 로그인 하는 사람의 식별값에 맞는 사진 가져오기
-        if(storageRef.child("profile_image/"+filename)!=null) {
+        String filename = "profile" + uid + ".jpg"; //ex) profile1.jpg 로그인 하는 사람의 식별값에 맞는 사진 가져오기
+        if (storageRef.child("profile_image/" + filename) != null) {
             storageRef.child("profile_image/" + filename).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
@@ -203,6 +196,25 @@ public class ProfileSettingFragment extends Fragment {
                 }
             });
         }
+    }
+
+    public void Getname(FirebaseUser firebaseUser) {
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+        DocumentReference documentReference = fb.collection("Users").document(firebaseUser.getUid());
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null) {
+                        if (document.exists()) {
+                            String a = (String) document.getData().get("nickname");
+                            nickname.setText(a);
+                        }
+                    }
+                }
+            }
+        });
     }
 }
 

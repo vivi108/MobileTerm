@@ -123,6 +123,14 @@
 
     <!--    </ScrollView>-->
 
-
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/my_home_bar_chart"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_margin="10dp"
+        app:layout_constraintTop_toBottomOf="@id/my_home_listview"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.471"
+        app:layout_constraintHorizontal_bias="0.495"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
