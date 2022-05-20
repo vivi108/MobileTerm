@@ -15,13 +15,19 @@ import com.example.mobileterm.MainActivity;
 import com.example.mobileterm.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
+
+import java.util.ArrayList;
 
 public class SignUpActivity extends AppCompatActivity {
     // 회원가입하는 액티비티, 회원가입이 완료 되면 메인 액티비티가 실행된다
@@ -38,6 +44,7 @@ public class SignUpActivity extends AppCompatActivity {
     EditText memberInfoPhone;
     EditText memberInfoNickname;
     private static final String TAG = "SignUpActivity";
+    ArrayList<String> nicknames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +64,22 @@ public class SignUpActivity extends AppCompatActivity {
         memberInfoNickname = findViewById(R.id.MemberInfoNickname);
 
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         findViewById(R.id.RegisterButton).setOnClickListener(onClickListener);
+
+        nicknames = new ArrayList<>();
+        db.collection("Users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+                        if (document.exists())
+                            nicknames.add((String) document.getData().get("nickname"));
+                    }
+                    Log.d(TAG,"got all nicknames");
+                }
+            }
+        });
     }
 
     public void onStart(){
@@ -81,7 +103,10 @@ public class SignUpActivity extends AppCompatActivity {
         String date = memberInfoDate.getText().toString();
         String phone = memberInfoPhone.getText().toString();
         String nickname = memberInfoNickname.getText().toString();
-        if (email.length() > 0 && password.length() > 0 ){
+
+
+
+        if (email.length() > 0 && password.length() > 0 && !nicknames.contains(nickname)){
             if (password.equals(passwordCheck)){
                 Log.d(TAG, "Password check");
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -102,12 +127,13 @@ public class SignUpActivity extends AppCompatActivity {
         }else{
             CheckSignUpCondition(email, password, passwordCheck);
         }
+
     }
 
     private void dbInsertion(String name, String date, String phone, String email, String nickname, String regDate){
         if (name.length() > 0 && date.length() >= 6 && phone.length() >= 8 && email.contains("@") && nickname.length() < 20){
             UserInfoClass userInfo = new UserInfoClass(name, date, phone, email, nickname, regDate);
-            db = FirebaseFirestore.getInstance();
+
             db.collection("Users").document(user.getUid()).set(userInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
@@ -150,7 +176,9 @@ public class SignUpActivity extends AppCompatActivity {
         }
         else if(email.contains("@") == false){
             StartToast("이메일 형식을 확인해주세요");
-        }else if (nickname.length() < 20) {
+        }else if (nicknames.contains(nickname)){
+            StartToast("닉네임이 중복되었습니다.");
+        } else if (nickname.length() < 20) {
             StartToast("닉네임 길이를 확인해주세요.");
         }
     }
@@ -179,7 +207,7 @@ public class SignUpActivity extends AppCompatActivity {
     };
 
     private void StartToast(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 
 

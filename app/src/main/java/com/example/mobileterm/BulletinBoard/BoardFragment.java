@@ -65,9 +65,11 @@ public class BoardFragment extends Fragment {
                             String title = (String) document.getData().get("title");
                             String content = (String) document.getData().get("content");
                             String name = (String) document.getData().get("name");
+                            String writtenTime = (String) document.getData().get("writtenTime");
+                            Long likedCount = (Long) document.getData().get("likedCount");
                             Log.e(TAG, did+"title : "+title);
-                            BoardInfo data = new BoardInfo(title, content, name, did);
-                            newArrayList.add(data);
+                            BoardInfo data = new BoardInfo(title, content, name, did, writtenTime, likedCount);
+                            newArrayList.add(0,data);
                         }
                     }
 

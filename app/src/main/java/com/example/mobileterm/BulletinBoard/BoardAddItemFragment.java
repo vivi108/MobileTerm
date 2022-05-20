@@ -24,7 +24,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Locale;
 
 public class BoardAddItemFragment extends Fragment {
@@ -45,8 +47,10 @@ public class BoardAddItemFragment extends Fragment {
     String tags;
     String[] tagIter;
     String TAG = "BoardAddItem";
-    BoardInfo newBoardItem;
-
+    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    long mnow;
+    Date mDate;
+    String boardId;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -83,37 +87,62 @@ public class BoardAddItemFragment extends Fragment {
 
 
                             BulletinBoardCollection newItem = new BulletinBoardCollection(content, nickname, "default",title);
-                            db.collection("BulletinBoard").add(newItem).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            boardId = getTime()+" "+nickname;
+                            db.collection("BulletinBoard").document(boardId).set(newItem).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
-                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        DocumentReference document = task.getResult();
-                                        Log.e(TAG, "did:"+document.getId());
-                                        did = document.getId();
-//                                        newBoardItem = new BoardInfo(title, content, nickname, did);
                                         WriteBatch batch = db.batch();
                                         for (String tag: tagIter) {
-                                            DocumentReference tempref = db.collection("BulletinBoard").document(did).collection("BoardTags").document(tag);
+                                            DocumentReference tempref = db.collection("BulletinBoard").document(boardId).collection("BoardTags").document(tag);
                                             BoardTags newTag = new BoardTags(tag);
                                             batch.set(tempref, newTag);
                                         }
-
                                         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
-                                                    Log.e(TAG,"tag add success");
+                                                    Log.e(TAG, "tag add sucess");
                                                     fragmentChange();
                                                 }
                                             }
                                         });
 
-
-
-
                                     }
                                 }
                             });
+
+//                            db.collection("BulletinBoard").add(newItem).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<DocumentReference> task) {
+//                                    if (task.isSuccessful()) {
+//                                        DocumentReference document = task.getResult();
+//                                        Log.e(TAG, "did:"+document.getId());
+//                                        did = document.getId();
+////                                        newBoardItem = new BoardInfo(title, content, nickname, did);
+//                                        WriteBatch batch = db.batch();
+//                                        for (String tag: tagIter) {
+//                                            DocumentReference tempref = db.collection("BulletinBoard").document(did).collection("BoardTags").document(tag);
+//                                            BoardTags newTag = new BoardTags(tag);
+//                                            batch.set(tempref, newTag);
+//                                        }
+//
+//                                        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                            @Override
+//                                            public void onComplete(@NonNull Task<Void> task) {
+//                                                if (task.isSuccessful()) {
+//                                                    Log.e(TAG,"tag add success");
+//                                                    fragmentChange();
+//                                                }
+//                                            }
+//                                        });
+//
+//
+//
+//
+//                                    }
+//                                }
+//                            });
                         }
                     }
                 });
@@ -128,5 +157,11 @@ public class BoardAddItemFragment extends Fragment {
         BoardFragment boardFragment = new BoardFragment();
 //        boardFragment.addNewItem(newBoardItem);
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardFragment).addToBackStack(null).commit();
+    }
+
+    private String getTime() {
+        mnow = System.currentTimeMillis();
+        mDate = new Date(mnow);
+        return mFormat.format(mDate);
     }
 }

@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+
 import androidx.loader.content.CursorLoader;
+
 
 
 import android.Manifest;
@@ -25,6 +27,7 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.util.Log;
 
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -38,6 +41,8 @@ import com.example.mobileterm.BulletinBoard.BoardItemFragment;
 import com.example.mobileterm.Calendar.CalendarFragment;
 import com.example.mobileterm.Calendar.gCalendarFragment;
 import com.example.mobileterm.Calendar.iCalendarFragment;
+import com.example.mobileterm.Init.LoginActivity;
+import com.example.mobileterm.Init.LoginSelectionActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -77,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
     Uri imageUri;
     Uri photoURI, albumURI;
 
+
     private String pathUri;
     private File tempFile;
 
@@ -87,13 +93,15 @@ public class MainActivity extends AppCompatActivity {
 
     private String selectedBoardItemDid;
     private String uid;
-    //유저 프로필 pram
     private String name;
+    private String email;
+
+    //유저 프로필 pram
     private String nickname;
     private Uri photoUrl;
-    private String email;
     private String phone;
     private int token;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         uid = data.getString("uid");
         name = data.getString("name");
         email = data.getString("email");
-        Log.d(TAG,"main : "+name+", "+email+", "+uid);
+        Log.d(TAG, "main : " + name + ", " + email + ", " + uid);
 
 
 //        Bundle putdata = new Bundle();
@@ -117,6 +125,35 @@ public class MainActivity extends AppCompatActivity {
         initiate_fragment();
         initiate_nav_menu();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.actionbar_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.LogoutMenu:
+                FirebaseAuth.getInstance().signOut();
+                StartActivity(LoginSelectionActivity.class);
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void StartActivity(Class c) {
+        Intent intent = new Intent(this, c);
+        // 동일한 창이 여러번 뜨게 만드는 것이 아니라 기존에 켜져있던 창을 앞으로 끌어와주는 기능.
+        // 이 플래그를 추가하지 않을 경우 창들이 중복돼서 계속 팝업되게 된다.
+        // 메인화면을 띄우는 모든 코드에서 이 플래그를 추가해줘야 하는 것 같다.
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     private void initiate_fragment() {
@@ -179,12 +216,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         ImageView profile_iv = findViewById(R.id.profile_setting_iv);
         ImageView myhome_profile_iv = findViewById(R.id.my_home_profile_iv);
-        if(resultCode!= RESULT_OK) return;
+        if (resultCode != RESULT_OK) return;
         switch (requestCode) {
             case REQUEST_TAKE_ALBUM: { // 앨범에서 사진골라오면, 스토리지에 저장 & 프로필 사진 변경
                 // Uri
@@ -202,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
 
                 break;
             }
-            case REQUEST_TAKE_PHOTO:{ // 카메라로 사진찍으면 로컬에 저장 & 스토리지에 저장 & 프로필 사진 변경
+            case REQUEST_TAKE_PHOTO: { // 카메라로 사진찍으면 로컬에 저장 & 스토리지에 저장 & 프로필 사진 변경
                 Log.v("알림", "FROM_CAMERA 처리");
                 galleryAddPic();
                 clickUpload(uid);
@@ -221,7 +259,8 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-        //권한 체크 함수
+
+    //권한 체크 함수
 //        public void checkPermission() {
 //            String[] permissionList = {Manifest.permission.READ_EXTERNAL_STORAGE};
 //
@@ -242,15 +281,15 @@ public class MainActivity extends AppCompatActivity {
     // uri 절대경로 가져오기
     private String getPath(Uri uri) {
 
-            String[] proj=  {MediaStore.Images.Media.DATA};
-            CursorLoader cursorLoader = new CursorLoader(this,uri,proj,null,null,null);
-            Cursor cursor = cursorLoader.loadInBackground();
+        String[] proj = {MediaStore.Images.Media.DATA};
+        CursorLoader cursorLoader = new CursorLoader(this, uri, proj, null, null, null);
+        Cursor cursor = cursorLoader.loadInBackground();
 
-            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            String result = cursor.getString(columnIndex);
-            cursor.close();
-            return result;
+        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String result = cursor.getString(columnIndex);
+        cursor.close();
+        return result;
     }
 
     void captureCamera() {
@@ -337,19 +376,19 @@ public class MainActivity extends AppCompatActivity {
     public void clickUpload(String uid) {
         //firebase storage에 업로드하기
         //1. FirebaseStorage을 관리하는 객체 얻어오기
-        FirebaseStorage firebaseStorage= FirebaseStorage.getInstance();
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
 
         //2. 업로드할 파일의 node를 참조하는 객체
-        String filename= "profile"+uid+ ".jpg";//profile1.jpg 형태로 저장
+        String filename = "profile" + uid + ".jpg";//profile1.jpg 형태로 저장
         //원래 확장자는 파일의 실제 확장자를 얻어와서 사용해야함. 그러려면 이미지의 절대 주소를 구해야함.
 
-        StorageReference imgRef= firebaseStorage.getReference("profile_image/"+filename);
+        StorageReference imgRef = firebaseStorage.getReference("profile_image/" + filename);
         //uploads라는 폴더가 없으면 자동 생성
 
         //참조 객체를 통해 이미지 파일 업로드
         // imgRef.putFile(imgUri);
         //업로드 결과를 받고 싶다면..
-        UploadTask uploadTask =imgRef.putFile(imageUri);
+        UploadTask uploadTask = imgRef.putFile(imageUri);
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -358,7 +397,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
 
 
     public void onFragmentChanged(int index) {
@@ -393,7 +431,10 @@ public class MainActivity extends AppCompatActivity {
     public BoardInfo sendBoardItem() {
         return selectedBoardItem;
     }
-    public String sendDid(){ return selectedBoardItemDid; }
-}
 
+    public String sendDid() {
+        return selectedBoardItemDid;
+    }
+
+}
 

@@ -59,15 +59,16 @@ public class CommentListViewAdapter extends BaseAdapter {
 
         TextView commentContentTextView = itemView.findViewById(R.id.commentContentTextView);
         TextView commentNameTextView = itemView.findViewById(R.id.commentNameTextView);
-
+        TextView commentWrittenTimeView = itemView.findViewById(R.id.commentWrittenTimeView);
         commentContentTextView.setText(commentItem.getContent());
         commentNameTextView.setText(commentItem.getName());
+        commentWrittenTimeView.setText(commentItem.getWrittenTime());
 
         return itemView;
     }
 
     public void addComment(CommentInfo newComment){
-        dataList.add(newComment);
+        dataList.add(0,newComment);
         notifyDataSetChanged();
     }
 }
