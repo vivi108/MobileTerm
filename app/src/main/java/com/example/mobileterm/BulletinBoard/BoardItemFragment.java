@@ -98,7 +98,7 @@ public class BoardItemFragment extends Fragment {
                             String content = (String) document.getData().get("content");
 
                             CommentInfo data = new CommentInfo(content, name);
-                            newArrayList.add(data);
+                            newArrayList.add(0,data);
                         }
                     }
                     if (!newArrayList.equals(arrayList)) {

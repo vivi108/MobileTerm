@@ -69,7 +69,7 @@ public class BoardFragment extends Fragment {
                             Long likedCount = (Long) document.getData().get("likedCount");
                             Log.e(TAG, did+"title : "+title);
                             BoardInfo data = new BoardInfo(title, content, name, did, writtenTime, likedCount);
-                            newArrayList.add(data);
+                            newArrayList.add(0,data);
                         }
                     }
 
