@@ -58,8 +58,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="완료"
+        android:layout_margin="10dp"
         android:textSize="40sp"
-        android:background="#DF5637"
+        android:background="#CCCCBB"
         android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

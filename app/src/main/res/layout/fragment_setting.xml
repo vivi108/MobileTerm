@@ -38,101 +38,143 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="10dp"
-                android:background="#98DAFF"
+                android:background="@drawable/setting_menu"
                 android:orientation="horizontal"
                 android:padding="5dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/setting_info_tv">
-
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
-                    android:text="이메일"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/setting_info_email_tv"
-                    android:layout_width="180dp"
-                    android:layout_height="wrap_content"
-                    android:text="####gachon.ac.kr"
-                    android:textColor="#BFBFBF"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/setting_info_email_change_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="변경"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/setting_info_phone_ll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:background="#98DAFF"
-                android:orientation="horizontal"
-                android:padding="5dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/setting_info_email_ll">
-
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:text="휴대폰"
+                    android:text="사용중인 휴대폰"
                     android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/setting_info_phone_tv"
-                    android:layout_width="180dp"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:text="010-0000-0000"
                     android:textColor="#BFBFBF"
                     android:textSize="20sp" />
 
-                <TextView
-                    android:id="@+id/setting_info_phone_change_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="변경"
-                    android:textSize="20sp" />
-            </LinearLayout>
 
+<!--                <TextView-->
+<!--                    android:id="@+id/setting_info_email_change_tv"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="변경"-->
+<!--                    android:textSize="20sp" />-->
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/setting_auth_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/setting_info_email_ll"
+                app:layout_constraintStart_toStartOf="parent"
+                android:orientation="vertical"
+                android:background="@drawable/setting_menu"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp">
+            <LinearLayout
+                android:id="@+id/setting_info_phone_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:background="@drawable/setting_menu"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/setting_info_email_ll">
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:text="사용중인 이메일"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/setting_info_email_tv"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:text="####gachon.ac.kr"
+                    android:textColor="#BFBFBF"
+                    android:textSize="20sp" />
+
+
+
+            </LinearLayout>
+            <View
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#BFBFBF"/>
             <LinearLayout
                 android:id="@+id/setting_info_authenticate_ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
+
                 android:layout_marginEnd="10dp"
-                android:background="#98DAFF"
                 android:orientation="horizontal"
                 android:padding="5dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/setting_info_phone_ll">
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="110dp"
                     android:layout_height="wrap_content"
-                    android:text="본인인증"
+                    android:text=">  본인인증"
                     android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/setting_info_authenticate_tv"
-                    android:layout_width="180dp"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="2021.03.02"
                     android:textColor="#BFBFBF"
                     android:textSize="20sp" />
-
                 <TextView
                     android:id="@+id/setting_info_authenticate_change_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="확인"
+                    android:text="인증"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/setting_info_region_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/setting_menu"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/setting_auth_phone">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="동네인증"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/setting_info_region_tv"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:text="성남대로 1342"
+                    android:textColor="#BFBFBF"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/setting_info_region_change_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="인증"
                     android:textSize="20sp" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -171,7 +213,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
-                    android:background="#98DAFF"
+                    android:background="@drawable/setting_menu"
                     android:orientation="horizontal"
                     android:padding="5dp">
 
@@ -195,7 +237,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
-                    android:background="#98DAFF"
+                    android:background="@drawable/setting_menu"
                     android:orientation="horizontal"
                     android:padding="5dp">
 
@@ -219,7 +261,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
-                    android:background="#98DAFF"
+                    android:background="@drawable/setting_menu"
                     android:orientation="horizontal"
                     android:padding="5dp">
 

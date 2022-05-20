@@ -52,7 +52,7 @@ public class MyHomeFragment extends Fragment {
     Uri imageUri;
     ImageView setting;
     ImageView profile;
-    TextView name;
+    TextView name, beforetodo,aftertodo,token;
     ListView listview;
     String[] data ={"관심스터디","관심게시글"};
     String uid;
@@ -79,10 +79,13 @@ public class MyHomeFragment extends Fragment {
         listview = (ListView) rootView.findViewById(R.id.my_home_listview);
         profile = (ImageView) rootView.findViewById(R.id.my_home_profile_iv);
         name = (TextView) rootView.findViewById(R.id.my_home_profile_name_tv);
+        beforetodo = (TextView) rootView.findViewById(R.id.my_home_make_todo_tv);
+        aftertodo = (TextView) rootView.findViewById(R.id.my_home_todo_tv);
+        token = (TextView) rootView.findViewById(R.id.my_home_profile_token_num_tv);
         barChart = (BarChart)rootView.findViewById(R.id.my_home_bar_chart);
 
         graphInitSetting(); //그래프 기본 세팅
-
+        todo_tv(); // 오늘 할일 N개 남았어요 - 여기를 눌러서 오늘의 할일을 지정해주세요 문구변경
         //Firebase 로그인한 사용자 정보
         user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -97,7 +100,7 @@ public class MyHomeFragment extends Fragment {
         }
         loadImage(uid);
         Getname(user);
-
+        GetToken(user);
         //리스트뷰
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, data);
         listview.setAdapter(adapter);
@@ -112,7 +115,13 @@ public class MyHomeFragment extends Fragment {
                         .commit();
             }
         });
+        //여기를 눌러서 오늘의 할일을 지정해주세요
+        beforetodo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
         // 프로필 이미지 눌렀을 때.
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,7 +152,12 @@ public class MyHomeFragment extends Fragment {
         });
         return rootView;
     }
+    private void todo_tv(){
+        //오늘치 정보 없으면 todobefore
+        //오늘치 정보 있으면 todoafter + 문구 업데이트
+        aftertodo.setVisibility(View.GONE);
 
+    }
     private void graphInitSetting() {
         labelList.add("일");
         labelList.add("월");
@@ -153,6 +167,7 @@ public class MyHomeFragment extends Fragment {
         labelList.add("금");
         labelList.add("토");
 
+        //서버에서 정보 받아와야함.
         jsonList.add(10);
         jsonList.add(20);
         jsonList.add(30);
@@ -162,7 +177,7 @@ public class MyHomeFragment extends Fragment {
         jsonList.add(70);
 
         BarChartGraph(labelList, jsonList);
-        barChart.setTouchEnabled(false); //확대하지못하게 막아버림! 별로 안좋은 기능인 것 같아~
+        barChart.setTouchEnabled(false); //확대하지못하게 막아버림
         //barChart.setRendererLeftYAxis();
 //        barChart.setMaxVisibleValueCount(50);
 //        barChart.setTop(50);
@@ -178,7 +193,7 @@ public class MyHomeFragment extends Fragment {
             entries.add(new BarEntry((Integer) valList.get(i), i));
         }
 
-        BarDataSet depenses = new BarDataSet(entries, "일일 사용시간"); // 변수로 받아서 넣어줘도 됨
+        BarDataSet depenses = new BarDataSet(entries, "일일 완성도"); // 변수로 받아서 넣어줘도 됨
         depenses.setAxisDependency(YAxis.AxisDependency.LEFT);
         barChart.setDescription(" ");
 
@@ -208,6 +223,24 @@ public class MyHomeFragment extends Fragment {
                         if (document.exists()) {
                             String a = (String) document.getData().get("nickname");
                             name.setText(a);
+                        }
+                    }
+                }
+            }
+        });
+    }
+    public void GetToken(FirebaseUser firebaseUser) {
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+        DocumentReference documentReference = fb.collection("Users").document(firebaseUser.getUid());
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null) {
+                        if (document.exists()) {
+                            String a = (String) document.getData().get("token");
+                            token.setText(a);
                         }
                     }
                 }
