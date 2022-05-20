@@ -96,8 +96,8 @@ public class BoardItemFragment extends Fragment {
                         if (document.exists()) {
                             String name = (String) document.getData().get("name");
                             String content = (String) document.getData().get("content");
-
-                            CommentInfo data = new CommentInfo(content, name);
+                            String writtenTime = (String) document.getData().get("writtenTime");
+                            CommentInfo data = new CommentInfo(content, name, writtenTime);
                             newArrayList.add(0,data);
                         }
                     }
@@ -130,43 +130,13 @@ public class BoardItemFragment extends Fragment {
         });
 
 
-//        addCommentButtonBoardItem.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                DocumentReference docref = db.collection("Users").document(curUser.getUid());
-//                Log.e(TAG, "curUser : "+curUser.getUid());
-//                docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            DocumentSnapshot documentSnapshot = task.getResult();
-//                            if (documentSnapshot.exists()) {
-//                                userName = (String) documentSnapshot.getData().get("nickname");
-//                            }else{
-//                                userName = "unidentified user";
-//                            }
-//                            CommentInfo newComment = new CommentInfo(commentEditText.getText().toString(), userName);
-////                            arrayList.add(newComment);
-////                            commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList);
-////                            commentListView.setAdapter(commentListViewAdapter);
-//                            commentListViewAdapter.addComment(newComment);
-//                            DBinsertion(commentEditText.getText().toString(), userName);
-////                            commentListView.
-//                        }
-//                    }
-//                });
-//
-//
-//
-//
-//            }
-//        });
+
 
         return rootView;
     }
 
-    private void DBinsertion(String content, String userName) {
-        CommentInfo newComment = new CommentInfo(content, userName);
+    private void DBinsertion(String content, String userName, String writtenTime) {
+        CommentInfo newComment = new CommentInfo(content, userName, writtenTime);
         commentId = getTime()+userName;
         db.collection("BulletinBoard/"+did+"/Comments").document(commentId).set(newComment).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -184,7 +154,9 @@ public class BoardItemFragment extends Fragment {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.addCommentButtonBoardItem:
+
                     addComment();
+
                     break;
                 case R.id.likeButton:
                     String title = titleTextViewBoardItem.getText().toString();
@@ -208,13 +180,15 @@ public class BoardItemFragment extends Fragment {
                     }else{
                         userName = "unidentified user";
                     }
-                    CommentInfo newComment = new CommentInfo(commentEditText.getText().toString(), userName);
+                    String curTime = getTime();
+                    CommentInfo newComment = new CommentInfo(commentEditText.getText().toString(), userName, curTime);
 //                            arrayList.add(newComment);
 //                            commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList);
 //                            commentListView.setAdapter(commentListViewAdapter);
                     commentListViewAdapter.addComment(newComment);
-                    DBinsertion(commentEditText.getText().toString(), userName);
+                    DBinsertion(commentEditText.getText().toString(), userName, curTime);
 //                            commentListView.
+                    commentEditText.setText("");
                 }
             }
         });
