@@ -34,7 +34,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:text="@string/study_name"
+                android:text="스터디 1"
                 android:textSize="20dp" />
 
             <ImageButton
