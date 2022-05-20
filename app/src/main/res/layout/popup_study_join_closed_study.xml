@@ -8,7 +8,6 @@
     android:orientation="horizontal">
 
     <View
-        android:id="@+id/divider5"
         android:layout_width="3dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -21,7 +20,6 @@
         android:orientation="vertical">
 
         <View
-            android:id="@+id/divider7"
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:background="#000000" />
@@ -32,7 +30,7 @@
             android:layout_weight="8">
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/btn_join_study_cancel"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@android:color/transparent"
@@ -42,7 +40,6 @@
                 app:srcCompat="@android:drawable/btn_dialog" />
 
             <EditText
-                android:id="@+id/editTextTextMultiLine"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="23dp"
@@ -64,12 +61,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@+id/button"
-                app:layout_constraintEnd_toEndOf="@id/button"
-                app:layout_constraintStart_toStartOf="@+id/button">
+                app:layout_constraintBottom_toTopOf="@+id/btn_join_study_with_code"
+                app:layout_constraintEnd_toEndOf="@id/btn_join_study_with_code"
+                app:layout_constraintStart_toStartOf="@+id/btn_join_study_with_code">
 
                 <View
-                    android:id="@+id/divider9"
                     android:layout_width="3dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -82,7 +78,6 @@
                     android:orientation="vertical">
 
                     <View
-                        android:id="@+id/divider10"
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:background="?android:attr/listDivider" />
@@ -94,7 +89,7 @@
                         android:orientation="horizontal">
 
                         <EditText
-                            android:id="@+id/editTextTextPassword"
+                            android:id="@+id/et_join_study_password"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -104,7 +99,7 @@
                             tools:ignore="TouchTargetSizeCheck" />
 
                         <ImageButton
-                            android:id="@+id/imageButton2"
+                            android:id="@+id/btn_join_study_show_code"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:layout_weight="1"
@@ -114,14 +109,12 @@
                     </LinearLayout>
 
                     <View
-                        android:id="@+id/divider11"
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
                         android:background="?android:attr/listDivider" />
                 </LinearLayout>
 
                 <View
-                    android:id="@+id/divider12"
                     android:layout_width="3dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -130,11 +123,11 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/btn_join_study_with_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="80dp"
-                android:text="Button"
+                android:text="입장하기"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -142,7 +135,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
-            android:id="@+id/divider8"
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:background="#000000" />
@@ -150,7 +142,6 @@
     </LinearLayout>
 
     <View
-        android:id="@+id/divider6"
         android:layout_width="3dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
