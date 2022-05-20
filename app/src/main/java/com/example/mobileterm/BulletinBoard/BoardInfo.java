@@ -5,8 +5,41 @@ public class BoardInfo {
     private String content;
     private String name;
     private String did;
+    private String writtenTime;
+    private Long likedCount;
 
+    public Long getLikeCount() {
+        return likedCount;
+    }
 
+    public void setLikeCount(Long likeCount) {
+        this.likedCount = likeCount;
+    }
+
+    public BoardInfo(String title, String content, String name, String did, String writtenTime, Long likeCount) {
+        this.title = title;
+        this.content = content;
+        this.name = name;
+        this.did = did;
+        this.writtenTime = writtenTime;
+        this.likedCount = likeCount;
+    }
+
+    public String getWrittenTime() {
+        return writtenTime;
+    }
+
+    public void setWrittenTime(String writtenTime) {
+        this.writtenTime = writtenTime;
+    }
+
+    public BoardInfo(String title, String content, String name, String did, String writtenTime) {
+        this.title = title;
+        this.content = content;
+        this.name = name;
+        this.did = did;
+        this.writtenTime = writtenTime;
+    }
 
     public BoardInfo(String title, String content, String name, String did) {
         this.title = title;
