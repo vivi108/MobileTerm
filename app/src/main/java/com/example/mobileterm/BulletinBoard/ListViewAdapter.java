@@ -34,7 +34,7 @@ public class ListViewAdapter extends BaseAdapter {
     private FirebaseFirestore db;
     private String did;
 
-
+    //테스트 커밋
     public ListViewAdapter(Context context, ArrayList<BoardInfo> dataList){
         mContext = context;
         inflater = LayoutInflater.from(mContext);
