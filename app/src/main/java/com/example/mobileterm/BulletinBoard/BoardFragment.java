@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -86,9 +87,17 @@ public class BoardFragment extends Fragment {
                             MainActivity activity = (MainActivity) getActivity();
                             Log.e("boardItemClicked","by setOnItemCLick");
 
-                            activity.onFragmentChanged(arrayList.get(i), arrayList.get(i).getDid());
+//                            activity.onFragmentChanged(arrayList.get(i), arrayList.get(i).getDid());
+                            activity.onFragmentChanged(((TextView) view.findViewById(R.id.titleTextView)).getText().toString(), ((TextView) view.findViewById(R.id.contentTextView)).getText().toString(),
+                                    ((TextView) view.findViewById(R.id.nameTextView)).getText().toString(), ((TextView) view.findViewById(R.id.writtenTimeTextView)).getText().toString());
                         }
                     });
+                    rootView.findViewById(R.id.searchButton).setOnClickListener(onClickListener);
+                    rootView.findViewById(R.id.filterButton).setOnClickListener(onClickListener);
+                    rootView.findViewById(R.id.startWriteButton).setOnClickListener(onClickListener);
+                    if (searchEditText.getText().toString().length() > 0){
+                        adapter.filter(searchEditText.getText().toString());
+                    }
                 }
             }
         });
@@ -103,9 +112,6 @@ public class BoardFragment extends Fragment {
 //            }
 //        });
 
-        rootView.findViewById(R.id.searchButton).setOnClickListener(onClickListener);
-        rootView.findViewById(R.id.filterButton).setOnClickListener(onClickListener);
-        rootView.findViewById(R.id.startWriteButton).setOnClickListener(onClickListener);
 
         return rootView;
     }
@@ -115,7 +121,8 @@ public class BoardFragment extends Fragment {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.searchButton:
-
+                    String search = searchEditText.getText().toString();
+                    adapter.filter(search);
                     break;
                 case R.id.filterButton:
 
