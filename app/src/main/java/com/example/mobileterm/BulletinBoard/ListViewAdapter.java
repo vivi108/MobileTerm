@@ -91,7 +91,7 @@ public class ListViewAdapter extends BaseAdapter {
 
                         Log.d(TAG, "view - "+position+" - "+boardItem.getName());
                         if (document.exists()) {
-                            tag += "#"+document.get("name")+" ";
+                            tag += document.get("name")+" ";
                             Log.d(TAG,"must be data of boardTags : "+document.getString("name"));
                             tagTextView.setText(tag);
                         }else{
