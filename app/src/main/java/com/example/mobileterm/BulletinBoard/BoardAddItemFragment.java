@@ -40,7 +40,7 @@ public class BoardAddItemFragment extends Fragment {
     FirebaseUser user;
     FirebaseFirestore db;
 
-    String did;
+//    String did;
     String nickname;
     String content;
     String title;
@@ -86,8 +86,10 @@ public class BoardAddItemFragment extends Fragment {
                             tagIter = tags.split(" ");
 
 
-                            BulletinBoardCollection newItem = new BulletinBoardCollection(content, nickname, "default",title);
+//                            BulletinBoardCollection newItem = new BulletinBoardCollection(content, nickname, "default",title);
+
                             boardId = getTime()+" "+nickname;
+                            BoardInfo newItem = new BoardInfo(title, content, nickname, boardId, getTime(), (long)0);
                             db.collection("BulletinBoard").document(boardId).set(newItem).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -103,6 +105,9 @@ public class BoardAddItemFragment extends Fragment {
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
                                                     Log.e(TAG, "tag add sucess");
+                                                    titleEditText.setText("");
+                                                    tagEditText.setText("");
+                                                    bodyEditText.setText("");
                                                     fragmentChange();
                                                 }
                                             }
