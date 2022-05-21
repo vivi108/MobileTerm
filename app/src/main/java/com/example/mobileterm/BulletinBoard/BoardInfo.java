@@ -8,21 +8,21 @@ public class BoardInfo {
     private String writtenTime;
     private Long likedCount;
 
-    public Long getLikeCount() {
+    public Long getLikedCount() {
         return likedCount;
     }
 
-    public void setLikeCount(Long likeCount) {
-        this.likedCount = likeCount;
+    public void setLikedCount(Long likedCount) {
+        this.likedCount = likedCount;
     }
 
-    public BoardInfo(String title, String content, String name, String did, String writtenTime, Long likeCount) {
+    public BoardInfo(String title, String content, String name, String did, String writtenTime, Long likedCount) {
         this.title = title;
         this.content = content;
         this.name = name;
         this.did = did;
         this.writtenTime = writtenTime;
-        this.likedCount = likeCount;
+        this.likedCount = likedCount;
     }
 
     public String getWrittenTime() {

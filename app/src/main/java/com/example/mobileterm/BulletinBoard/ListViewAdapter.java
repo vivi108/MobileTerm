@@ -70,7 +70,7 @@ public class ListViewAdapter extends BaseAdapter {
         nameTextView.setText(boardItem.getName().toString());
         tagTextView.setText("");
         writtenTimeTextView.setText(boardItem.getWrittenTime());
-        String tempLike = Long.toString(boardItem.getLikeCount());
+        String tempLike = Long.toString(boardItem.getLikedCount());
         likedCountView.setText(tempLike);
         did = boardItem.getDid();
         Log.d(TAG,did);
