@@ -236,5 +236,6 @@ public class BoardItemFragment extends Fragment {
         mnow = System.currentTimeMillis();
         mDate = new Date(mnow);
         return mFormat.format(mDate);
+
     }
 }

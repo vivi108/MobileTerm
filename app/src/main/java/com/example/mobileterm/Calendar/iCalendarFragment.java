@@ -23,12 +23,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.example.mobileterm.BulletinBoard.LikedBoardItem;
 import com.example.mobileterm.MainActivity;
 import com.example.mobileterm.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -53,6 +55,9 @@ public class iCalendarFragment extends Fragment {
     public RadioGroup ctype;
     public RadioButton radIndividual, radGroup;
     public CheckBox isDone;
+    private FirebaseUser curUser;
+    final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private iCalendarFragment iCalendarFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup main_frame_layout, @Nullable Bundle savedInstanceState) {
@@ -71,7 +76,6 @@ public class iCalendarFragment extends Fragment {
         radGroup = rootView.findViewById(R.id.radGroup);
         isDone = rootView.findViewById(R.id.isDone);
 
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
         radGroup.setOnClickListener(new View.OnClickListener() { //그룹버튼 누르면 그룹캘린더로 전환
@@ -228,6 +232,17 @@ public class iCalendarFragment extends Fragment {
 
         return rootView;
     }
+
+//    public void addToLikedItem(String title){ //document(did).set(new LikedBoardItem(title, did))
+//        db.collection("Users").document(curUser.getUid()).collection("iSchedule").add(iCalendarFragment).addOnCompleteListener(new OnCompleteListener<Void>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Void> task) {
+//                if (task.isSuccessful()) {
+//                    Log.d(TAG, "successfully added");
+//                }
+//            }
+//        });
+//    }
 }
 
 
