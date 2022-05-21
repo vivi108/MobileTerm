@@ -1,5 +1,6 @@
 package com.example.mobileterm.BulletinBoard;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -125,6 +126,8 @@ public class BoardFragment extends Fragment {
                     adapter.filter(search);
                     break;
                 case R.id.filterButton:
+                    Intent intent = new Intent(getActivity().getApplicationContext(), PopUpFilter.class);
+                    startActivity(intent);
 
                     break;
                 case R.id.startWriteButton:
