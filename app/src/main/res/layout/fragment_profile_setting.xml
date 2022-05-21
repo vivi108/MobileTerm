@@ -43,14 +43,14 @@
         app:layout_constraintStart_toEndOf="@id/profile_setting_iv"
         app:layout_constraintBottom_toBottomOf="@id/profile_setting_iv"/>
 
-    <EditText
+    <TextView
         android:id="@+id/profile_setting_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/profile_setting_iv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-       android:text="NAME"
+        android:text="NAME"
         android:textSize="33sp" />
    </androidx.constraintlayout.widget.ConstraintLayout>
     <TextView
@@ -58,8 +58,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="완료"
+        android:layout_margin="10dp"
         android:textSize="40sp"
-        android:background="#DF5637"
+        android:background="#CCCCBB"
         android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
