@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,7 +55,9 @@ public class BoardItemFragment extends Fragment {
     String commentId;
     EditText commentEditText;
     TextView titleTextViewBoardItem;
-
+    long curLike;
+    long updateLike;
+    boolean notLiked;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
@@ -62,6 +65,7 @@ public class BoardItemFragment extends Fragment {
         MainActivity mainActivity = (MainActivity)getActivity();
         selectedBoardItem = mainActivity.sendBoardItem();
         did = mainActivity.sendDid();
+        Log.d(TAG,did);
         commentListView = rootView.findViewById(R.id.commentView);
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -159,8 +163,32 @@ public class BoardItemFragment extends Fragment {
 
                     break;
                 case R.id.likeButton:
-                    String title = titleTextViewBoardItem.getText().toString();
-                    addToLikedItem(title);
+                    notLiked = true;
+                    db.collection("Users").document(curUser.getUid()).collection("likedBoardItem").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                QuerySnapshot documentSnapshot = task.getResult();
+                                for (DocumentSnapshot document : documentSnapshot) {
+                                    if (document.exists()) {
+                                        Log.d(TAG,document.getId());
+                                        if (did.equals(document.getId())){
+                                            notLiked = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (notLiked){
+                                    String title = titleTextViewBoardItem.getText().toString();
+                                    addToLikedItem(title);
+                                }else{
+                                    Toast.makeText(getActivity().getApplicationContext(),"이미 좋아요 눌린 게시글입니다.",Toast.LENGTH_LONG).show();
+                                    Log.d(TAG,"like already pressed");
+                                }
+                            }
+                        }
+                    });
+
                     break;
 
             }
@@ -201,6 +229,25 @@ public class BoardItemFragment extends Fragment {
              public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     Log.d(TAG, "successfully added");
+                    db.collection("BulletinBoard").document(did).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()){
+                                DocumentSnapshot documentSnapshot = task.getResult();
+                                if (documentSnapshot.exists()){
+                                    curLike = (Long) documentSnapshot.getData().get("likedCount");
+                                    updateLike = curLike+1;
+                                    db.collection("BulletinBoard").document(did).update("likedCount", updateLike).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Log.d(TAG,"liked done");
+                                            Toast.makeText(getActivity().getApplicationContext(), "관심 게시글에 추가되었습니다.",Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    });
                 }
              }
          });
