@@ -220,7 +220,6 @@ public class BoardItemFragment extends Fragment {
                 }
             }
         });
-
     }
 
     public void addToLikedItem(String title){
