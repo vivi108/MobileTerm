@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_studypost_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:contentDescription="뒤로가기"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_back"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:text="게시글 작성"
+            android:textSize="25dp" />
+
+        <ImageButton
+            android:id="@+id/btn_finish_writing"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginLeft="185dp"
+            android:background="@drawable/ic_bulletin"
+            android:contentDescription="작성 완료 버튼"
+            android:scaleType="fitXY"
+            tools:ignore="TouchTargetSizeCheck" />
+    </LinearLayout>
+
+
+    <EditText
+        android:id="@+id/et_study_post_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:hint="제목을 입력하세요"
+        android:inputType="text"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <EditText
+        android:id="@+id/tagEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="태그를 입력하세요 #test #first"
+        android:inputType="text"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <EditText
+        android:id="@+id/bodyEditText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="15dp"
+        android:layout_weight="2"
+        android:hint="내용을 입력하세요"
+        android:inputType="textMultiLine"
+        android:maxLines="10" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_study_fileupload"
+            android:layout_width="60dp"
+            android:layout_height="70dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="출처 및 자료 업로드 버튼"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_post_clip" />
+
+        <EditText
+            android:id="@+id/et_study_file_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
+
+    </LinearLayout>
+
+</LinearLayout>
