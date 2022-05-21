@@ -192,7 +192,6 @@ public class BoardItemFragment extends Fragment {
                 }
             }
         });
-
     }
 
     public void addToLikedItem(String title){
@@ -210,6 +209,5 @@ public class BoardItemFragment extends Fragment {
         mnow = System.currentTimeMillis();
         mDate = new Date(mnow);
         return mFormat.format(mDate);
-
     }
 }

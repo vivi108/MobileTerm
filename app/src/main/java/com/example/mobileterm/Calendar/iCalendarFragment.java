@@ -30,6 +30,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -55,9 +56,10 @@ public class iCalendarFragment extends Fragment {
     public RadioGroup ctype;
     public RadioButton radIndividual, radGroup;
     public CheckBox isDone;
-    private FirebaseUser curUser;
     final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private iCalendarFragment iCalendarFragment;
+    private FirebaseAuth mAuth;
+    private FirebaseUser curUser;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup main_frame_layout, @Nullable Bundle savedInstanceState) {
@@ -75,6 +77,17 @@ public class iCalendarFragment extends Fragment {
         radIndividual = rootView.findViewById(R.id.radIndividual);
         radGroup = rootView.findViewById(R.id.radGroup);
         isDone = rootView.findViewById(R.id.isDone);
+
+        mAuth = FirebaseAuth.getInstance();
+        curUser = mAuth.getCurrentUser();
+
+        //null 처리 났을 때 혹시나
+//        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+//        FirebaseUser mFirebaseUser = mAuth.getCurrentUser();
+//        String currentUserID = null;
+//        if(mFirebaseUser != null) {
+//            currentUserID = mFirebaseUser.getUid(); //Do what you need to do with the id
+//        }
 
 
 
@@ -100,10 +113,10 @@ public class iCalendarFragment extends Fragment {
                 contextEditText.setVisibility(View.INVISIBLE);
                 isDone.setVisibility(View.INVISIBLE);
 
-                //System.out.println("클릭날짜 : " + String.valueOf(date.getYear()) + "-" + String.valueOf(date.getMonth() + 1) + "-" + String.valueOf(date.getDay()));
+                System.out.println("클릭날짜 : " + String.valueOf(date.getYear()) + "-" + String.valueOf(date.getMonth() + 1) + "-" + String.valueOf(date.getDay()));
 
                 //클릭한 날짜의 일정을 txt2에 써놓음
-                db.collection("Schedule")
+                db.collection("Users").document(curUser.getUid()).collection("iSchedule")
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
@@ -111,16 +124,16 @@ public class iCalendarFragment extends Fragment {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         if (document.exists()) {
-                                            //이 document의 날짜 와 아래 클릭날짜 - 동일 시
-                                            if (String.valueOf(document.getData().get("date")).equals(String.valueOf(date.getYear()) + "-" + String.valueOf(date.getMonth() + 1) + "-" + String.valueOf(date.getDay())))
-                                            {
-                                                String context = (String) document.getData().get("context"); //그 일정을 가져오겠다
-                                                //System.out.println("가져온 일정은" + (String) document.getData().get("context"));
-                                                textView2.setText(context+"됨"); //그 일정을 txt2에 넣겠다
-                                                //System.out.println("This " + String.valueOf(document.getData().get("date"))+" !! "+context);
-                                                //String isDone =  (String) document.getData().get("isDone");
+                                            if (String.valueOf(document.getData().get("date")) //선택 날짜와 파베 날짜가 동일할 경우
+                                                    .equals(String.valueOf(date.getYear()) + "-" + String.valueOf(date.getMonth() + 1) + "-" + String.valueOf(date.getDay()))) {
+                                                String context = (String) document.getData().get("str"); //그 일정을 가져오겠다
+                                                textView2.setText(context); //그 일정을 txt2에 넣겠다
+                                                System.out.println("This" + String.valueOf(document.getData().get("date"))+"!!"+context);
+                                                String isd = String.valueOf(document.getData().get("isDone"));
+                                                if(isd.equals("true")) //이거 할라면 수정기능 만들어야함
+                                                    textView2.append(" over");
                                             }
-                                             //else {textView2.setText("해당일정없음");}
+                                            else textView2.setText("");
                                         }
                                     }
                                 }
@@ -154,6 +167,7 @@ public class iCalendarFragment extends Fragment {
                     }
                 });
 
+
                 //삭제 버튼 눌리면
                 del_Btn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -178,22 +192,25 @@ public class iCalendarFragment extends Fragment {
                     public void onClick(View view) {
                         str = contextEditText.getText().toString(); //일정을 쓰면 그 내용이 str로 할당
 
-                        //파베에 str 저장
+                        //컬렉션에 넣을 준비
+                        String Date = String.valueOf(date.getYear()) + "-" + String.valueOf(date.getMonth() + 1) + "-" + String.valueOf(date.getDay());
+                        String IsDone = String.valueOf(isDone.isChecked());
+                        String Context = str;
 
-                        //여기서 파베에 str 추가
-                        Map<String, Object> scd = new HashMap<>();
-                        scd.put("date", String.valueOf(date.getYear()) + "-" + String.valueOf(date.getMonth() + 1) + "-" + String.valueOf(date.getDay()));
-                        scd.put("isDone",isDone.isChecked() );
-                        scd.put("context", str);
-
-                        System.out.println("1 : " + String.valueOf(date.getYear()) + "-" + String.valueOf(date.getMonth() + 1) + "-" + String.valueOf(date.getDay()));
-
-                        db.collection("Schedule")
-                                .add(scd);
+                        //컬렉션에 넣음 - user 안 iSchedule 컬렉션에
+                        db.collection("Users").document(curUser.getUid()).collection("iSchedule").document().set(new iCalendarItem(Context, Date, IsDone)).addOnCompleteListener(new OnCompleteListener<Void>()
+                        {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "successfully added");
+                                }
+                            }
+                        });
 
                         //이제 파베에서 불러옴
                         //불러와서 해당날짜 일정을 txt2에 써놓음
-                        db.collection("Schedule")
+                        db.collection("Users").document(curUser.getUid()).collection("iSchedule")
                                 .get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
@@ -203,13 +220,12 @@ public class iCalendarFragment extends Fragment {
                                                 if (document.exists()) {
                                                     if (String.valueOf(document.getData().get("date")) //선택 날짜와 파베 날짜가 동일할 경우
                                                             .equals(String.valueOf(date.getYear()) + "-" + String.valueOf(date.getMonth() + 1) + "-" + String.valueOf(date.getDay()))) {
-                                                        String context = (String) document.getData().get("context"); //그 일정을 가져오겠다
+                                                        String context = (String) document.getData().get("str"); //그 일정을 가져오겠다
                                                         textView2.setText(context); //그 일정을 txt2에 넣겠다
                                                         System.out.println("This" + String.valueOf(document.getData().get("date"))+"!!"+context);
                                                         String isd = String.valueOf(document.getData().get("isDone"));
-                                                        //if(isd.equals("true"))
-                                                            //이거 할라면 수정기능 만들어야함
-                                                        System.out.println("111111111111111"+ isd);
+                                                        if(isd.equals("true")) //이거 할라면 수정기능 만들어야함
+                                                            textView2.append(" over");
                                                     }
                                                 }
                                             }
@@ -233,16 +249,7 @@ public class iCalendarFragment extends Fragment {
         return rootView;
     }
 
-//    public void addToLikedItem(String title){ //document(did).set(new LikedBoardItem(title, did))
-//        db.collection("Users").document(curUser.getUid()).collection("iSchedule").add(iCalendarFragment).addOnCompleteListener(new OnCompleteListener<Void>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Void> task) {
-//                if (task.isSuccessful()) {
-//                    Log.d(TAG, "successfully added");
-//                }
-//            }
-//        });
-//    }
+
 }
 
 
@@ -460,3 +467,25 @@ public class iCalendarFragment extends Fragment {
 //빨간 점 찍기 -------------
 //                calendarView.setSelectedDate(CalendarDay.today());
 //                calendarView.addDecorator(new EventDecorator(Color.RED, Collections.singleton(CalendarDay.today())));
+
+// 더블 컬렉션에 넣는 함수
+//    public void addScheduleEachPerson(String schedule){ //document(did).set(new LikedBoardItem(title, did))
+//        db.collection("Users").document(curUser.getUid()).collection("iSchedule").document().set(new iCalendarItem(schedule)).addOnCompleteListener(new OnCompleteListener<Void>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Void> task) {
+//                if (task.isSuccessful()) {
+//                    Log.d(TAG, "successfully added");
+//                }
+//            }
+//        });
+//    }
+
+
+//파베에 str 저장
+//여기서 파베에 str 추가
+//                        Map<String, Object> scd = new HashMap<>();
+//                        scd.put("date", String.valueOf(date.getYear()) + "-" + String.valueOf(date.getMonth() + 1) + "-" + String.valueOf(date.getDay()));
+//                        scd.put("isDone",isDone.isChecked() );
+//                        scd.put("context", str);
+//                        db.collection("Schedule")
+//                                .add(scd);
