@@ -25,18 +25,22 @@ import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 public class ListViewAdapter extends BaseAdapter {
     private static final String TAG = "Adapter";
     Context mContext;
     LayoutInflater inflater;
     private ArrayList<BoardInfo> DataList;
+    private ArrayList<BoardInfo> itemList;
     private FirebaseFirestore db;
     private String did;
 
     //테스트 커밋
     public ListViewAdapter(Context context, ArrayList<BoardInfo> dataList){
         mContext = context;
+        this.itemList = new ArrayList<BoardInfo>();
+        this.itemList.addAll(dataList);
         inflater = LayoutInflater.from(mContext);
         this.DataList = new ArrayList<BoardInfo>();
         this.DataList.addAll(dataList);
@@ -116,5 +120,30 @@ public class ListViewAdapter extends BaseAdapter {
     public void addItem(BoardInfo item) {
         DataList.add(item);
         notifyDataSetChanged();
+    }
+
+    public void filter(String searchText) {
+        if (searchText != null) {
+            searchText = searchText.toLowerCase(Locale.getDefault());
+
+            if (searchText.length() == 0) {
+                DataList.clear();
+                for (BoardInfo itr:itemList){
+                    DataList.add(itr);
+                }
+                notifyDataSetChanged();
+            } else {
+                DataList.clear();
+                for (BoardInfo itr : itemList) {
+                    if (itr.getContent().toLowerCase(Locale.getDefault()).contains(searchText) ||
+                            itr.getTitle().toLowerCase(Locale.ROOT).toLowerCase(Locale.getDefault()).contains(searchText) ||
+                            itr.getName().toLowerCase(Locale.getDefault()).contains(searchText)) {
+                        DataList.add(itr);
+                        Log.d(TAG, itr.getTitle() + " " + itr.getName() + " " + itr.getContent());
+                    }
+                }
+                notifyDataSetChanged();
+            }
+        }
     }
 }

@@ -39,7 +39,7 @@ import java.util.Date;
 
 public class BoardItemFragment extends Fragment {
     private String did;
-    private BoardInfo selectedBoardItem;
+//    private BoardInfo selectedBoardItem;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private FirebaseUser curUser;
@@ -49,12 +49,17 @@ public class BoardItemFragment extends Fragment {
     String TAG = "BoardItemFragment";
 
     String userName;
+
     SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     long mnow;
     Date mDate;
     String commentId;
     EditText commentEditText;
     TextView titleTextViewBoardItem;
+    TextView timeTextView ;
+    TextView nameTextViewBoardItem;
+    TextView contentTextViewBoardItem;
+    TextView tagTextViewBoardItem;
     long curLike;
     long updateLike;
     boolean notLiked;
@@ -63,7 +68,7 @@ public class BoardItemFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_board_item, container, false);
         MainActivity mainActivity = (MainActivity)getActivity();
-        selectedBoardItem = mainActivity.sendBoardItem();
+//        selectedBoardItem = mainActivity.sendBoardItem();
         did = mainActivity.sendDid();
         Log.d(TAG,did);
         commentListView = rootView.findViewById(R.id.commentView);
@@ -72,66 +77,80 @@ public class BoardItemFragment extends Fragment {
         curUser = mAuth.getCurrentUser();
 
 
-        TextView timeTextView = rootView.findViewById(R.id.timeTextView);
-        TextView nameTextViewBoardItem = rootView.findViewById(R.id.nameTextViewBoardItem);
-        TextView contentTextViewBoardItem = rootView.findViewById(R.id.contentTextViewBoardItem);
+        timeTextView = rootView.findViewById(R.id.timeTextView);
+        nameTextViewBoardItem = rootView.findViewById(R.id.nameTextViewBoardItem);
+        contentTextViewBoardItem = rootView.findViewById(R.id.contentTextViewBoardItem);
         titleTextViewBoardItem = rootView.findViewById(R.id.titleTextViewBoardItem);
-        TextView tagTextViewBoardItem = rootView.findViewById(R.id.tagTextViewBoardItem);
+        tagTextViewBoardItem = rootView.findViewById(R.id.tagTextViewBoardItem);
         Button likeButton = rootView.findViewById(R.id.likeButton);
         commentEditText = rootView.findViewById(R.id.commentEditText);
         ImageButton addCommentButtonBoardItem = rootView.findViewById(R.id.addCommentButtonBoardItem);
 
         likeButton.setOnClickListener(onClickListener);
         addCommentButtonBoardItem.setOnClickListener(onClickListener);
-
-
-        nameTextViewBoardItem.setText(selectedBoardItem.getName());
-        contentTextViewBoardItem.setText(selectedBoardItem.getContent());
-        titleTextViewBoardItem.setText(selectedBoardItem.getTitle());
-        tagTextViewBoardItem.setText("");
-
-        ArrayList<CommentInfo> newArrayList = new ArrayList<CommentInfo>();
-        CollectionReference docRef = db.document("BulletinBoard/"+did).collection("Comments");
-        docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("BulletinBoard").document(did).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()){
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        if (document.exists()) {
-                            String name = (String) document.getData().get("name");
-                            String content = (String) document.getData().get("content");
-                            String writtenTime = (String) document.getData().get("writtenTime");
-                            CommentInfo data = new CommentInfo(content, name, writtenTime);
-                            newArrayList.add(0,data);
-                        }
-                    }
-                    if (!newArrayList.equals(arrayList)) {
-                        arrayList = newArrayList;
-                    }
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()){
+                        titleTextViewBoardItem.setText((String) document.getData().get("title"));
+                        contentTextViewBoardItem.setText((String) document.getData().get("content"));
+                        timeTextView.setText((String) document.getData().get("writtenTime"));
+                        nameTextViewBoardItem.setText((String) document.getData().get("name"));
 
-                    commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList);
-                    commentListView.setAdapter(commentListViewAdapter);
+                        tagTextViewBoardItem.setText("");
 
+                        ArrayList<CommentInfo> newArrayList = new ArrayList<CommentInfo>();
+                        CollectionReference docRef = db.document("BulletinBoard/"+did).collection("Comments");
+                        docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()){
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        if (document.exists()) {
+                                            String name = (String) document.getData().get("name");
+                                            String content = (String) document.getData().get("content");
+                                            String writtenTime = (String) document.getData().get("writtenTime");
+                                            CommentInfo data = new CommentInfo(content, name, writtenTime);
+                                            newArrayList.add(0,data);
+                                        }
+                                    }
+                                    if (!newArrayList.equals(arrayList)) {
+                                        arrayList = newArrayList;
+                                    }
+
+                                    commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList);
+                                    commentListView.setAdapter(commentListViewAdapter);
+
+                                }
+                            }
+                        });
+
+                        docRef = db.document("BulletinBoard/"+did).collection("BoardTags");
+                        docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        if (document.exists()) {
+                                            String tagName = (String) document.getData().get("name");
+                                            String temp = tagTextViewBoardItem.getText().toString();
+                                            tagTextViewBoardItem.setText(temp+"#"+tagName+" ");
+
+                                        }
+                                    }
+                                }
+                            }
+                        });
+
+                    }
                 }
             }
         });
 
-        docRef = db.document("BulletinBoard/"+did).collection("BoardTags");
-        docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        if (document.exists()) {
-                            String tagName = (String) document.getData().get("name");
-                            String temp = tagTextViewBoardItem.getText().toString();
-                            tagTextViewBoardItem.setText(temp+"#"+tagName+" ");
 
-                        }
-                    }
-                }
-            }
-        });
+
 
 
 

@@ -88,7 +88,7 @@ public class BoardAddItemFragment extends Fragment {
 
 //                            BulletinBoardCollection newItem = new BulletinBoardCollection(content, nickname, "default",title);
 
-                            boardId = getTime()+" "+nickname;
+                            boardId = getTime()+" "+title;
                             BoardInfo newItem = new BoardInfo(title, content, nickname, boardId, getTime(), (long)0);
                             db.collection("BulletinBoard").document(boardId).set(newItem).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
