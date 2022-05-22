@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -18,16 +17,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Locale;
 
 public class BoardAddItemFragment extends Fragment {
     EditText titleEditText;
@@ -83,7 +79,7 @@ public class BoardAddItemFragment extends Fragment {
                             title = titleEditText.getText().toString();
                             content = bodyEditText.getText().toString();
                             tags = tagEditText.getText().toString();
-                            tagIter = tags.split(" ");
+                            tagIter = tags.split("#");
 
 
 //                            BulletinBoardCollection newItem = new BulletinBoardCollection(content, nickname, "default",title);
@@ -96,9 +92,19 @@ public class BoardAddItemFragment extends Fragment {
                                     if (task.isSuccessful()) {
                                         WriteBatch batch = db.batch();
                                         for (String tag: tagIter) {
-                                            DocumentReference tempref = db.collection("BulletinBoard").document(boardId).collection("BoardTags").document(tag);
-                                            BoardTags newTag = new BoardTags(tag);
-                                            batch.set(tempref, newTag);
+                                            if (tag.length() > 0){
+                                                tag = "#"+tag.trim();
+                                                DocumentReference tempref = db.collection("BulletinBoard").document(boardId).collection("BoardTags").document(tag);
+                                                DocumentReference tempTagRef = db.collection("Tags").document(tag);
+                                                DocumentReference tagDocRef = db.collection("Tags").document(tag).collection("tagDocs").document(boardId);
+                                                BoardTags newTag = new BoardTags(tag);
+                                                TagDocs newDoc = new TagDocs(boardId);
+
+                                                batch.set(tempref, newTag);
+                                                batch.set(tempTagRef, newTag);
+                                                batch.set(tagDocRef, newDoc);
+                                            }
+
                                         }
                                         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override

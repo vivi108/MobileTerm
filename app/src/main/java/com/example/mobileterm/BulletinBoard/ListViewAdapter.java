@@ -44,7 +44,7 @@ public class ListViewAdapter extends BaseAdapter {
         inflater = LayoutInflater.from(mContext);
         this.DataList = new ArrayList<BoardInfo>();
         this.DataList.addAll(dataList);
-        Log.d(TAG, "ListViewAdapter : "+DataList.size());
+//        Log.d(TAG, "ListViewAdapter : "+DataList.size());
     }
 
 
@@ -77,7 +77,7 @@ public class ListViewAdapter extends BaseAdapter {
         String tempLike = Long.toString(boardItem.getLikedCount());
         likedCountView.setText(tempLike);
         did = boardItem.getDid();
-        Log.d(TAG,did);
+//        Log.d(TAG,did);
         db = FirebaseFirestore.getInstance();
 
         CollectionReference docref = db.document("BulletinBoard/"+did).collection("BoardTags");
@@ -89,10 +89,10 @@ public class ListViewAdapter extends BaseAdapter {
                     for (DocumentSnapshot document : task.getResult()){
                         String tag = tagTextView.getText().toString();
 
-                        Log.d(TAG, "view - "+position+" - "+boardItem.getName());
+//                        Log.d(TAG, "view - "+position+" - "+boardItem.getName());
                         if (document.exists()) {
                             tag += document.get("name")+" ";
-                            Log.d(TAG,"must be data of boardTags : "+document.getString("name"));
+//                            Log.d(TAG,"must be data of boardTags : "+document.getString("name"));
                             tagTextView.setText(tag);
                         }else{
                             Log.d(TAG, "no doc");
