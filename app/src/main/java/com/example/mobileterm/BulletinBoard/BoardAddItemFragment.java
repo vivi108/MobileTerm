@@ -94,7 +94,7 @@ public class BoardAddItemFragment extends Fragment {
                                         for (String tag: tagIter) {
                                             if (tag.length() > 0){
                                                 tag = "#"+tag.trim();
-                                                DocumentReference tempref = db.collection("BulletinBoard").document(boardId).collection("BoardTags").document(tag+" "+boardId);
+                                                DocumentReference tempref = db.collection("BulletinBoard").document(boardId).collection("BoardTags").document(tag);
                                                 DocumentReference tempTagRef = db.collection("Tags").document(tag);
                                                 DocumentReference tagDocRef = db.collection("Tags").document(tag).collection("tagDocs").document(boardId);
                                                 BoardTags newTag = new BoardTags(tag);
