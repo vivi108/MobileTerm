@@ -60,13 +60,14 @@ public class BoardItemFragment extends Fragment {
     TextView nameTextViewBoardItem;
     TextView contentTextViewBoardItem;
     TextView tagTextViewBoardItem;
+    TextView likedCountTextViewBoardItem;
     long curLike;
     long updateLike;
     boolean notLiked;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_board_item, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_board_item_new, container, false);
         MainActivity mainActivity = (MainActivity)getActivity();
 //        selectedBoardItem = mainActivity.sendBoardItem();
         did = mainActivity.sendDid();
@@ -82,8 +83,9 @@ public class BoardItemFragment extends Fragment {
         contentTextViewBoardItem = rootView.findViewById(R.id.contentTextViewBoardItem);
         titleTextViewBoardItem = rootView.findViewById(R.id.titleTextViewBoardItem);
         tagTextViewBoardItem = rootView.findViewById(R.id.tagTextViewBoardItem);
-        Button likeButton = rootView.findViewById(R.id.likeButton);
+        ImageButton likeButton = rootView.findViewById(R.id.likeButton);
         commentEditText = rootView.findViewById(R.id.commentEditText);
+        likedCountTextViewBoardItem = rootView.findViewById(R.id.likedCountViewBoardItem);
         ImageButton addCommentButtonBoardItem = rootView.findViewById(R.id.addCommentButtonBoardItem);
 
         likeButton.setOnClickListener(onClickListener);
@@ -98,7 +100,7 @@ public class BoardItemFragment extends Fragment {
                         contentTextViewBoardItem.setText((String) document.getData().get("content"));
                         timeTextView.setText((String) document.getData().get("writtenTime"));
                         nameTextViewBoardItem.setText((String) document.getData().get("name"));
-
+                        likedCountTextViewBoardItem.setText((String)Long.toString((Long)document.getData().get("likedCount")));
                         tagTextViewBoardItem.setText("");
 
                         ArrayList<CommentInfo> newArrayList = new ArrayList<CommentInfo>();
@@ -136,7 +138,7 @@ public class BoardItemFragment extends Fragment {
                                         if (document.exists()) {
                                             String tagName = (String) document.getData().get("name");
                                             String temp = tagTextViewBoardItem.getText().toString();
-                                            tagTextViewBoardItem.setText(temp+"#"+tagName+" ");
+                                            tagTextViewBoardItem.setText(temp+tagName+" ");
 
                                         }
                                     }
@@ -260,6 +262,7 @@ public class BoardItemFragment extends Fragment {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             Log.d(TAG,"liked done");
                                             Toast.makeText(getActivity().getApplicationContext(), "관심 게시글에 추가되었습니다.",Toast.LENGTH_LONG).show();
+                                            likedCountTextViewBoardItem.setText(Long.toString(updateLike));
                                         }
                                     });
                                 }
