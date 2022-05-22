@@ -43,7 +43,7 @@ public class BoardAddItemFragment extends Fragment {
     String tags;
     String[] tagIter;
     String TAG = "BoardAddItem";
-    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     long mnow;
     Date mDate;
     String boardId;

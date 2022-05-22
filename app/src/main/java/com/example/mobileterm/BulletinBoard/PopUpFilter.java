@@ -33,7 +33,6 @@ public class PopUpFilter extends Activity {
     ArrayList<String> tags;
     ArrayList<String> dids;
     Intent resultIntent;
-    Bundle data;
     private final String TAG = "PopupFilter :";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +40,6 @@ public class PopUpFilter extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_pop_up_filter);
 
-        resultIntent = new Intent();
-        data = new Bundle();
         tagEraseButton = findViewById(R.id.tagEraseButton);
         tagSearchEditText = findViewById(R.id.tagSearchEditText);
         tagSearchButton = findViewById(R.id.tagSearchButton);
@@ -54,7 +51,7 @@ public class PopUpFilter extends Activity {
         tagEraseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                data.putStringArrayList("sItems",null);
+//                data.putStringArrayList("sItems",null);
 //                resultIntent.putExtras(data);
 //
 //                setResult(RESULT_OK, resultIntent);
@@ -69,12 +66,7 @@ public class PopUpFilter extends Activity {
             public void onClick(View view) {
                 inputTag = tagSearchEditText.getText().toString();
 //                tags = inputTag.split("#");
-                for (String temp : inputTag.split("#")){
-                    if (temp.length() > 0){
-                        tags.add("#"+temp);
-                        Log.d(TAG, "#"+temp+" 태그 추가임");
-                    }
-                }
+                finish();
 
             }
         });

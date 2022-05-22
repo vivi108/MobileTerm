@@ -1,11 +1,13 @@
 package com.example.mobileterm.BulletinBoard;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -40,12 +42,14 @@ public class BoardFragment extends Fragment {
 //    QuerySnapshot boardComments;
     ArrayList<BoardInfo> arrayList = new ArrayList<BoardInfo>();
 
-
+    Dialog filterDialog;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = FirebaseFirestore.getInstance();
         Log.e(TAG, "onCreate called");
+        filterDialog = new Dialog(getActivity());
+        filterDialog.setContentView(R.layout.activity_pop_up_filter);
 
     }
 
@@ -126,8 +130,7 @@ public class BoardFragment extends Fragment {
                     adapter.filter(search);
                     break;
                 case R.id.filterButton:
-                    Intent intent = new Intent(getActivity().getApplicationContext(), PopUpFilter.class);
-                    getActivity().startActivityForResult(intent, 301);
+                    showDialog();
 
                     break;
                 case R.id.startWriteButton:
@@ -140,6 +143,10 @@ public class BoardFragment extends Fragment {
 
     public void addNewItem(BoardInfo newItem){
         adapter.addItem(newItem);
+    }
+
+    public void showDialog(){
+        filterDialog.show();
     }
 
 }
