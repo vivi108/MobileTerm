@@ -55,6 +55,7 @@ public class BoardFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_board_main, container, false);
         searchEditText = rootView.findViewById(R.id.searchEditText);
         listView = rootView.findViewById(R.id.listView);
+
         ArrayList<BoardInfo> newArrayList = new ArrayList<BoardInfo>();
 
         db.collection("BulletinBoard").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -69,16 +70,15 @@ public class BoardFragment extends Fragment {
                             String name = (String) document.getData().get("name");
                             String writtenTime = (String) document.getData().get("writtenTime");
                             Long likedCount = (Long) document.getData().get("likedCount");
-                            Log.e(TAG, did+"title : "+title);
+//                               Log.e(TAG, did+"title : "+title);
                             BoardInfo data = new BoardInfo(title, content, name, did, writtenTime, likedCount);
                             newArrayList.add(0,data);
                         }
                     }
-
                     if (!newArrayList.equals(arrayList)){
                         arrayList = newArrayList;
                     }
-                    Log.e(TAG,arrayList.toString());
+//                        Log.e(TAG,arrayList.toString());
                     adapter = new ListViewAdapter(rootView.getContext(), arrayList);
                     listView.setAdapter(adapter);
 
@@ -127,7 +127,7 @@ public class BoardFragment extends Fragment {
                     break;
                 case R.id.filterButton:
                     Intent intent = new Intent(getActivity().getApplicationContext(), PopUpFilter.class);
-                    startActivity(intent);
+                    getActivity().startActivityForResult(intent, 301);
 
                     break;
                 case R.id.startWriteButton:
