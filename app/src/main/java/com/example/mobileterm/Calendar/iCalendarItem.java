@@ -1,22 +1,29 @@
 package com.example.mobileterm.Calendar;
 
 public class iCalendarItem {
-    private String str;
+    private String schedule;
     private String date;
     private String isDone;
 
 
-    public iCalendarItem(String str, String date, String isDone) {
-        this.str = str;
+    public iCalendarItem(String schedule, String date, String isDone) {
+        this.schedule = schedule;
         this.date = date;
         this.isDone = isDone;
     }
 
+    public iCalendarItem(String schedule, String isDone) {
+        this.schedule = schedule;
+        this.isDone = isDone;
+    }
+
+    public iCalendarItem(String schedule) { this.schedule = schedule; } //일단 이걸로 테스ㅡ트
+
     public iCalendarItem() {    }
 
 
-    public String getStr() {
-        return str;
+    public String getSchedule() {
+        return schedule;
     }
 
     public String getDate() {
@@ -27,9 +34,9 @@ public class iCalendarItem {
         return isDone;
     }
 
-    public void setStr(String str)
+    public void setSchedule(String schedule)
     {
-        this.str = str;
+        this.schedule = schedule;
     }
 
     public void setDate(String date) {

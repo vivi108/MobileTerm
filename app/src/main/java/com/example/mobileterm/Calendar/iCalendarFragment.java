@@ -17,13 +17,16 @@ import android.graphics.Color;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.example.mobileterm.BulletinBoard.BoardInfo;
 import com.example.mobileterm.BulletinBoard.LikedBoardItem;
+import com.example.mobileterm.BulletinBoard.ListViewAdapter;
 import com.example.mobileterm.MainActivity;
 import com.example.mobileterm.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,6 +35,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -42,6 +46,7 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,6 +65,9 @@ public class iCalendarFragment extends Fragment {
     private iCalendarFragment iCalendarFragment;
     private FirebaseAuth mAuth;
     private FirebaseUser curUser;
+    ArrayList<iCalendarItem> scheduleList = new ArrayList<iCalendarItem>();
+    ListView listview;
+    iCalendarAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup main_frame_layout, @Nullable Bundle savedInstanceState) {
@@ -77,18 +85,12 @@ public class iCalendarFragment extends Fragment {
         radIndividual = rootView.findViewById(R.id.radIndividual);
         radGroup = rootView.findViewById(R.id.radGroup);
         isDone = rootView.findViewById(R.id.isDone);
+        listview = rootView.findViewById(R.id.list);
 
         mAuth = FirebaseAuth.getInstance();
         curUser = mAuth.getCurrentUser();
-
-        //null 처리 났을 때 혹시나
-//        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-//        FirebaseUser mFirebaseUser = mAuth.getCurrentUser();
-//        String currentUserID = null;
-//        if(mFirebaseUser != null) {
-//            currentUserID = mFirebaseUser.getUid(); //Do what you need to do with the id
-//        }
-
+        CollectionReference docref = db.collection("Users").document(curUser.getUid()).collection("iSchedule");
+        ArrayList<iCalendarItem> newArrayList = new ArrayList<iCalendarItem>();
 
 
         radGroup.setOnClickListener(new View.OnClickListener() { //그룹버튼 누르면 그룹캘린더로 전환
@@ -111,12 +113,12 @@ public class iCalendarFragment extends Fragment {
                 diaryTextView.setVisibility(View.VISIBLE);
                 save_Btn.setVisibility(View.INVISIBLE);
                 contextEditText.setVisibility(View.INVISIBLE);
-                isDone.setVisibility(View.INVISIBLE);
+
 
                 System.out.println("클릭날짜 : " + String.valueOf(date.getYear()) + "-" + String.valueOf(date.getMonth() + 1) + "-" + String.valueOf(date.getDay()));
 
-                //클릭한 날짜의 일정을 txt2에 써놓음
-                db.collection("Users").document(curUser.getUid()).collection("iSchedule")
+                //클릭한 날짜의 일정을 써놓음
+                docref
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
@@ -126,21 +128,26 @@ public class iCalendarFragment extends Fragment {
                                         if (document.exists()) {
                                             if (String.valueOf(document.getData().get("date")) //선택 날짜와 파베 날짜가 동일할 경우
                                                     .equals(String.valueOf(date.getYear()) + "-" + String.valueOf(date.getMonth() + 1) + "-" + String.valueOf(date.getDay()))) {
-                                                String context = (String) document.getData().get("str"); //그 일정을 가져오겠다
-                                                textView2.setText(context); //그 일정을 txt2에 넣겠다
-                                                System.out.println("This" + String.valueOf(document.getData().get("date"))+"!!"+context);
-                                                String isd = String.valueOf(document.getData().get("isDone"));
-                                                if(isd.equals("true")) //이거 할라면 수정기능 만들어야함
-                                                    textView2.append(" over");
+                                                String schedule = ((String) document.getData().get("str")); //그 일정을 가져오겠다
+                                                String isDone = String.valueOf(document.getData().get("isDone"));
+                                                String date = ((String) document.getData().get("date"));
+                                                Log.e(TAG, "schedule : "+schedule);
+                                                iCalendarItem data = new iCalendarItem(schedule, date, isDone); //이 3개를 쌍으로 data에 넣음
+                                                newArrayList.add(0,data);
                                             }
-                                            else textView2.setText("");
                                         }
                                     }
+                                    if (!newArrayList.equals(scheduleList)){
+                                        scheduleList = newArrayList;
+                                    }
+                                    Log.e(TAG,scheduleList.toString());
+                                    adapter = new iCalendarAdapter(rootView.getContext(), scheduleList);
+                                    listview.setAdapter(adapter);
                                 }
                             }
                         });
 
-                textView2.setVisibility(View.VISIBLE);
+                listview.setVisibility(View.VISIBLE);
                 add_Btn.setVisibility(View.VISIBLE);
                 del_Btn.setVisibility(View.VISIBLE);
 
@@ -489,3 +496,31 @@ public class iCalendarFragment extends Fragment {
 //                        scd.put("context", str);
 //                        db.collection("Schedule")
 //                                .add(scd);
+//
+
+
+
+////클릭한 날짜의 일정을 txt2에 써놓음
+//                db.collection("Users").document(curUser.getUid()).collection("iSchedule")
+//                        .get()
+//                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//@Override
+//public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//        if (task.isSuccessful()) {
+//        for (QueryDocumentSnapshot document : task.getResult()) {
+//        if (document.exists()) {
+//        if (String.valueOf(document.getData().get("date")) //선택 날짜와 파베 날짜가 동일할 경우
+//        .equals(String.valueOf(date.getYear()) + "-" + String.valueOf(date.getMonth() + 1) + "-" + String.valueOf(date.getDay()))) {
+//        String context = ((String) document.getData().get("str")); //그 일정을 가져오겠다
+//        textView2.setText(context); //그 일정을 txt2에 넣겠다
+//        System.out.println("This" + String.valueOf(document.getData().get("date"))+"!!"+context);
+//        String isd = String.valueOf(document.getData().get("isDone"));
+//        if(isd.equals("true")) //이거 할라면 수정기능 만들어야함
+//        textView2.append(" over");
+//        }
+//        else textView2.setText("");
+//        }
+//        }
+//        }
+//        }
+//        });

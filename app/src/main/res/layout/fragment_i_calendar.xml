@@ -77,31 +77,42 @@
 
 
     //일정 추가된 날짜 클릭 시 어떤 일정있나 보여주는 칸
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="invisible"
-        android:textSize="12pt"
         app:layout_constraintBottom_toBottomOf="@+id/contextEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/contextEditText"
-        app:layout_constraintTop_toTopOf="@+id/contextEditText" />
-
-    <CheckBox
-        android:id="@+id/isDone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="isDone"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toRightOf="@+id/contextEditText"
         app:layout_constraintTop_toTopOf="@+id/contextEditText"
-        android:visibility="invisible"
+
         />
+    <!--    <TextView-->
+<!--        android:id="@+id/textView2"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_marginStart="0dp"-->
+<!--        android:layout_marginLeft="0dp"-->
+<!--        android:layout_marginEnd="8dp"-->
+<!--        android:layout_marginRight="8dp"-->
+<!--        android:visibility="invisible"-->
+<!--        android:textSize="12pt"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/contextEditText"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/contextEditText"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/contextEditText" />-->
+
+<!--    <CheckBox-->
+<!--        android:id="@+id/isDone"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="isDone"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintLeft_toRightOf="@+id/contextEditText"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/contextEditText"-->
+<!--        android:visibility="invisible"-->
+<!--        />-->
 
 
     //수정 후 저장 버튼 건들 ㄴ
