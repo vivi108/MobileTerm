@@ -50,7 +50,7 @@ public class BoardItemFragment extends Fragment {
 
     String userName;
 
-    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     long mnow;
     Date mDate;
     String commentId;
