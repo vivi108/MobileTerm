@@ -398,14 +398,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void onFragmentChanged(BoardInfo data, String did) {
-        selectedBoardItem = data;
-        selectedBoardItemDid = did;
-//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment);
-//        transaction.addToBackStack(null).commit();
+//    public void onFragmentChanged(BoardInfo data, String did) {
+//        selectedBoardItem = data;
+//        selectedBoardItemDid = did;
+//        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment).addToBackStack(null).commit();
+//    }
+
+    public void onFragmentChanged(String title, String content, String uName, String wTime){
+        selectedBoardItemDid = wTime+" "+title;
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment).addToBackStack(null).commit();
     }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();

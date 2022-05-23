@@ -22,8 +22,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MobileTerm">
         <activity
+<<<<<<< HEAD
             android:name=".ChattingActivity.ChattingActivity"
             android:exported="false" />
+=======
+            android:name=".BulletinBoard.PopUpFilter"
+            android:exported="false"
+            android:theme="@android:style/Theme.Dialog"/>
+>>>>>>> 220e4d608d34e6d2f1dbf4654fdfa32517c01633
         <activity
             android:name=".Init.GoogleLoginSetupActivity"
             android:exported="false" />

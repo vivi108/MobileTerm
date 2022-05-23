@@ -32,6 +32,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class LoginSelectionActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -41,6 +42,7 @@ public class LoginSelectionActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
     SignInButton googleButton;
     private String TAG = "LoginSelectionActivity";
+    boolean autoLogin = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +104,7 @@ public class LoginSelectionActivity extends AppCompatActivity {
                             }
                         });
                     }else{
+                        Log.d(TAG,"user null");
                         signIn();
                     }
                     break;
@@ -138,18 +141,47 @@ public class LoginSelectionActivity extends AppCompatActivity {
                     // sign in success
                     Log.d(TAG,"sign in success");
                     FirebaseUser user = mAuth.getCurrentUser();
-                    db.collection("Users").document(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    db.collection("Users").document(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                            if (task.isSuccessful()) {
+//                                Log.d(TAG,"여기 오면안된다 firebaseAuthWithGoogle");
+//                                Bundle data = new Bundle();
+//                                data.putString("uid",user.getUid());
+//                                data.putString("name",user.getDisplayName());
+//                                data.putString("email",user.getEmail());
+//                                data.putString("phone",user.getPhoneNumber());
+//                                StartActivity(MainActivity.class, data);
+//                            }else{
+//                                Log.d(TAG,"이게 실행되야하는데..");
+//                                updateUI(user);
+//                            }
+//                        }
+//                    });
+                    db.collection("Users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                Bundle data = new Bundle();
-                                data.putString("uid",user.getUid());
-                                data.putString("name",user.getDisplayName());
-                                data.putString("email",user.getEmail());
-                                data.putString("phone",user.getPhoneNumber());
-                                StartActivity(MainActivity.class, data);
-                            }else{
-                                updateUI(user);
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()){
+                                QuerySnapshot querySnapshot = task.getResult();
+                                for (DocumentSnapshot document :querySnapshot){
+                                    if (document.getId().equals(user.getUid())){
+                                        Log.d(TAG,"여기 오면안된다 firebaseAuthWithGoogle");
+                                       autoLogin = true;
+                                       break;
+                                    }
+                                }
+                                if (autoLogin){
+                                    Bundle data = new Bundle();
+                                    data.putString("uid",user.getUid());
+                                    data.putString("name",user.getDisplayName());
+                                    data.putString("email",user.getEmail());
+                                    data.putString("phone",user.getPhoneNumber());
+                                    StartActivity(MainActivity.class, data);
+                                }else{
+                                    updateUI(user);
+                                }
+
+
                             }
                         }
                     });
