@@ -9,19 +9,40 @@ public class UserInfoClass {
     private String nickname;
     private String regDate;
     private String profileImageURL;
+    private String address;
 
-    public UserInfoClass() { }
+    public String getAddress() {
+        return address;
+    }
 
-    public UserInfoClass(String name, String date, String phone, String email, String nickname, String regDate) {
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public UserInfoClass(String name, String phone, String date, String email, String nickname, String regDate, String address) {
         this.name = name;
         this.phone = phone;
         this.date = date;
         this.email = email;
         this.nickname = nickname;
+        this.regDate = regDate;
+        this.address = address;
         this.token = "0";
         this.profileImageURL = "ic_profile_gray";
-        this.regDate = regDate;
     }
+
+    public UserInfoClass() { }
+
+//    public UserInfoClass(String name, String date, String phone, String email, String nickname, String regDate) {
+//        this.name = name;
+//        this.phone = phone;
+//        this.date = date;
+//        this.email = email;
+//        this.nickname = nickname;
+//        this.token = "0";
+//        this.profileImageURL = "ic_profile_gray";
+//        this.regDate = regDate;
+//    }
 
     public String getName() {
         return name;

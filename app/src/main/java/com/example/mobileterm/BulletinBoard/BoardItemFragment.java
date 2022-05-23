@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,7 +39,7 @@ import java.util.Date;
 
 public class BoardItemFragment extends Fragment {
     private String did;
-    private BoardInfo selectedBoardItem;
+//    private BoardInfo selectedBoardItem;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private FirebaseUser curUser;
@@ -48,86 +49,110 @@ public class BoardItemFragment extends Fragment {
     String TAG = "BoardItemFragment";
 
     String userName;
-    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     long mnow;
     Date mDate;
     String commentId;
     EditText commentEditText;
     TextView titleTextViewBoardItem;
-
+    TextView timeTextView ;
+    TextView nameTextViewBoardItem;
+    TextView contentTextViewBoardItem;
+    TextView tagTextViewBoardItem;
+    TextView likedCountTextViewBoardItem;
+    long curLike;
+    long updateLike;
+    boolean notLiked;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_board_item, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_board_item_new, container, false);
         MainActivity mainActivity = (MainActivity)getActivity();
-        selectedBoardItem = mainActivity.sendBoardItem();
+//        selectedBoardItem = mainActivity.sendBoardItem();
         did = mainActivity.sendDid();
+        Log.d(TAG,did);
         commentListView = rootView.findViewById(R.id.commentView);
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         curUser = mAuth.getCurrentUser();
 
 
-        TextView timeTextView = rootView.findViewById(R.id.timeTextView);
-        TextView nameTextViewBoardItem = rootView.findViewById(R.id.nameTextViewBoardItem);
-        TextView contentTextViewBoardItem = rootView.findViewById(R.id.contentTextViewBoardItem);
+        timeTextView = rootView.findViewById(R.id.timeTextView);
+        nameTextViewBoardItem = rootView.findViewById(R.id.nameTextViewBoardItem);
+        contentTextViewBoardItem = rootView.findViewById(R.id.contentTextViewBoardItem);
         titleTextViewBoardItem = rootView.findViewById(R.id.titleTextViewBoardItem);
-        TextView tagTextViewBoardItem = rootView.findViewById(R.id.tagTextViewBoardItem);
-        Button likeButton = rootView.findViewById(R.id.likeButton);
+        tagTextViewBoardItem = rootView.findViewById(R.id.tagTextViewBoardItem);
+        ImageButton likeButton = rootView.findViewById(R.id.likeButton);
         commentEditText = rootView.findViewById(R.id.commentEditText);
+        likedCountTextViewBoardItem = rootView.findViewById(R.id.likedCountViewBoardItem);
         ImageButton addCommentButtonBoardItem = rootView.findViewById(R.id.addCommentButtonBoardItem);
 
         likeButton.setOnClickListener(onClickListener);
         addCommentButtonBoardItem.setOnClickListener(onClickListener);
-
-
-        nameTextViewBoardItem.setText(selectedBoardItem.getName());
-        contentTextViewBoardItem.setText(selectedBoardItem.getContent());
-        titleTextViewBoardItem.setText(selectedBoardItem.getTitle());
-        tagTextViewBoardItem.setText("");
-
-        ArrayList<CommentInfo> newArrayList = new ArrayList<CommentInfo>();
-        CollectionReference docRef = db.document("BulletinBoard/"+did).collection("Comments");
-        docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("BulletinBoard").document(did).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()){
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        if (document.exists()) {
-                            String name = (String) document.getData().get("name");
-                            String content = (String) document.getData().get("content");
-                            String writtenTime = (String) document.getData().get("writtenTime");
-                            CommentInfo data = new CommentInfo(content, name, writtenTime);
-                            newArrayList.add(0,data);
-                        }
-                    }
-                    if (!newArrayList.equals(arrayList)) {
-                        arrayList = newArrayList;
-                    }
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()){
+                        titleTextViewBoardItem.setText((String) document.getData().get("title"));
+                        contentTextViewBoardItem.setText((String) document.getData().get("content"));
+                        timeTextView.setText((String) document.getData().get("writtenTime"));
+                        nameTextViewBoardItem.setText((String) document.getData().get("name"));
+                        likedCountTextViewBoardItem.setText((String)Long.toString((Long)document.getData().get("likedCount")));
+                        tagTextViewBoardItem.setText("");
 
-                    commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList);
-                    commentListView.setAdapter(commentListViewAdapter);
+                        ArrayList<CommentInfo> newArrayList = new ArrayList<CommentInfo>();
+                        CollectionReference docRef = db.document("BulletinBoard/"+did).collection("Comments");
+                        docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()){
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        if (document.exists()) {
+                                            String name = (String) document.getData().get("name");
+                                            String content = (String) document.getData().get("content");
+                                            String writtenTime = (String) document.getData().get("writtenTime");
+                                            CommentInfo data = new CommentInfo(content, name, writtenTime);
+                                            newArrayList.add(0,data);
+                                        }
+                                    }
+                                    if (!newArrayList.equals(arrayList)) {
+                                        arrayList = newArrayList;
+                                    }
 
+                                    commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList);
+                                    commentListView.setAdapter(commentListViewAdapter);
+
+                                }
+                            }
+                        });
+
+                        docRef = db.document("BulletinBoard/"+did).collection("BoardTags");
+                        docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        if (document.exists()) {
+                                            String tagName = (String) document.getData().get("name");
+                                            String temp = tagTextViewBoardItem.getText().toString();
+                                            tagTextViewBoardItem.setText(temp+tagName+" ");
+
+                                        }
+                                    }
+                                }
+                            }
+                        });
+
+                    }
                 }
             }
         });
 
-        docRef = db.document("BulletinBoard/"+did).collection("BoardTags");
-        docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        if (document.exists()) {
-                            String tagName = (String) document.getData().get("name");
-                            String temp = tagTextViewBoardItem.getText().toString();
-                            tagTextViewBoardItem.setText(temp+"#"+tagName+" ");
 
-                        }
-                    }
-                }
-            }
-        });
+
 
 
 
@@ -159,8 +184,32 @@ public class BoardItemFragment extends Fragment {
 
                     break;
                 case R.id.likeButton:
-                    String title = titleTextViewBoardItem.getText().toString();
-                    addToLikedItem(title);
+                    notLiked = true;
+                    db.collection("Users").document(curUser.getUid()).collection("likedBoardItem").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                QuerySnapshot documentSnapshot = task.getResult();
+                                for (DocumentSnapshot document : documentSnapshot) {
+                                    if (document.exists()) {
+                                        Log.d(TAG,document.getId());
+                                        if (did.equals(document.getId())){
+                                            notLiked = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (notLiked){
+                                    String title = titleTextViewBoardItem.getText().toString();
+                                    addToLikedItem(title);
+                                }else{
+                                    Toast.makeText(getActivity().getApplicationContext(),"이미 좋아요 눌린 게시글입니다.",Toast.LENGTH_LONG).show();
+                                    Log.d(TAG,"like already pressed");
+                                }
+                            }
+                        }
+                    });
+
                     break;
 
             }
@@ -192,7 +241,6 @@ public class BoardItemFragment extends Fragment {
                 }
             }
         });
-
     }
 
     public void addToLikedItem(String title){
@@ -201,6 +249,26 @@ public class BoardItemFragment extends Fragment {
              public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     Log.d(TAG, "successfully added");
+                    db.collection("BulletinBoard").document(did).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()){
+                                DocumentSnapshot documentSnapshot = task.getResult();
+                                if (documentSnapshot.exists()){
+                                    curLike = (Long) documentSnapshot.getData().get("likedCount");
+                                    updateLike = curLike+1;
+                                    db.collection("BulletinBoard").document(did).update("likedCount", updateLike).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Log.d(TAG,"liked done");
+                                            Toast.makeText(getActivity().getApplicationContext(), "관심 게시글에 추가되었습니다.",Toast.LENGTH_LONG).show();
+                                            likedCountTextViewBoardItem.setText(Long.toString(updateLike));
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    });
                 }
              }
          });

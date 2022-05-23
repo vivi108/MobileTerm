@@ -25,22 +25,26 @@ import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 public class ListViewAdapter extends BaseAdapter {
     private static final String TAG = "Adapter";
     Context mContext;
     LayoutInflater inflater;
     private ArrayList<BoardInfo> DataList;
+    private ArrayList<BoardInfo> itemList;
     private FirebaseFirestore db;
     private String did;
 
     //테스트 커밋
     public ListViewAdapter(Context context, ArrayList<BoardInfo> dataList){
         mContext = context;
+        this.itemList = new ArrayList<BoardInfo>();
+        this.itemList.addAll(dataList);
         inflater = LayoutInflater.from(mContext);
         this.DataList = new ArrayList<BoardInfo>();
         this.DataList.addAll(dataList);
-        Log.d(TAG, "ListViewAdapter : "+DataList.size());
+//        Log.d(TAG, "ListViewAdapter : "+DataList.size());
     }
 
 
@@ -70,25 +74,25 @@ public class ListViewAdapter extends BaseAdapter {
         nameTextView.setText(boardItem.getName().toString());
         tagTextView.setText("");
         writtenTimeTextView.setText(boardItem.getWrittenTime());
-        String tempLike = Long.toString(boardItem.getLikeCount());
+        String tempLike = Long.toString(boardItem.getLikedCount());
         likedCountView.setText(tempLike);
         did = boardItem.getDid();
-        Log.d(TAG,did);
+//        Log.d(TAG,did);
         db = FirebaseFirestore.getInstance();
 
         CollectionReference docref = db.document("BulletinBoard/"+did).collection("BoardTags");
-
         docref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    tagTextView.setText("");
                     for (DocumentSnapshot document : task.getResult()){
                         String tag = tagTextView.getText().toString();
 
-                        Log.d(TAG, "view - "+position+" - "+boardItem.getName());
+//                        Log.d(TAG, "view - "+position+" - "+boardItem.getName());
                         if (document.exists()) {
-                            tag += "#"+document.get("name")+" ";
-                            Log.d(TAG,"must be data of boardTags : "+document.getString("name"));
+                            tag += document.get("name")+" ";
+//                            Log.d(TAG,"must be data of boardTags : "+document.getString("name"));
                             tagTextView.setText(tag);
                         }else{
                             Log.d(TAG, "no doc");
@@ -117,4 +121,52 @@ public class ListViewAdapter extends BaseAdapter {
         DataList.add(item);
         notifyDataSetChanged();
     }
+
+    public void filter(String searchText) {
+        if (searchText != null) {
+            searchText = searchText.toLowerCase(Locale.getDefault());
+
+            if (searchText.length() == 0) {
+                DataList.clear();
+                for (BoardInfo itr:itemList){
+                    DataList.add(itr);
+                }
+                notifyDataSetChanged();
+            } else {
+                DataList.clear();
+                for (BoardInfo itr : itemList) {
+                    if (itr.getContent().toLowerCase(Locale.getDefault()).contains(searchText) ||
+                            itr.getTitle().toLowerCase(Locale.ROOT).toLowerCase(Locale.getDefault()).contains(searchText) ||
+                            itr.getName().toLowerCase(Locale.getDefault()).contains(searchText)) {
+                        DataList.add(itr);
+                        Log.d(TAG, itr.getTitle() + " " + itr.getName() + " " + itr.getContent());
+                    }
+                }
+                notifyDataSetChanged();
+            }
+        }
+    }
+
+    public void filter(ArrayList<String> didList){
+        DataList.clear();
+        if (didList.size() > 0){
+
+            for (BoardInfo itr : itemList){
+                if (didList.contains(itr.getDid())){
+                    DataList.add(itr);
+                }
+            }
+
+        }
+        notifyDataSetChanged();
+    }
+
+    public void renew(){
+        DataList.clear();
+        for (BoardInfo itr : itemList){
+            DataList.add(itr);
+        }
+        notifyDataSetChanged();
+    }
+
 }
