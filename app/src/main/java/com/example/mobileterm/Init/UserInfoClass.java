@@ -27,6 +27,8 @@ public class UserInfoClass {
         this.nickname = nickname;
         this.regDate = regDate;
         this.address = address;
+        this.token = "0";
+        this.profileImageURL = "ic_profile_gray";
     }
 
     public UserInfoClass() { }
