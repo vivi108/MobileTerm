@@ -22,6 +22,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MobileTerm">
         <activity
+            android:name=".ChattingActivity.ChattingActivity"
+            android:exported="false" />
+        <activity
             android:name=".Init.GoogleLoginSetupActivity"
             android:exported="false" />
 
@@ -32,7 +35,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_path"></meta-data>
+                android:resource="@xml/file_path" />
         </provider>
 
         <activity
@@ -52,7 +55,6 @@
             android:exported="true" />
         <activity
             android:name=".Init.AuthActivity"
-
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -61,12 +63,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SplashActivity" android:theme="@style/SplashTheme" android:exported="true">
-<!--            <intent-filter>-->
-<!--            <action android:name="android.intent.action.MAIN" />-->
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:theme="@style/SplashTheme">
 
-<!--            <category android:name="android.intent.category.LAUNCHER" />-->
-<!--        </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
     </application>
 
