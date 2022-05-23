@@ -42,6 +42,12 @@
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="설정된 태그: "
+        android:id="@+id/appliedTagsTextView"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
