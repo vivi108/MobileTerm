@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,6 +26,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -41,8 +44,13 @@ public class BoardFragment extends Fragment {
 //    QuerySnapshot boardBoardTags;
 //    QuerySnapshot boardComments;
     ArrayList<BoardInfo> arrayList = new ArrayList<BoardInfo>();
-
+    ArrayList<String> tagList = new ArrayList<String>();
+    ArrayList<String> didList = new ArrayList<String>();
+    ArrayList<String> itrList = new ArrayList<String >();
     Dialog filterDialog;
+    EditText tagSearchEditText;
+    ImageButton tagSearchButton;
+    Button tagEraseButton;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,6 +155,48 @@ public class BoardFragment extends Fragment {
 
     public void showDialog(){
         filterDialog.show();
+        tagSearchEditText = filterDialog.findViewById(R.id.tagSearchEditText);
+        tagSearchButton = filterDialog.findViewById(R.id.tagSearchButton);
+        tagEraseButton = filterDialog.findViewById(R.id.tagEraseButton);
+
+        tagSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG,"tagSearch pressed");
+                String raw = tagSearchEditText.getText().toString();
+                for (String tempTag:raw.split("#")){
+                    if (tempTag.length() > 0){
+                        tagList.add("#"+tempTag.trim());
+                    }
+                }
+                db.collectionGroup("tagDocs").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()){
+                            QuerySnapshot querySnapshot = task.getResult();
+                            for (DocumentSnapshot document : querySnapshot){
+                                if (tagList.contains((String) document.getData().get("tag")) && !didList.contains((String) document.getData().get("did"))){
+                                    didList.add((String) document.getData().get("did"));
+                                }
+
+                            }
+                            adapter.filter(didList);
+                            filterDialog.dismiss();
+                        }
+                    }
+                });
+
+
+            }
+        });
+
+        tagEraseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                adapter.renew();
+                filterDialog.dismiss();
+            }
+        });
     }
 
 }
