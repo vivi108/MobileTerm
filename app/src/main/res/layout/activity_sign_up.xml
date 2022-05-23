@@ -101,6 +101,12 @@
                     android:ems="10"
                     android:hint="닉네임 20자 이내"
                     android:inputType="text"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/MemberInfoAddress"
+                    android:ems="10"
+                    android:hint="주소 입력: ~~시 ~~구"/>
 
                 <Button
                     android:id="@+id/RegisterButton"
