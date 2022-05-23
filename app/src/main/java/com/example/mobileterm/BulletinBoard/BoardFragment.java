@@ -46,11 +46,11 @@ public class BoardFragment extends Fragment {
     ArrayList<BoardInfo> arrayList = new ArrayList<BoardInfo>();
     ArrayList<String> tagList = new ArrayList<String>();
     ArrayList<String> didList = new ArrayList<String>();
-    ArrayList<String> itrList = new ArrayList<String >();
     Dialog filterDialog;
     EditText tagSearchEditText;
     ImageButton tagSearchButton;
     Button tagEraseButton;
+    TextView appliedTagsTextView;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,7 +158,7 @@ public class BoardFragment extends Fragment {
         tagSearchEditText = filterDialog.findViewById(R.id.tagSearchEditText);
         tagSearchButton = filterDialog.findViewById(R.id.tagSearchButton);
         tagEraseButton = filterDialog.findViewById(R.id.tagEraseButton);
-
+        appliedTagsTextView = filterDialog.findViewById(R.id.appliedTagsTextView);
         tagSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -169,6 +169,7 @@ public class BoardFragment extends Fragment {
                         tagList.add("#"+tempTag.trim());
                     }
                 }
+                appliedTagsTextView.setText(appliedTagsTextView.getText().toString()+" "+raw);
                 db.collectionGroup("tagDocs").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -178,8 +179,8 @@ public class BoardFragment extends Fragment {
                                 if (tagList.contains((String) document.getData().get("tag")) && !didList.contains((String) document.getData().get("did"))){
                                     didList.add((String) document.getData().get("did"));
                                 }
-
                             }
+                            tagSearchEditText.setText("");
                             adapter.filter(didList);
                             filterDialog.dismiss();
                         }
@@ -193,6 +194,8 @@ public class BoardFragment extends Fragment {
         tagEraseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                didList = new ArrayList<String>();
+                appliedTagsTextView.setText("설정된 태그:");
                 adapter.renew();
                 filterDialog.dismiss();
             }

@@ -85,6 +85,7 @@ public class ListViewAdapter extends BaseAdapter {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    tagTextView.setText("");
                     for (DocumentSnapshot document : task.getResult()){
                         String tag = tagTextView.getText().toString();
 
