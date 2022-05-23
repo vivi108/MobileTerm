@@ -81,7 +81,6 @@ public class ListViewAdapter extends BaseAdapter {
         db = FirebaseFirestore.getInstance();
 
         CollectionReference docref = db.document("BulletinBoard/"+did).collection("BoardTags");
-
         docref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -146,4 +145,27 @@ public class ListViewAdapter extends BaseAdapter {
             }
         }
     }
+
+    public void filter(ArrayList<String> didList){
+        DataList.clear();
+        if (didList.size() > 0){
+
+            for (BoardInfo itr : itemList){
+                if (didList.contains(itr.getDid())){
+                    DataList.add(itr);
+                }
+            }
+
+        }
+        notifyDataSetChanged();
+    }
+
+    public void renew(){
+        DataList.clear();
+        for (BoardInfo itr : itemList){
+            DataList.add(itr);
+        }
+        notifyDataSetChanged();
+    }
+
 }
