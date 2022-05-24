@@ -10,6 +10,15 @@ public class UserInfoClass {
     private String regDate;
     private String profileImageURL;
     private String address;
+    private boolean isVerified;
+
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean isVerified) {
+        this.isVerified = isVerified;
+    }
 
     public String getAddress() {
         return address;
@@ -29,6 +38,7 @@ public class UserInfoClass {
         this.address = address;
         this.token = "0";
         this.profileImageURL = "ic_profile_gray";
+        this.isVerified = false;
     }
 
     public UserInfoClass() { }
