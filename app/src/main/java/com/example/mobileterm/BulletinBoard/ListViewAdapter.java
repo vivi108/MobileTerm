@@ -24,6 +24,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -147,7 +148,7 @@ public class ListViewAdapter extends BaseAdapter {
         }
     }
 
-    public void filter(ArrayList<String> didList){
+    public void filter(ArrayList<String> didList, int checkedId){
         DataList.clear();
         if (didList.size() > 0){
 
@@ -167,6 +168,28 @@ public class ListViewAdapter extends BaseAdapter {
             DataList.add(itr);
         }
         notifyDataSetChanged();
+    }
+
+    public void reorder(int checkedId){
+        switch (checkedId){
+            case R.id.orderLike:{
+                Collections.sort(DataList);
+                notifyDataSetChanged();
+                break;
+            }
+            case R.id.orderOld:{
+                DataList.clear();
+                for (BoardInfo itr:itemList){
+                    DataList.add(0, itr);
+                }
+                notifyDataSetChanged();
+                break;
+            }
+            case R.id.orderRecent:{
+                renew();
+                break;
+            }
+        }
     }
 
 }

@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -51,6 +53,8 @@ public class BoardFragment extends Fragment {
     ImageButton tagSearchButton;
     Button tagEraseButton;
     TextView appliedTagsTextView;
+    RadioButton orderRecent, orderLike, orderOld;
+    RadioGroup radioGroup;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,33 +163,44 @@ public class BoardFragment extends Fragment {
         tagSearchButton = filterDialog.findViewById(R.id.tagSearchButton);
         tagEraseButton = filterDialog.findViewById(R.id.tagEraseButton);
         appliedTagsTextView = filterDialog.findViewById(R.id.appliedTagsTextView);
+        orderRecent = filterDialog.findViewById(R.id.orderRecent);
+        orderLike = filterDialog.findViewById(R.id.orderLike);
+        orderOld = filterDialog.findViewById(R.id.orderOld);
+        radioGroup = filterDialog.findViewById(R.id.radioGroup);
         tagSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG,"tagSearch pressed");
                 String raw = tagSearchEditText.getText().toString();
-                for (String tempTag:raw.split("#")){
-                    if (tempTag.length() > 0){
-                        tagList.add("#"+tempTag.trim());
-                    }
-                }
-                appliedTagsTextView.setText(appliedTagsTextView.getText().toString()+" "+raw);
-                db.collectionGroup("tagDocs").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()){
-                            QuerySnapshot querySnapshot = task.getResult();
-                            for (DocumentSnapshot document : querySnapshot){
-                                if (tagList.contains((String) document.getData().get("tag")) && !didList.contains((String) document.getData().get("did"))){
-                                    didList.add((String) document.getData().get("did"));
-                                }
-                            }
-                            tagSearchEditText.setText("");
-                            adapter.filter(didList);
-                            filterDialog.dismiss();
+                if (raw.length() == 0){
+                    adapter.reorder(radioGroup.getCheckedRadioButtonId());
+                    filterDialog.dismiss();
+                }else{
+                    for (String tempTag:raw.split("#")){
+                        if (tempTag.length() > 0){
+                            tagList.add("#"+tempTag.trim());
                         }
                     }
-                });
+                    appliedTagsTextView.setText(appliedTagsTextView.getText().toString()+" "+raw);
+                    db.collectionGroup("tagDocs").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()){
+                                QuerySnapshot querySnapshot = task.getResult();
+                                for (DocumentSnapshot document : querySnapshot){
+                                    if (tagList.contains((String) document.getData().get("tag")) && !didList.contains((String) document.getData().get("did"))){
+                                        didList.add((String) document.getData().get("did"));
+                                    }
+                                }
+                                tagSearchEditText.setText("");
+//                            adapter.reorder(radioGroup.getCheckedRadioButtonId());
+                                adapter.filter(didList,radioGroup.getCheckedRadioButtonId());
+                                filterDialog.dismiss();
+                            }
+                        }
+                    });
+                }
+
 
 
             }
@@ -201,5 +216,7 @@ public class BoardFragment extends Fragment {
             }
         });
     }
+
+
 
 }
