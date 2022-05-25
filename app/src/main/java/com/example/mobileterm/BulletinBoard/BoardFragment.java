@@ -174,6 +174,8 @@ public class BoardFragment extends Fragment {
                 String raw = tagSearchEditText.getText().toString();
                 if (raw.length() == 0){
                     adapter.reorder(radioGroup.getCheckedRadioButtonId());
+                    appliedTagsTextView.setText("설정된 태그: ");
+                    radioGroup.check(R.id.orderRecent);
                     filterDialog.dismiss();
                 }else{
                     for (String tempTag:raw.split("#")){
@@ -195,6 +197,8 @@ public class BoardFragment extends Fragment {
                                 tagSearchEditText.setText("");
 //                            adapter.reorder(radioGroup.getCheckedRadioButtonId());
                                 adapter.filter(didList,radioGroup.getCheckedRadioButtonId());
+                                appliedTagsTextView.setText("설정된 태그: ");
+                                radioGroup.check(R.id.orderRecent);
                                 filterDialog.dismiss();
                             }
                         }
