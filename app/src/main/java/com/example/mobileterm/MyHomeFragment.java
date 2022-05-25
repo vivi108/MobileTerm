@@ -36,8 +36,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,8 +48,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.squareup.okhttp.internal.DiskLruCache;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -60,7 +65,7 @@ public class MyHomeFragment extends Fragment {
     String[] data ={"관심스터디","관심게시글"};
     String uid;
     BarChart barChart;
-    ArrayList<Integer> jsonList = new ArrayList<>(); // ArrayList 선언
+    ArrayList<Integer> jsonList ; // ArrayList 선언
     ArrayList<String> labelList = new ArrayList<>(); // ArrayList 선언
 
     //Firebase로 로그인한 사용자 정보 알기 위해
@@ -104,6 +109,7 @@ public class MyHomeFragment extends Fragment {
         loadImage(uid);
         Getname(user);
         GetToken(user);
+        get_todo(user);
         //리스트뷰
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, data);
         listview.setAdapter(adapter);
@@ -160,6 +166,67 @@ public class MyHomeFragment extends Fragment {
         //오늘치 정보 있으면 todoafter + 문구 업데이트
         aftertodo.setVisibility(View.GONE);
 
+
+    }
+    private String changeDateFormat(Calendar cal){
+        String result="";
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH)+1;
+        int date = cal.get(Calendar.DATE);
+        result = year + "-" +month + "-" + date;
+        return result;
+    }
+    private void get_todo(FirebaseUser firebaseUser){
+        jsonList=new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+        int[] cnt={0,0,0,0,0,0,0}; //전체 할 일 개수
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+        CollectionReference collectionReference =fb.collection("Users").document(firebaseUser.getUid()).collection("iSchedule");
+        collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        //document.getData() or document.getId() 등등 여러 방법으로
+                        //데이터를 가져올 수 있다.
+                        Calendar date = (Calendar) document.getData().get("date");
+                        String isDone = (String) document.getData().get("isDone");
+                        if (changeDateFormat(cal).equals(changeDateFormat(date))) {//오늘
+                                  cnt[6]++;
+                             }
+//                        else if (changeDateFormat(cal.add(Calendar.DATE, -1)).equals(changeDateFormat(date.add(Calendar.DATE, -1)))){//오늘-1
+//
+//                        }
+                    }
+                }
+            }
+        });
+
+//        DocumentReference documentReference = fb.collection("Users").document(firebaseUser.getUid()).collection("iSchedule").document();
+//        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot document = task.getResult();
+//                    List list =(List) document.getData();
+//                    if (document != null) {
+//                        if (document.exists()) {
+//                            for(int i=0; i<list.size(); i++){
+//                                Log.i("MyHomeFragment", "data["+i+"] > " + list.get(i).toString());
+////                                CalendarDay date = (CalendarDay) document.getData().get("date");
+////                                String isDone = (String) document.getData().get("isDone");
+////                                if (date //선택 날짜와 파베 날짜가 동일할 경우
+////                                        .equals(String.valueOf(date.getYear()) + "-" + String.valueOf(date.getMonth() + 1) + "-" + String.valueOf(date.getDay()))) {
+////                                    int todaypercent=  ;
+////                                    jsonList.add(todaypercent);
+//                                }
+//                            }
+//
+//                        }
+//                    }
+//                }
+//
+//        });
     }
     private void graphInitSetting() {
         labelList.add("일");
