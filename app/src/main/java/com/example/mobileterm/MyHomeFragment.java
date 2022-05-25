@@ -57,13 +57,13 @@ import java.util.List;
 import java.util.Objects;
 
 public class MyHomeFragment extends Fragment {
-    Uri imageUri;
     ImageView setting;
     ImageView profile;
     TextView name, beforetodo, aftertodo, token;
     ExpandableListView listview;
     ArrayList<myGroup> DataList;
-//    String[] data = {"", "관심게시글"};
+    ExpandAdapter adapter;
+    String[][]  childids =new String[999][999];
     String uid;
     BarChart barChart;
     ArrayList<Integer> jsonList = new ArrayList<>(); // ArrayList 선언
@@ -72,9 +72,6 @@ public class MyHomeFragment extends Fragment {
     //Firebase로 로그인한 사용자 정보 알기 위해
     private FirebaseAuth mAuth;
     private FirebaseUser user;
-
-    //프로필 uri이용해 bitmap으로
-    Bitmap bitmap;
 
     public MyHomeFragment() {
         // Required empty public constructor
@@ -102,8 +99,6 @@ public class MyHomeFragment extends Fragment {
         if (user != null) {
             String name = user.getDisplayName();
             String email = user.getEmail();
-            //Uri photoUrl = user.getPhotoUrl();
-            //boolean emailVerified = user.isEmailVerified();
             uid = user.getUid();
         } else {
             // No user is signed in
@@ -111,9 +106,8 @@ public class MyHomeFragment extends Fragment {
         loadImage(uid);
         Getname(user);
         GetToken(user);
-        //리스트뷰
-//        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_list_item_1, data);
-//        listview.setAdapter(adapter);
+
+        //화장 리스트뷰
         Display newDisplay = requireActivity().getWindowManager().getDefaultDisplay();
         int width = newDisplay.getWidth();
         DataList = new ArrayList<myGroup>();
@@ -124,8 +118,8 @@ public class MyHomeFragment extends Fragment {
         DataList.add(temp);
         temp = new myGroup("관심게시글");
 
-        addChildListView(temp, user);
-        ExpandAdapter adapter = new ExpandAdapter(requireActivity(), R.layout.expandable_liistview_parent, R.layout.expandable_listview_child, DataList);
+        addChildListView_Board(temp, user);
+        adapter = new ExpandAdapter(requireActivity(), R.layout.expandable_liistview_parent, R.layout.expandable_listview_child, DataList);
         listview.setIndicatorBounds(width - 50, width); //이 코드를 지우면 화살표 위치가 바뀐다.
         listview.setAdapter(adapter);
 
@@ -171,13 +165,49 @@ public class MyHomeFragment extends Fragment {
         listview.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                MainActivity activity = (MainActivity) getActivity();
+                switch (groupPosition) {
+                    case 0://관심스터디
+
+                        break;
+                    case 1:
+                        Log.e("boardItemClicked","by setOnItemCLick from LikedBoardItem");
+                        String getchildid = childids[1][childPosition];
+                        GetLikedBoardItem(user, getchildid);
+                        break;
+                }
+
                 return false;
             }
         });
         return rootView;
     }
-    //확장 리스트뷰 차일드 정보 가져오기 by likedBoardItem
-    private void addChildListView(myGroup temp, FirebaseUser firebaseUser){
+    private void GetLikedBoardItem(FirebaseUser firebaseUser, String did) {
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+        DocumentReference documentReference = fb.collection("Bulletinboard").document(did);
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null) {
+                        if (document.exists()) {
+                            MainActivity activity = (MainActivity) getActivity();
+                            String title =(String) document.getData().get("title");
+                            String content=(String) document.getData().get("content");
+                            String uName=(String) document.getData().get("name");
+                            String wTime=(String) document.getData().get("writtenTime");
+                            activity.onFragmentChanged(title, content, uName, wTime);
+
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+    //확장 리스트뷰 차일드 정보 가져오기 by likedBoardItem-->완성
+    private void addChildListView_Board(myGroup temp, FirebaseUser firebaseUser){
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
         CollectionReference collectionReference = fb.collection("Users").document(firebaseUser.getUid()).collection("likedBoardItem");
 
@@ -185,20 +215,22 @@ public class MyHomeFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    int i=0;
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         //document.getData() or document.getId() 등등 여러 방법으로
                         //데이터를 가져올 수 있다.
 
                         String childTitle = (String) document.getData().get("title");
                         String childid = (String) document.getData().get("did");
-                        temp.childId.add(childid);
+                       // temp.childId.add(childid);
                         temp.child.add(childTitle);
+                        childids[1][i]=childid;
+                        i++;
 
                     }
                 }
             }
         });
-
 
         DataList.add(temp);
     }
