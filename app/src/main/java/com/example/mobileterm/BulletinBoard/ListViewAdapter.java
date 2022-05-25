@@ -150,16 +150,52 @@ public class ListViewAdapter extends BaseAdapter {
 
     public void filter(ArrayList<String> didList, int checkedId){
         DataList.clear();
-        if (didList.size() > 0){
+        switch (checkedId){
+            case R.id.orderLike:{
+                if (didList.size() > 0){
 
-            for (BoardInfo itr : itemList){
-                if (didList.contains(itr.getDid())){
-                    DataList.add(itr);
+                    for (BoardInfo itr : itemList){
+                        if (didList.contains(itr.getDid())){
+                            DataList.add(itr);
+                        }
+                    }
+
                 }
+                Collections.sort(DataList);
+                notifyDataSetChanged();
+                break;
             }
+            case R.id.orderOld:{
+                DataList.clear();
+                if (didList.size() > 0){
 
+                    for (BoardInfo itr : itemList){
+                        if (didList.contains(itr.getDid())){
+                            DataList.add(0,itr);
+                        }
+                    }
+
+                }
+                for (BoardInfo itr:itemList){
+                    DataList.add(0, itr);
+                }
+                notifyDataSetChanged();
+                break;
+            }
+            case R.id.orderRecent:{
+                if (didList.size() > 0){
+
+                    for (BoardInfo itr : itemList){
+                        if (didList.contains(itr.getDid())){
+                            DataList.add(itr);
+                        }
+                    }
+                }
+                notifyDataSetChanged();
+                break;
+            }
         }
-        notifyDataSetChanged();
+
     }
 
     public void renew(){
