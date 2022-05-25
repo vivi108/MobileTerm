@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/expand_parent_ll"
+    android:id="@+id/expand_lv_parent_ll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -8,6 +8,6 @@
         android:id="@+id/expand_parent_name_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="5dp" />
+        android:paddingLeft="5dp"/>
 
 </LinearLayout>
