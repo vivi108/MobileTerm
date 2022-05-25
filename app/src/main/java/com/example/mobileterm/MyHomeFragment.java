@@ -173,6 +173,7 @@ public class MyHomeFragment extends Fragment {
                     case 1:
                         Log.e("boardItemClicked","by setOnItemCLick from LikedBoardItem");
                         String getchildid = childids[1][childPosition];
+                        Log.d ("getchildid", getchildid+"가 선택됨");
                         GetLikedBoardItem(user, getchildid);
                         break;
                 }
@@ -184,7 +185,7 @@ public class MyHomeFragment extends Fragment {
     }
     private void GetLikedBoardItem(FirebaseUser firebaseUser, String did) {
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
-        DocumentReference documentReference = fb.collection("Bulletinboard").document(did);
+        DocumentReference documentReference = fb.collection("BulletinBoard").document(did);
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -197,6 +198,10 @@ public class MyHomeFragment extends Fragment {
                             String content=(String) document.getData().get("content");
                             String uName=(String) document.getData().get("name");
                             String wTime=(String) document.getData().get("writtenTime");
+                            Log.d ("getchildid", title);
+                            Log.d ("getchildid", content);
+                            Log.d ("getchildid", uName);
+                            Log.d ("getchildid", wTime);
                             activity.onFragmentChanged(title, content, uName, wTime);
 
                         }
