@@ -32,6 +32,7 @@ public class iCalendarAdapter extends BaseAdapter {
 
     public iCalendarAdapter(ArrayList<iCalendarItem> arrayList) {
         this.scheduleList = new ArrayList<iCalendarItem>();
+        this.scheduleList.addAll(arrayList);
     }
 
 
