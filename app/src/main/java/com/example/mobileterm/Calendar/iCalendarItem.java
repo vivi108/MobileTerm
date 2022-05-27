@@ -1,31 +1,27 @@
 package com.example.mobileterm.Calendar;
 
 public class iCalendarItem { //schedule 싹다 str로 바꿈 getSche이거말고
-    private String str;
+    private String schedule;
     private String date;
     private String isDone;
 
 
-    public iCalendarItem(String str, String date, String isDone) {
-        this.str = str;
+    public iCalendarItem(String schedule, String date, String isDone) {
+        this.schedule = schedule;
         this.date = date;
         this.isDone = isDone;
     }
 
     public iCalendarItem(String str, String isDone) {
-        this.str = str;
+        this.schedule = str;
         this.isDone = isDone;
     }
 
 
-    public iCalendarItem(String str) { this.str = str; } //일단 이걸로 테스ㅡ트
+    public iCalendarItem(String str) { this.schedule = str; } //일단 이걸로 테스ㅡ트
 
     public iCalendarItem() {    }
 
-
-    public String getSchedule() {
-        return str;
-    }
 
     public String getDate() {
         return date;
@@ -33,9 +29,12 @@ public class iCalendarItem { //schedule 싹다 str로 바꿈 getSche이거말고
 
     public String getIsDone() { return isDone;  }
 
-    public void setSchedule(String str)
-    {
-        this.str = str;
+    public String getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(String schedule) {
+        this.schedule = schedule;
     }
 
     public void setDate(String date) {

@@ -65,7 +65,9 @@ public class iCalendarFragment extends Fragment {
     private iCalendarFragment iCalendarFragment;
     private FirebaseAuth mAuth;
     private FirebaseUser curUser;
+    private HashMap<String, ArrayList<iCalendarItem>> dateTable = new HashMap<String, ArrayList<iCalendarItem>>();
     ArrayList<iCalendarItem> scheduleList = new ArrayList<iCalendarItem>();
+
     private ListView listview;
     private iCalendarAdapter adapter;
 
@@ -94,9 +96,9 @@ public class iCalendarFragment extends Fragment {
         CollectionReference docref = db.collection("Users").document(curUser.getUid()).collection("iSchedule");
 
         //복사하면 사용할 어레이리스트
-        ArrayList<iCalendarItem> newArrayList = new ArrayList<iCalendarItem>();
 
-        adapter = new iCalendarAdapter();
+
+//        adapter = new iCalendarAdapter();
 
 
 
@@ -120,6 +122,7 @@ public class iCalendarFragment extends Fragment {
                 save_Btn.setVisibility(View.INVISIBLE);
                 contextEditText.setVisibility(View.INVISIBLE);
 
+                ArrayList<iCalendarItem> newArrayList = new ArrayList<iCalendarItem>();
 
                 String month = String.valueOf(date.getMonth() + 1);
                 if(date.getMonth()+1 < 10)
@@ -132,7 +135,11 @@ public class iCalendarFragment extends Fragment {
                 String calendarDate = String.valueOf(date.getYear()) + month + day; //캘린더의 날짜 클릭 시 이걸로 받아옴
                 System.out.println("클릭날짜 : " + calendarDate);
 
-
+                try {
+                    dateTable.get(calendarDate);
+                }catch (Exception e){
+                    dateTable.put(calendarDate, new ArrayList<iCalendarItem>());
+                }
 
                //클릭한 날짜의 일정을 파베에서 불러와서 그 날에 해당하는 일정 리스트뷰 어댑터에 넣기
                docref
@@ -147,7 +154,7 @@ public class iCalendarFragment extends Fragment {
                                             {
                                                 System.out.println("클릭날짜 : " + calendarDate);
                                                 System.out.println("db날짜 : " + String.valueOf(document.getData().get("date")));
-                                                System.out.println("일정 : " + ((String) document.getData().get("str")));
+                                                System.out.println("일정 : " + ((String) document.getData().get("schedule")));
                                                 String schedule = ((String) document.getData().get("schedule")); //그 일정을 가져오겠다
                                                 String isDone = String.valueOf(document.getData().get("isDone"));
                                                 String date = ((String) document.getData().get("date"));
@@ -158,8 +165,16 @@ public class iCalendarFragment extends Fragment {
                                             }
                                         }
                                     }
-                                    if(!newArrayList.equals(sche))
+                                    try {
+                                        if(!dateTable.get(calendarDate).equals(newArrayList)){
+                                            dateTable.put(calendarDate, newArrayList);
+                                        }
+                                    }catch (Exception e){
+                                        dateTable.put(calendarDate, newArrayList);
+                                    }
+                                    adapter = new iCalendarAdapter(dateTable.get(calendarDate));
                                     listview.setAdapter(adapter);
+
                                 }
                             }
                         });

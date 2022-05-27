@@ -30,7 +30,7 @@ public class iCalendarAdapter extends BaseAdapter {
     private FirebaseFirestore db;
     private FirebaseUser curUser;
 
-    public iCalendarAdapter() {
+    public iCalendarAdapter(ArrayList<iCalendarItem> arrayList) {
         this.scheduleList = new ArrayList<iCalendarItem>();
     }
 
