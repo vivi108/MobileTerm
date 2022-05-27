@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="일정명"
+        android:textSize="20dp"
+        android:textColor="@color/black"/>
+
+    //리스트에서 체크박스 대신 했는지 보여줄거는?
+    <CheckBox
+        android:id="@+id/isDone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="isDone"
+        android:textStyle="bold"
+        />
+
+</LinearLayout>

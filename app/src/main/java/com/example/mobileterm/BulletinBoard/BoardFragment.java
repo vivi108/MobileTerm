@@ -64,7 +64,6 @@ public class BoardFragment extends Fragment {
         Log.e(TAG, "onCreate called");
         filterDialog = new Dialog(getActivity());
         filterDialog.setContentView(R.layout.activity_pop_up_filter);
-
     }
 
     @Nullable
