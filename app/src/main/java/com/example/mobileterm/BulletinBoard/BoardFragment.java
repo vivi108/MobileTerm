@@ -46,7 +46,6 @@ public class BoardFragment extends Fragment {
         super.onCreate(savedInstanceState);
         db = FirebaseFirestore.getInstance();
         Log.e(TAG, "onCreate called");
-
     }
 
     @Nullable

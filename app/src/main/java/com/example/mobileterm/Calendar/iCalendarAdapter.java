@@ -26,21 +26,32 @@ public class iCalendarAdapter extends BaseAdapter {
     private TextView isdoneCheck;
     LayoutInflater inflater;
     private ArrayList<iCalendarItem> scheduleList;
-    private ArrayList<iCalendarItem> scheduleList1;
+    //private ArrayList<iCalendarItem> scheduleList1;
     private FirebaseFirestore db;
     private FirebaseUser curUser;
 
     public iCalendarAdapter() {
+        this.scheduleList = new ArrayList<iCalendarItem>();
     }
 
-    public iCalendarAdapter(Context context, ArrayList<iCalendarItem> scheduleList2) {
-        mContext = context;
-        this.scheduleList1 = new ArrayList<iCalendarItem>();
-        this.scheduleList1.addAll(scheduleList2);
-        inflater = LayoutInflater.from(mContext);
-        this.scheduleList = new ArrayList<iCalendarItem>();
-        this.scheduleList.addAll(scheduleList2);
-        Log.d(TAG, "ListViewAdapter : " + scheduleList.size());
+
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        final int pos = position;
+        final Context context = parent.getContext();
+
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.icontent, parent, false);
+        }
+
+        scheduleTextView = (TextView) convertView.findViewById(R.id.text1);
+
+        iCalendarItem a = scheduleList.get(position);
+
+        scheduleTextView.setText(a.getSchedule());
+
+        return convertView;
+
     }
 
     @Override
@@ -59,64 +70,64 @@ public class iCalendarAdapter extends BaseAdapter {
     }
 
 
-    public void addItem(iCalendarItem item) {
+    public void addItem(String schedule) // 일단 스케줄만 add 하도록 테스트
+    {
+        iCalendarItem item = new iCalendarItem();
+
+        item.setSchedule(schedule);
+
         scheduleList.add(item);
-        notifyDataSetChanged();
-    }
-
-//    public void addItem(String schedule, String isDone) //string 맞는지
-//    {
-//        iCalendarItem item = new iCalendarItem();
-//
-//        item.setSchedule(schedule);
-//
-//        scheduleList.add(item);
-//    }
-
-    @Override
-    public View getView(final int position, View itemView, ViewGroup parent) {
-        final Context context = parent.getContext();
-        final iCalendarItem a = scheduleList.get(position);
-        if (itemView == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            itemView = inflater.inflate(R.layout.icontent, parent, false);
-        } else {
-            View view = new View(context);
-            view = itemView;
-        }
-
-        scheduleTextView = (TextView) itemView.findViewById(R.id.text1);
-        isdoneCheck = (TextView) itemView.findViewById(R.id.isDone);
-
-        scheduleTextView.setText(a.getSchedule());
-        isdoneCheck.setText(a.getIsDone());
-        db = FirebaseFirestore.getInstance();
-
-        CollectionReference docref = db.collection("Users").document(curUser.getUid()).collection("iSchedule");
-
-
-        return itemView;
-
     }
 }
 
-//    public View getView(final int position, View convertView, ViewGroup parent) {
-//        final int pos = position;
+
+
+
+
+
+
+
+
+
+
+//    public void addItem(iCalendarItem item) {
+//        scheduleList.add(item);
+//        notifyDataSetChanged();
+//    }
+
+//    public View getView(final int position, View itemView, ViewGroup parent) {
 //        final Context context = parent.getContext();
-//
-//        if (convertView == null) {
+//        final iCalendarItem a = scheduleList.get(position);
+//        if (itemView == null) {
 //            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//            convertView = inflater.inflate(R.layout.icontent, parent, false);
+//            itemView = inflater.inflate(R.layout.icontent, parent, false);
+//        } else {
+//            View view = new View(context);
+//            view = itemView;
 //        }
 //
-//        scheduleTextView = (TextView) convertView.findViewById(R.id.text1);
-//
-//        iCalendarItem a = scheduleList.get(position);
+//        scheduleTextView = (TextView) itemView.findViewById(R.id.text1);
+//        isdoneCheck = (TextView) itemView.findViewById(R.id.isDone);
 //
 //        scheduleTextView.setText(a.getSchedule());
+//        isdoneCheck.setText(a.getIsDone());
+//        db = FirebaseFirestore.getInstance();
 //
-//        return convertView;
+//        CollectionReference docref = db.collection("Users").document(curUser.getUid()).collection("iSchedule");
+//
+//
+//        return itemView;
 //
 //    }
 
+
+//    public iCalendarAdapter(Context context, ArrayList<iCalendarItem> scheduleList2) {
+//        mContext = context;
+//        this.scheduleList1 = new ArrayList<iCalendarItem>();
+//        this.scheduleList1.addAll(scheduleList2);
+//        inflater = LayoutInflater.from(mContext);
+//        this.scheduleList = new ArrayList<iCalendarItem>();
+//        this.scheduleList.addAll(scheduleList2);
+//        Log.d(TAG, "ListViewAdapter : " + scheduleList.size());
+//    }
 
