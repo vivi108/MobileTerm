@@ -22,7 +22,7 @@ public class iCalendarAdapter extends BaseAdapter {
     Context mContext;
     private static final String TAG = "iCalendarAdapter";
 
-    private TextView scheduleTextView;
+//    private TextView scheduleTextView;
     private TextView isdoneCheck;
     LayoutInflater inflater;
     private ArrayList<iCalendarItem> scheduleList;
@@ -42,9 +42,12 @@ public class iCalendarAdapter extends BaseAdapter {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.icontent, parent, false);
+        }else{
+            View view = new View(context);
+            view = convertView;
         }
 
-        scheduleTextView = (TextView) convertView.findViewById(R.id.text1);
+        TextView scheduleTextView = (TextView) convertView.findViewById(R.id.text1);
 
         iCalendarItem a = scheduleList.get(position);
 
