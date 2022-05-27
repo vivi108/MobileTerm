@@ -49,8 +49,8 @@ public class SettingFragment extends Fragment {
     TextView phone_tv;
     TextView authDate;
 
-    TextView emailchange;
-    TextView phonechange;
+    TextView regionauth;
+    TextView regionchange;
     TextView authDatechange;
 
     Switch sound;
@@ -77,30 +77,17 @@ public class SettingFragment extends Fragment {
         email_tv = (TextView) rootView.findViewById(R.id.setting_info_email_tv);
         phone_tv = (TextView) rootView.findViewById(R.id.setting_info_phone_tv);
         authDate = (TextView) rootView.findViewById(R.id.setting_info_authenticate_tv);
-       // emailchange = (TextView) rootView.findViewById(R.id.setting_info_email_change_tv);
-        //phonechange = (TextView) rootView.findViewById(R.id.setting_info_phone_change_tv);
-       authDatechange = (TextView) rootView.findViewById(R.id.setting_info_authenticate_change_tv);
+
+        authDatechange = (TextView) rootView.findViewById(R.id.setting_info_authenticate_change_tv);
+        regionauth = (TextView) rootView.findViewById(R.id.setting_info_region_change_tv);
+        regionchange =(TextView) rootView.findViewById(R.id.setting_info_region_tv) ;
 
         sound = (Switch) rootView.findViewById(R.id.setting_alarm_sound_switch);
         viberate = (Switch) rootView.findViewById(R.id.setting_alarm_ring_switch);
 
         auth =FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
-        if (user != null) {
-            // Name, email address, and profile photo Url
-            name = user.getDisplayName();
-            email = user.getEmail();
-            email_tv.setText(email);
-            photoUrl = user.getPhotoUrl();
-
-            // Check if user's email is verified
-            boolean emailVerified = user.isEmailVerified();
-
-            // The user's ID, unique to the Firebase project. Do NOT use this value to
-            // authenticate with your backend server, if you have one. Use
-            // FirebaseUser.getIdToken() instead.
-            uid = user.getUid();
-        }
+        GetInfo(user);
 
         //소리, 무음, 진동 제어
 
@@ -126,46 +113,59 @@ public class SettingFragment extends Fragment {
         });
 
 
-        //휴대폰 변경 설정정
+        //이메일 인증
         authDatechange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final EditText input = new EditText(requireActivity());
-//
-                FrameLayout container = new FrameLayout(getContext());
-                FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
-                params.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
-                input.setLayoutParams(params);
-                container.addView(input);
+//                final EditText input = new EditText(requireActivity());
+
+//                FrameLayout container = new FrameLayout(getContext());
+//                FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                params.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+//                params.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+//                input.setLayoutParams(params);
+//                container.addView(input);
                 AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity(), R.style.MyAlertDialogStyle);
                 alert.setTitle("이메일로 인증하기");
-                alert.setMessage("인증받을 이메일을 작성해주세요");
-                alert.setView(container);
+                alert.setMessage("이메일을 인증받으시겠습니까?");
+//                alert.setView(container);
                 alert.setPositiveButton("인증메일 받기", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String value = input.getText().toString();
-                        value.toString();
-
+//                        String value = input.getText().toString();
+//                        value.toString();
                         //이메일에 인증메일 보내기
-                        //인증이 되었으면 현재 날짜로 timestame
+                        //인증이 되었으면 verified
                         auth =FirebaseAuth.getInstance();
                         user = auth.getCurrentUser();
-                        auth.useAppLanguage();                //해당기기의 언어 설정
+                        auth.useAppLanguage(); //해당기기의 언어 설정
                         user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {                         //해당 이메일에 확인메일을 보냄
-                                    Log.d(TAG, "Email sent.");
-                                    Toast.makeText(requireActivity(),
-                                            "Verification email sent to " + user.getEmail(),
-                                            Toast.LENGTH_SHORT).show();
-                                    //isVerified로 수정해야함.
-                                    Date timestamp = new Date();
-                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                                    String a=sdf.format(timestamp);
-                                    authDate.setText(a);
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "Email sent.");//해당 이메일에 확인메일을 보냄
+                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                    db.collection("User").document(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()){
+                                                DocumentSnapshot documentSnapshot = task.getResult();
+                                                if (documentSnapshot.exists()){
+//                                                    Boolean curLike = (Boolean) documentSnapshot.getData().get("verified");
+                                                    Boolean updateLike = true;
+                                                    db.collection("User").document(user.getUid()).update("verified", updateLike).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            Log.d(TAG,"Verified: true updated");
+                                                            Toast.makeText(getActivity().getApplicationContext(), "인증되었습니다.",Toast.LENGTH_LONG).show();
+                                                            regionchange.setText("true");
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        }
+                                    });
+
                                 } else {                                             //메일 보내기 실패
                                     Log.e(TAG, "sendEmailVerification", task.getException());
                                     Toast.makeText(requireActivity(),
@@ -187,6 +187,64 @@ public class SettingFragment extends Fragment {
 
         });
 
+        //지역인증
+        regionauth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final EditText input = new EditText(requireActivity());
+//
+                FrameLayout container = new FrameLayout(getContext());
+                FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+                params.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+                input.setLayoutParams(params);
+                container.addView(input);
+                AlertDialog.Builder alert = new AlertDialog.Builder(requireActivity(), R.style.MyAlertDialogStyle);
+                alert.setTitle("지역인증 받기");
+                alert.setMessage("현재 위치를 입력해주세요");
+                alert.setView(container);
+                alert.setPositiveButton("인증하기", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String value = input.getText().toString();
+                        value.toString();
+
+                        //edittext에 있는 주소 받아와서 settext & 서버에 저장<-완성
+
+                        auth = FirebaseAuth.getInstance();
+                        user = auth.getCurrentUser();
+                        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+                        DocumentReference documentReference = fb.collection("Users").document(user.getUid());
+                        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document != null) {
+                                        if (document.exists()) {
+                                            document.getData().put("address", value);
+                                            regionchange.setText(value);
+                                            //authDate
+
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+
+                });
+                alert.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //canceled
+                    }
+                });
+                alert.show();
+            }
+
+        });
         return rootView;
     }
     public void GetInfo(FirebaseUser firebaseUser) {
@@ -201,9 +259,12 @@ public class SettingFragment extends Fragment {
                         if (document.exists()) {
                             String a = (String) document.getData().get("email");
                             String b= (String) document.getData().get("phone");
-                            String c = (String) document.getData().get("region");
+                            String c = (String) document.getData().get("address");
+                            String d = (String) document.getData().get("verified");
                             email_tv.setText(a);
                             phone_tv.setText(b);
+                            regionchange.setText(c);
+                            authDate.setText(d);
                             //authDate
 
                         }
@@ -212,6 +273,7 @@ public class SettingFragment extends Fragment {
             }
         });
     }
+
 
 
 }

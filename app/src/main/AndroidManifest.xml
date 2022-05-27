@@ -22,9 +22,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MobileTerm">
         <activity
+            android:name=".ChattingActivity.ChattingActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".BulletinBoard.PopUpFilter"
             android:exported="false"
             android:theme="@android:style/Theme.Dialog"/>
+
+
         <activity
             android:name=".Init.GoogleLoginSetupActivity"
             android:exported="false" />

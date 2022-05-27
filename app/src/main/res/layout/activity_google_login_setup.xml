@@ -84,6 +84,14 @@
                     android:hint="생년월일 : 6자리 "
                     android:inputType="date"/>
 
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/MemberInfoAddressGoogle"
+                    android:hint="주소: ~~시 ~~구"
+                    android:inputType="text"
+                    android:ems="10"/>
+
 
 
                 <Button

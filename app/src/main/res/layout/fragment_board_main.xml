@@ -18,6 +18,7 @@
             android:layout_weight="2"
             android:hint="@string/searchEditText"
             android:inputType="text"
+            android:fontFamily="@font/kc_regular"
             tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
@@ -39,7 +40,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/filterButton"
             android:text="@string/filterButton"
-            android:textStyle="bold"
+            android:fontFamily="@font/kc_regular"
             android:layout_marginEnd="15dp"/>
 
         <ImageButton

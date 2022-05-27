@@ -151,13 +151,14 @@ public class iCalendarFragment extends Fragment {
                                                 String schedule = ((String) document.getData().get("schedule")); //그 일정을 가져오겠다
                                                 String isDone = String.valueOf(document.getData().get("isDone"));
                                                 String date = ((String) document.getData().get("date"));
-                                                adapter.addItem(schedule);
-                                                adapter.notifyDataSetChanged();
+//                                                adapter.addItem(schedule);
+//                                                adapter.notifyDataSetChanged();
                                                 iCalendarItem data = new iCalendarItem(schedule, date, isDone); //이 3개를 쌍으로 data에 넣음
-                                                //newArrayList.add(0, data);
+                                                newArrayList.add(0, data);
                                             }
                                         }
                                     }
+                                    if(!newArrayList.equals(sche))
                                     listview.setAdapter(adapter);
                                 }
                             }

@@ -24,6 +24,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -81,11 +82,11 @@ public class ListViewAdapter extends BaseAdapter {
         db = FirebaseFirestore.getInstance();
 
         CollectionReference docref = db.document("BulletinBoard/"+did).collection("BoardTags");
-
         docref.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    tagTextView.setText("");
                     for (DocumentSnapshot document : task.getResult()){
                         String tag = tagTextView.getText().toString();
 
@@ -122,27 +123,224 @@ public class ListViewAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void filter(String searchText) {
+    // 검정
+    public void filter(String searchText, int checkedId) {
+        //검색만 한거임, 여기에 정렬만 추가되면 될듯?
+        if (searchText != null) {
+            searchText = searchText.toLowerCase(Locale.getDefault());
+            if (searchText.length() == 0) {
+                switch (checkedId){
+                    case R.id.orderLike:{
+                        for (BoardInfo itr:itemList){
+                            DataList.add(itr);
+                        }
+                        Collections.sort(DataList);
+                        notifyDataSetChanged();
+                        break;
+                    }
+                    case R.id.orderOld:{
+                        DataList.clear();
+                        for (BoardInfo itr:itemList){
+                            DataList.add(0, itr);
+                        }
+                        notifyDataSetChanged();
+                        break;
+                    }
+                    case R.id.orderRecent:{
+                        renew();
+                        break;
+                    }
+                }
+            } else {
+                DataList.clear();
+                switch (checkedId){
+                    case R.id.orderLike:{
+                        for (BoardInfo itr : itemList) {
+                            if (itr.getContent().toLowerCase(Locale.getDefault()).contains(searchText) ||
+                                    itr.getTitle().toLowerCase(Locale.ROOT).toLowerCase(Locale.getDefault()).contains(searchText) ||
+                                    itr.getName().toLowerCase(Locale.getDefault()).contains(searchText)) {
+                                DataList.add(itr);
+                                Log.d(TAG, itr.getTitle() + " " + itr.getName() + " " + itr.getContent());
+                            }
+                        }
+                        Collections.sort(DataList);
+                        notifyDataSetChanged();
+                        break;
+                    }
+                    case R.id.orderOld:{
+                        for (BoardInfo itr : itemList) {
+                            if (itr.getContent().toLowerCase(Locale.getDefault()).contains(searchText) ||
+                                    itr.getTitle().toLowerCase(Locale.ROOT).toLowerCase(Locale.getDefault()).contains(searchText) ||
+                                    itr.getName().toLowerCase(Locale.getDefault()).contains(searchText)) {
+                                DataList.add(0,itr);
+                                Log.d(TAG, itr.getTitle() + " " + itr.getName() + " " + itr.getContent());
+                            }
+                        }
+
+                        notifyDataSetChanged();
+                        break;
+                    }
+                    case R.id.orderRecent:{
+                        for (BoardInfo itr : itemList) {
+                            if (itr.getContent().toLowerCase(Locale.getDefault()).contains(searchText) ||
+                                    itr.getTitle().toLowerCase(Locale.ROOT).toLowerCase(Locale.getDefault()).contains(searchText) ||
+                                    itr.getName().toLowerCase(Locale.getDefault()).contains(searchText)) {
+                                DataList.add(itr);
+                                Log.d(TAG, itr.getTitle() + " " + itr.getName() + " " + itr.getContent());
+                            }
+                        }
+
+                        notifyDataSetChanged();
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    // 태정
+    public void filter(ArrayList<String> didList, int checkedId){
+        //태그 정렬
+        DataList.clear();
+        switch (checkedId){
+            case R.id.orderLike:{
+                if (didList.size() > 0){
+
+                    for (BoardInfo itr : itemList){
+                        if (didList.contains(itr.getDid())){
+                            DataList.add(itr);
+                        }
+                    }
+
+                }
+                Collections.sort(DataList);
+                notifyDataSetChanged();
+                break;
+            }
+            case R.id.orderOld:{
+                DataList.clear();
+                if (didList.size() > 0){
+
+                    for (BoardInfo itr : itemList){
+                        if (didList.contains(itr.getDid())){
+                            DataList.add(0,itr);
+                        }
+                    }
+
+                }
+                for (BoardInfo itr:itemList){
+                    DataList.add(0, itr);
+                }
+                notifyDataSetChanged();
+                break;
+            }
+            case R.id.orderRecent:{
+                if (didList.size() > 0){
+
+                    for (BoardInfo itr : itemList){
+                        if (didList.contains(itr.getDid())){
+                            DataList.add(itr);
+                        }
+                    }
+                }
+                notifyDataSetChanged();
+                break;
+            }
+        }
+
+    }
+
+    public void renew(){
+        DataList.clear();
+        for (BoardInfo itr : itemList){
+            DataList.add(itr);
+        }
+        notifyDataSetChanged();
+    }
+
+    // 정렬
+    public void reorder(int checkedId){
+        switch (checkedId){
+            case R.id.orderLike:{
+                Collections.sort(DataList);
+                notifyDataSetChanged();
+                break;
+            }
+            case R.id.orderOld:{
+                DataList.clear();
+                for (BoardInfo itr:itemList){
+                    DataList.add(0, itr);
+                }
+                notifyDataSetChanged();
+                break;
+            }
+            case R.id.orderRecent:{
+                renew();
+                break;
+            }
+        }
+    }
+
+    // 검태정
+    public void searchTagReorder(String searchText, ArrayList<String> didList, int checkedId){
+        // 검색 태그 정렬
         if (searchText != null) {
             searchText = searchText.toLowerCase(Locale.getDefault());
 
             if (searchText.length() == 0) {
-                DataList.clear();
-                for (BoardInfo itr:itemList){
-                    DataList.add(itr);
-                }
-                notifyDataSetChanged();
+               filter(didList, checkedId);
             } else {
                 DataList.clear();
-                for (BoardInfo itr : itemList) {
-                    if (itr.getContent().toLowerCase(Locale.getDefault()).contains(searchText) ||
-                            itr.getTitle().toLowerCase(Locale.ROOT).toLowerCase(Locale.getDefault()).contains(searchText) ||
-                            itr.getName().toLowerCase(Locale.getDefault()).contains(searchText)) {
-                        DataList.add(itr);
-                        Log.d(TAG, itr.getTitle() + " " + itr.getName() + " " + itr.getContent());
+                switch (checkedId){
+                    case R.id.orderLike:{
+                        if (didList.size() > 0){
+
+                            for (BoardInfo itr : itemList){
+                                if (didList.contains(itr.getDid()) && itr.getContent().toLowerCase(Locale.getDefault()).contains(searchText) ||
+                                        itr.getTitle().toLowerCase(Locale.ROOT).toLowerCase(Locale.getDefault()).contains(searchText) ||
+                                        itr.getName().toLowerCase(Locale.getDefault()).contains(searchText)){
+                                    DataList.add(itr);
+                                }
+                            }
+
+                        }
+                        Collections.sort(DataList);
+                        notifyDataSetChanged();
+                        break;
+                    }
+                    case R.id.orderOld:{
+                        DataList.clear();
+                        if (didList.size() > 0){
+
+                            for (BoardInfo itr : itemList){
+                                if (didList.contains(itr.getDid()) && itr.getContent().toLowerCase(Locale.getDefault()).contains(searchText) ||
+                                        itr.getTitle().toLowerCase(Locale.ROOT).toLowerCase(Locale.getDefault()).contains(searchText) ||
+                                        itr.getName().toLowerCase(Locale.getDefault()).contains(searchText)){
+                                    DataList.add(0,itr);
+                                }
+                            }
+
+                        }
+
+                        notifyDataSetChanged();
+                        break;
+                    }
+                    case R.id.orderRecent:{
+                        if (didList.size() > 0){
+
+                            for (BoardInfo itr : itemList){
+                                if (didList.contains(itr.getDid()) && itr.getContent().toLowerCase(Locale.getDefault()).contains(searchText) ||
+                                        itr.getTitle().toLowerCase(Locale.ROOT).toLowerCase(Locale.getDefault()).contains(searchText) ||
+                                        itr.getName().toLowerCase(Locale.getDefault()).contains(searchText)){
+                                    DataList.add(itr);
+                                }
+                            }
+                        }
+                        notifyDataSetChanged();
+                        break;
                     }
                 }
-                notifyDataSetChanged();
+
+
             }
         }
     }

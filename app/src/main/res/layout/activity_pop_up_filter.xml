@@ -2,12 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="300dp"
-    android:layout_height="250dp"
+    android:layout_width="340dp"
+    android:layout_height="300dp"
     tools:context=".BulletinBoard.PopUpFilter"
     android:orientation="vertical"
     android:background="@color/white"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    android:padding="10dp">
 
     <TextView
         android:layout_width="match_parent"
@@ -41,10 +42,47 @@
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="설정된 태그: "
+        android:id="@+id/appliedTagsTextView"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tagEraseButton"
         android:text="태그 지우기"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="정렬기준:"/>
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/radioGroup">
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="최신순"
+                android:textColor="@color/black"
+                android:id="@+id/orderRecent"
+                android:checked="true"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="좋아요순"
+                android:textColor="@color/black"
+                android:id="@+id/orderLike"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="오래된순"
+                android:textColor="@color/black"
+                android:id="@+id/orderOld"/>
+
+        </RadioGroup>
+
 
 </LinearLayout>

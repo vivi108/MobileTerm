@@ -39,6 +39,7 @@ public class GoogleLoginSetupActivity extends AppCompatActivity {
     EditText memberInfoPhone;
     EditText memberInfoNickname;
     EditText memberInfoDate;
+    EditText memberInfoAddress;
 
     String uid;
     String name;
@@ -46,6 +47,7 @@ public class GoogleLoginSetupActivity extends AppCompatActivity {
     String phone;
     String date;
     String nickname;
+    String address;
     ArrayList<String> nicknames;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +74,10 @@ public class GoogleLoginSetupActivity extends AppCompatActivity {
         userEmail.setText(email);
         userName.setText(name);
 
-        memberInfoDate = findViewById(R.id.MemberInfoDateGoogle);
-        memberInfoNickname = findViewById(R.id.MemberInfoNickNameGoogle);
-        memberInfoPhone = findViewById(R.id.MemberInfoPhoneGoogle);
+        memberInfoDate = (EditText) findViewById(R.id.MemberInfoDateGoogle);
+        memberInfoNickname = (EditText) findViewById(R.id.MemberInfoNickNameGoogle);
+        memberInfoPhone = (EditText) findViewById(R.id.MemberInfoPhoneGoogle);
+        memberInfoAddress = (EditText) findViewById(R.id.MemberInfoAddressGoogle);
 
         CalendarDay calendarDay = CalendarDay.today();
         String year = Integer.toString(calendarDay.getYear());
@@ -86,10 +89,12 @@ public class GoogleLoginSetupActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("왜 오류임?",memberInfoDate.getText().toString());
                 date = memberInfoDate.getText().toString();
                 nickname = memberInfoNickname.getText().toString();
                 phone = memberInfoPhone.getText().toString();
-                dbInsertion(name, date, phone, email, nickname, regDate);
+                address = memberInfoAddress.getText().toString();
+                dbInsertion(name, date, phone, email, nickname, regDate, address);
             }
         });
 
@@ -109,10 +114,10 @@ public class GoogleLoginSetupActivity extends AppCompatActivity {
 
     }
 
-    private void dbInsertion(String name, String date, String phone, String email, String nickname, String regDate){
+    private void dbInsertion(String name, String date, String phone, String email, String nickname, String regDate, String address){
         Log.e("temp",date);
-        if (name.length() > 0 && date.length() == 6 && phone.length() >= 8 && email.contains("@") && nickname.length() < 20 && !nicknames.contains(nickname)){
-            UserInfoClass userInfo = new UserInfoClass(name, date, phone, email, nickname, regDate);
+        if (name.length() > 0 && date.length() == 6 && phone.length() >= 8 && email.contains("@") && nickname.length() < 20 && !nicknames.contains(nickname) && address.contains("시") && address.contains("구")){
+            UserInfoClass userInfo = new UserInfoClass(name, date, phone, email, nickname, regDate, address);
 
             db.collection("Users").document(user.getUid()).set(userInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
@@ -134,11 +139,11 @@ public class GoogleLoginSetupActivity extends AppCompatActivity {
                 }
             });
         }else{
-            CheckSignUpMemberInfoCondition(name, date, phone, email, nickname);
+            CheckSignUpMemberInfoCondition(name, date, phone, email, nickname, address);
         }
     }
 
-    private void CheckSignUpMemberInfoCondition(String name, String date, String phone, String email, String nickname) {
+    private void CheckSignUpMemberInfoCondition(String name, String date, String phone, String email, String nickname, String address) {
         // 메서드가 호출되는 시점에는 회원가입이 이루어진 상태이다.
         // 따라서 중간에 문제가 생겼다면 해당 계정을 삭제해주어야 한다.
         Log.e("temp", "CheckSignUpMemberInfoCondition: " + user.getEmail());
@@ -159,6 +164,8 @@ public class GoogleLoginSetupActivity extends AppCompatActivity {
             StartToast("닉네임이 중복되었습니다.");
         } else if (nickname.length() < 20) {
             StartToast("닉네임 길이를 확인해주세요.");
+        }else{
+            StartToast("주소를 확인해주세요.");
         }
     }
 
