@@ -74,13 +74,15 @@ public class iCalendarAdapter extends BaseAdapter {
     }
 
 
-    public void addItem(String schedule) // 일단 스케줄만 add 하도록 테스트
+    public void addItem(iCalendarItem newItem) // 일단 스케줄만 add 하도록 테스트
     {
-        iCalendarItem item = new iCalendarItem();
+//        iCalendarItem item = new iCalendarItem();
+//
+//        item.setSchedule(schedule);
+        scheduleList.add(newItem);
+        notifyDataSetChanged();
 
-        item.setSchedule(schedule);
 
-        scheduleList.add(item);
     }
 }
 

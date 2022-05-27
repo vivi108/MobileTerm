@@ -240,11 +240,12 @@ public class iCalendarFragment extends Fragment {
                         String Date = calendarDate; //일정 쓴 날짜겠지
                         String IsDone = "false"; //방금 추가한거니까 false
                         String Context = str;
+                        iCalendarItem newItem = new iCalendarItem(Context, Date, IsDone);
 
                         //에딧텍스트 일정을 db 컬렉션에 넣음 - user 안 iSchedule 컬렉션에
                         docref
                                 .document()
-                                .set(new iCalendarItem(Context, Date, IsDone)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                .set(newItem).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
@@ -253,30 +254,32 @@ public class iCalendarFragment extends Fragment {
                             }
                         });
 
+                        dateTable.get(calendarDate).add(newItem);
+                        adapter.addItem(newItem);
                         //이제 파베에서 불러옴
                         //불러와서 해당날짜 일정을 리스트뷰에 넣어놓음
-                        docref
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                if (document.exists()) {
-                                                    if (String.valueOf(document.getData().get("date")).equals(calendarDate))
-                                                    {
-                                                        String str = ((String) document.getData().get("schedule")); //그 일정을 가져오겠다
-                                                        String isDone = String.valueOf(document.getData().get("isDone"));
-                                                        String date = ((String) document.getData().get("date"));
-                                                        adapter.addItem(str); //리스트에서는 스케줄만 보여줄거니까?
-                                                        adapter.notifyDataSetChanged();
-                                                    }
-                                                }
-                                            }
-                                            listview.setAdapter(adapter);
-                                        }
-                                    }
-                                });
+//                        docref
+//                                .get()
+//                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                        if (task.isSuccessful()) {
+//                                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                                if (document.exists()) {
+//                                                    if (String.valueOf(document.getData().get("date")).equals(calendarDate))
+//                                                    {
+//                                                        String str = ((String) document.getData().get("schedule")); //그 일정을 가져오겠다
+//                                                        String isDone = String.valueOf(document.getData().get("isDone"));
+//                                                        String date = ((String) document.getData().get("date"));
+//                                                        adapter.addItem(str); //리스트에서는 스케줄만 보여줄거니까?
+//                                                        adapter.notifyDataSetChanged();
+//                                                    }
+//                                                }
+//                                            }
+//                                            listview.setAdapter(adapter);
+//                                        }
+//                                    }
+//                                });
                         //저장 버튼을 클릭 한 후 - 저장버튼과 edittext 안보이고 / 수정, 삭제 버튼, 일정 보여주는 거 보이게함
                         save_Btn.setVisibility(View.INVISIBLE);
                         add_Btn.setVisibility(View.VISIBLE);
