@@ -121,7 +121,10 @@ public class iCalendarFragment extends Fragment {
                 diaryTextView.setVisibility(View.VISIBLE);
                 save_Btn.setVisibility(View.INVISIBLE);
                 contextEditText.setVisibility(View.INVISIBLE);
-
+                listview.setVisibility(View.VISIBLE);
+                add_Btn.setVisibility(View.VISIBLE);
+                del_Btn.setVisibility(View.VISIBLE);
+                diaryTextView.setText(String.format("%d / %d / %d", date.getYear(), date.getMonth() + 1, date.getDay()));
                 ArrayList<iCalendarItem> newArrayList = new ArrayList<iCalendarItem>();
 
                 String month = String.valueOf(date.getMonth() + 1);
@@ -174,18 +177,16 @@ public class iCalendarFragment extends Fragment {
                                     }
                                     adapter = new iCalendarAdapter(dateTable.get(calendarDate));
                                     listview.setAdapter(adapter);
-
+                                    contextEditText.setText("");
                                 }
                             }
                         });
 
-                listview.setVisibility(View.VISIBLE);
-                add_Btn.setVisibility(View.VISIBLE);
-                del_Btn.setVisibility(View.VISIBLE);
+
 
                 //중간 날짜 어케 보여줄지 + 일정 추가되는 칸 초기화
-                diaryTextView.setText(String.format("%d / %d / %d", date.getYear(), date.getMonth() + 1, date.getDay()));
-                contextEditText.setText("");
+
+
 
 
                 //추가 버튼 -> 저장 버튼 로직으로
