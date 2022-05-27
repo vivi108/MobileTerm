@@ -170,10 +170,15 @@ public class iCalendarFragment extends Fragment {
                                     }
                                     try {
                                         if(!dateTable.get(calendarDate).equals(newArrayList)){
+
                                             dateTable.put(calendarDate, newArrayList);
                                         }
                                     }catch (Exception e){
                                         dateTable.put(calendarDate, newArrayList);
+                                    }
+                                    Log.d(TAG,"should show schedules");
+                                    for (iCalendarItem itr : dateTable.get(calendarDate)){
+                                        Log.d(TAG,"item : "+itr.getDate()+" "+itr.getSchedule());
                                     }
                                     adapter = new iCalendarAdapter(dateTable.get(calendarDate));
                                     listview.setAdapter(adapter);
