@@ -53,6 +53,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
@@ -67,7 +68,7 @@ public class MyHomeFragment extends Fragment {
     String[][]  childids =new String[999][999];
     String uid;
     BarChart barChart;
-    ArrayList<Integer> jsonList = new ArrayList<>(); // ArrayList 선언
+    ArrayList<Integer> jsonList = new ArrayList<Integer>(); // ArrayList 선언
     ArrayList<String> labelList = new ArrayList<>(); // ArrayList 선언
     int[] cnt= new int[]{0, 0, 0, 0, 0, 0, 0}; //전체 할 일 개수
     //Firebase로 로그인한 사용자 정보 알기 위해
@@ -291,14 +292,9 @@ public class MyHomeFragment extends Fragment {
         });
     }
     private void graphInitSetting() {
-        labelList.add(" ");
-        labelList.add(" ");
-        labelList.add(" ");
-        labelList.add(" ");
-        labelList.add("그제");
-        labelList.add("어제");
-        labelList.add("오늘");
 
+
+        jsonList.clear();
         //서버에서 정보 받아와야함.
         jsonList.add(cnt[0]);
         jsonList.add(cnt[1]);
@@ -308,7 +304,18 @@ public class MyHomeFragment extends Fragment {
         jsonList.add(cnt[5]);
         jsonList.add(cnt[6]);
 
+
+        labelList.clear();
+        labelList.add(" ");
+        labelList.add(" ");
+        labelList.add(" ");
+        labelList.add(" ");
+        labelList.add(" ");
+        labelList.add(" ");
+        labelList.add("오늘");
+
         BarChartGraph(labelList, jsonList);
+
         barChart.setTouchEnabled(false); //확대하지못하게 막아버림
         //barChart.setRendererLeftYAxis();
 //        barChart.setMaxVisibleValueCount(50);
@@ -317,6 +324,7 @@ public class MyHomeFragment extends Fragment {
 //        barChart.setAutoScaleMinMaxEnabled(true);
         barChart.getAxisRight().setAxisMaxValue(80);
         barChart.getAxisLeft().setAxisMaxValue(80);
+
     }
 
     private void BarChartGraph(ArrayList<String> labelList, ArrayList<Integer> valList) {
