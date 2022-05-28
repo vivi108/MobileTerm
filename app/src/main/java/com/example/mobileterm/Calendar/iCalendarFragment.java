@@ -66,7 +66,7 @@ public class iCalendarFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseUser curUser;
     private HashMap<String, ArrayList<iCalendarItem>> dateTable = new HashMap<String, ArrayList<iCalendarItem>>();
-    ArrayList<iCalendarItem> scheduleList = new ArrayList<iCalendarItem>();
+    //ArrayList<iCalendarItem> scheduleList = new ArrayList<iCalendarItem>();
 
     private ListView listview;
     private iCalendarAdapter adapter;
@@ -92,19 +92,16 @@ public class iCalendarFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         curUser = mAuth.getCurrentUser();
 
+        ctype.check(radIndividual.getId()); //처음 실행 시에 indiv에 체크돼있도록
+
         //현재 로그인한 유저 users의 iSchedule 컬렉션
         CollectionReference docref = db.collection("Users").document(curUser.getUid()).collection("iSchedule");
-
-        //복사하면 사용할 어레이리스트
-
-
-//        adapter = new iCalendarAdapter();
-
 
 
         radGroup.setOnClickListener(new View.OnClickListener() { //그룹버튼 누르면 그룹캘린더로 전환
             @Override
             public void onClick(View view) {
+                ctype.check(radGroup.getId());
                 int radioId = ctype.getCheckedRadioButtonId();
                 if (radGroup.getId() == radioId) {
                     MainActivity activity = (MainActivity) getActivity();
