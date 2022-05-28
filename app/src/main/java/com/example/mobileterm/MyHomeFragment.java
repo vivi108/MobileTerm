@@ -26,6 +26,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.mobileterm.Calendar.CalendarFragment;
 import com.example.mobileterm.ProfileSettingFragment;
 import com.example.mobileterm.R;
 import com.example.mobileterm.SettingFragment;
@@ -68,7 +69,7 @@ public class MyHomeFragment extends Fragment {
     BarChart barChart;
     ArrayList<Integer> jsonList = new ArrayList<>(); // ArrayList 선언
     ArrayList<String> labelList = new ArrayList<>(); // ArrayList 선언
-
+    int[] cnt= new int[]{0, 0, 0, 0, 0, 0, 0}; //전체 할 일 개수
     //Firebase로 로그인한 사용자 정보 알기 위해
     private FirebaseAuth mAuth;
     private FirebaseUser user;
@@ -90,12 +91,7 @@ public class MyHomeFragment extends Fragment {
         token = (TextView) rootView.findViewById(R.id.my_home_profile_token_num_tv);
         barChart = (BarChart) rootView.findViewById(R.id.my_home_bar_chart);
 
-
-        graphInitSetting(); //그래프 기본 세팅
-        todo_tv(); // 오늘 할일 N개 남았어요 - 여기를 눌러서 오늘의 할일을 지정해주세요 문구변경
-        //Firebase 로그인한 사용자 정보
         user = FirebaseAuth.getInstance().getCurrentUser();
-
         if (user != null) {
             String name = user.getDisplayName();
             String email = user.getEmail();
@@ -103,9 +99,13 @@ public class MyHomeFragment extends Fragment {
         } else {
             // No user is signed in
         }
+        //함수 순서 바뀌면 안됨
         loadImage(uid);
         Getname(user);
         GetToken(user);
+        get_todo(user);
+        todo_tv(); // 오늘 할일 N개 남았어요 - 여기를 눌러서 오늘의 할일을 지정해주세요 문구변경
+        graphInitSetting(); //그래프 기본 세팅
 
         //화장 리스트뷰
         Display newDisplay = requireActivity().getWindowManager().getDefaultDisplay();
@@ -133,11 +133,15 @@ public class MyHomeFragment extends Fragment {
                         .commit();
             }
         });
-        //여기를 눌러서 오늘의 할일을 지정해주세요
+        //여기를 눌러서 오늘의 할일을 지정해주세요 -> 캘린더 fragment로 이동
         beforetodo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.main_frame_layout, new CalendarFragment())
+                        .addToBackStack(null)
+                        .commit();
             }
         });
         // 프로필 이미지 눌렀을 때.
@@ -243,8 +247,13 @@ public class MyHomeFragment extends Fragment {
     private void todo_tv() {
         //오늘치 정보 없으면 todobefore
         //오늘치 정보 있으면 todoafter + 문구 업데이트
-        aftertodo.setVisibility(View.GONE);
 
+        beforetodo.setVisibility(View.GONE);
+        aftertodo.setVisibility(View.VISIBLE);
+        if(cnt[6]==0){
+            beforetodo.setVisibility(View.VISIBLE);
+            aftertodo.setVisibility(View.GONE);
+        }
     }
     private String changeDateFormat(Calendar cal){
         String result="";
@@ -257,7 +266,6 @@ public class MyHomeFragment extends Fragment {
     private void get_todo(FirebaseUser firebaseUser) {
         jsonList = new ArrayList<>();
         Calendar cal = Calendar.getInstance();
-        int[] cnt = {0, 0, 0, 0, 0, 0, 0}; //전체 할 일 개수
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
         CollectionReference collectionReference = fb.collection("Users").document(firebaseUser.getUid()).collection("iSchedule");
         collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -268,7 +276,9 @@ public class MyHomeFragment extends Fragment {
                         //document.getData() or document.getId() 등등 여러 방법으로
                         //데이터를 가져올 수 있다.
                         Calendar date = (Calendar) document.getData().get("date");
+                        Log.d("가져운 date", date.toString());
                         String isDone = (String) document.getData().get("isDone");
+
                         if (changeDateFormat(cal).equals(changeDateFormat(date))) {//오늘
                             cnt[6]++;
                         }
@@ -281,22 +291,22 @@ public class MyHomeFragment extends Fragment {
         });
     }
     private void graphInitSetting() {
-        labelList.add("일");
-        labelList.add("월");
-        labelList.add("화");
-        labelList.add("수");
-        labelList.add("목");
-        labelList.add("금");
-        labelList.add("토");
+        labelList.add(" ");
+        labelList.add(" ");
+        labelList.add(" ");
+        labelList.add(" ");
+        labelList.add("그제");
+        labelList.add("어제");
+        labelList.add("오늘");
 
         //서버에서 정보 받아와야함.
-        jsonList.add(10);
-        jsonList.add(20);
-        jsonList.add(30);
-        jsonList.add(40);
-        jsonList.add(50);
-        jsonList.add(60);
-        jsonList.add(70);
+        jsonList.add(cnt[0]);
+        jsonList.add(cnt[1]);
+        jsonList.add(cnt[2]);
+        jsonList.add(cnt[3]);
+        jsonList.add(cnt[4]);
+        jsonList.add(cnt[5]);
+        jsonList.add(cnt[6]);
 
         BarChartGraph(labelList, jsonList);
         barChart.setTouchEnabled(false); //확대하지못하게 막아버림

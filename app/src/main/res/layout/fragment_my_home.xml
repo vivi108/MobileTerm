@@ -89,7 +89,7 @@
         android:id="@+id/my_home_todo_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="오늘의 할 일이 N개 남았어요"
+        android:text="오늘도 잘 하고 있어요!!"
         app:layout_constraintTop_toBottomOf="@+id/my_home_profile_cl"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="15dp"
