@@ -125,7 +125,7 @@ public class GoogleLoginSetupActivity extends AppCompatActivity {
                     StartToast("회원가입에 성공하였습니다.");
                     Bundle data = new Bundle();
                     data.putString("uid",user.getUid());
-                    data.putString("name",user.getDisplayName());
+                    data.putString("nickname",nickname);
                     data.putString("email",user.getEmail());
                     data.putString("phone",user.getPhoneNumber());
                     StartActivity(MainActivity.class, data);

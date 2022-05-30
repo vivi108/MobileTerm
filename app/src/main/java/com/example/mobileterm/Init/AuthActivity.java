@@ -51,6 +51,9 @@ public class AuthActivity extends AppCompatActivity {
                                 Log.d(TAG,"Should start main");
                                 Bundle data = new Bundle();
                                 data.putString("uid",user.getUid());
+                                data.putString("nickname",(String) document.getData().get("nickname"));
+                                data.putString("email", (String) document.getData().get("email"));
+                                data.putString("phone",(String) document.getData().get("phone"));
 //                                StartActivity(LoginSelectionActivity.class);
                                 StartActivity(MainActivity.class, data);
                             }else{

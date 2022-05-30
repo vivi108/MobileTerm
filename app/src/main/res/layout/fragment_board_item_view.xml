@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
 
 
     <TextView
@@ -13,12 +14,14 @@
         android:textSize="25dp"
         android:textStyle="bold"/>
 
+
     <TextView
         android:id="@+id/contentTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="content....."
         android:textSize="20dp" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,6 +40,10 @@
             android:text="#tags #random"/>
 
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="?android:attr/listDivider" />
    <LinearLayout
        android:layout_width="match_parent"
        android:layout_height="wrap_content"

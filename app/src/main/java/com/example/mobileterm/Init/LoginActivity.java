@@ -113,6 +113,9 @@ public class LoginActivity extends AppCompatActivity {
                         if (document.exists()){
                             Bundle data = new Bundle();
                             data.putString("uid", firebaseUser.getUid());
+                            data.putString("nickname",(String) document.getData().get("nickname"));
+                            data.putString("email", (String) document.getData().get("email"));
+                            data.putString("phone",(String) document.getData().get("phone"));
                             StartActivity(MainActivity.class, data);
                         }
                     }

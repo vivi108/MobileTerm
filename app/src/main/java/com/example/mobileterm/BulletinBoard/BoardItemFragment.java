@@ -48,7 +48,7 @@ public class BoardItemFragment extends Fragment {
     ArrayList<CommentInfo> arrayList = new ArrayList<CommentInfo>();
     String TAG = "BoardItemFragment";
 
-    String userName;
+    String userNickName;
 
     SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     long mnow;
@@ -61,6 +61,10 @@ public class BoardItemFragment extends Fragment {
     TextView contentTextViewBoardItem;
     TextView tagTextViewBoardItem;
     TextView likedCountTextViewBoardItem;
+
+    ImageButton editItemButton;
+    ImageButton deleteItemButton;
+
     long curLike;
     long updateLike;
     boolean notLiked;
@@ -71,6 +75,7 @@ public class BoardItemFragment extends Fragment {
         MainActivity mainActivity = (MainActivity)getActivity();
 //        selectedBoardItem = mainActivity.sendBoardItem();
         did = mainActivity.sendDid();
+        userNickName = mainActivity.sendUserNickname();
         Log.d(TAG,did);
         commentListView = rootView.findViewById(R.id.commentView);
         db = FirebaseFirestore.getInstance();
@@ -88,6 +93,9 @@ public class BoardItemFragment extends Fragment {
         likedCountTextViewBoardItem = rootView.findViewById(R.id.likedCountViewBoardItem);
         ImageButton addCommentButtonBoardItem = rootView.findViewById(R.id.addCommentButtonBoardItem);
 
+        editItemButton = rootView.findViewById(R.id.editItemButton);
+        deleteItemButton = rootView.findViewById(R.id.deleteItemButton);
+
         likeButton.setOnClickListener(onClickListener);
         addCommentButtonBoardItem.setOnClickListener(onClickListener);
         db.collection("BulletinBoard").document(did).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -102,6 +110,10 @@ public class BoardItemFragment extends Fragment {
                         nameTextViewBoardItem.setText((String) document.getData().get("name"));
                         likedCountTextViewBoardItem.setText((String)Long.toString((Long)document.getData().get("likedCount")));
                         tagTextViewBoardItem.setText("");
+                        if (userNickName.equals((String) document.getData().get("name"))) {
+                            editItemButton.setVisibility(View.VISIBLE);
+                            deleteItemButton.setVisibility(View.VISIBLE);
+                        }
 
                         ArrayList<CommentInfo> newArrayList = new ArrayList<CommentInfo>();
                         CollectionReference docRef = db.document("BulletinBoard/"+did).collection("Comments");
@@ -122,7 +134,7 @@ public class BoardItemFragment extends Fragment {
                                         arrayList = newArrayList;
                                     }
 
-                                    commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList);
+                                    commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList, userNickName);
                                     commentListView.setAdapter(commentListViewAdapter);
 
                                 }
@@ -217,30 +229,40 @@ public class BoardItemFragment extends Fragment {
     };
 
     private void addComment(){
-        DocumentReference docref = db.collection("Users").document(curUser.getUid());
-        Log.e(TAG, "curUser : "+curUser.getUid());
-        docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot documentSnapshot = task.getResult();
-                    if (documentSnapshot.exists()) {
-                        userName = (String) documentSnapshot.getData().get("nickname");
-                    }else{
-                        userName = "unidentified user";
-                    }
-                    String curTime = getTime();
-                    CommentInfo newComment = new CommentInfo(commentEditText.getText().toString(), userName, curTime);
-//                            arrayList.add(newComment);
-//                            commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList);
-//                            commentListView.setAdapter(commentListViewAdapter);
-                    commentListViewAdapter.addComment(newComment);
-                    DBinsertion(commentEditText.getText().toString(), userName, curTime);
-//                            commentListView.
-                    commentEditText.setText("");
-                }
-            }
-        });
+//        DocumentReference docref = db.collection("Users").document(curUser.getUid());
+//        Log.e(TAG, "curUser : "+curUser.getUid());
+//        docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot documentSnapshot = task.getResult();
+//                    if (documentSnapshot.exists()) {
+//                        userName = (String) documentSnapshot.getData().get("nickname");
+//                    }else{
+//                        userName = "unidentified user";
+//                    }
+//                    String curTime = getTime();
+//                    CommentInfo newComment = new CommentInfo(commentEditText.getText().toString(), userName, curTime);
+////                            arrayList.add(newComment);
+////                            commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList);
+////                            commentListView.setAdapter(commentListViewAdapter);
+//                    commentListViewAdapter.addComment(newComment);
+//                    DBinsertion(commentEditText.getText().toString(), userName, curTime);
+////                            commentListView.
+//                    commentEditText.setText("");
+//                }
+//            }
+//        });
+
+        if (userNickName.length() == 0) {
+            userNickName = "unidentified user";
+        }
+
+        String curTime = getTime();
+        CommentInfo newComment = new CommentInfo(commentEditText.getText().toString(), userNickName, curTime);
+        commentListViewAdapter.addComment(newComment);
+        DBinsertion(commentEditText.getText().toString(), userNickName, curTime);
+        commentEditText.setText("");
     }
 
     public void addToLikedItem(String title){

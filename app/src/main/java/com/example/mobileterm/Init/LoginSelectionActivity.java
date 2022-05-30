@@ -84,7 +84,7 @@ public class LoginSelectionActivity extends AppCompatActivity {
                                             Log.d(TAG,"Should start main");
                                             Bundle data = new Bundle();
                                             data.putString("uid",user.getUid());
-                                            data.putString("name",user.getDisplayName());
+                                            data.putString("nickname",(String) document.getData().get("nickname"));
                                             data.putString("email",user.getEmail());
 //                                            signIn();
                                             StartActivity(MainActivity.class, data);
@@ -166,18 +166,17 @@ public class LoginSelectionActivity extends AppCompatActivity {
                                 for (DocumentSnapshot document :querySnapshot){
                                     if (document.getId().equals(user.getUid())){
                                         Log.d(TAG,"여기 오면안된다 firebaseAuthWithGoogle");
+                                        Bundle data = new Bundle();
+                                        data.putString("uid",user.getUid());
+                                        data.putString("nickname",(String) document.getData().get("nickname"));
+                                        data.putString("email",user.getEmail());
+                                        data.putString("phone",user.getPhoneNumber());
+                                        StartActivity(MainActivity.class, data);
                                        autoLogin = true;
                                        break;
                                     }
                                 }
-                                if (autoLogin){
-                                    Bundle data = new Bundle();
-                                    data.putString("uid",user.getUid());
-                                    data.putString("name",user.getDisplayName());
-                                    data.putString("email",user.getEmail());
-                                    data.putString("phone",user.getPhoneNumber());
-                                    StartActivity(MainActivity.class, data);
-                                }else{
+                                if (!autoLogin){
                                     updateUI(user);
                                 }
 

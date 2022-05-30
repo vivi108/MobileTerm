@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.mobileterm.R;
@@ -17,13 +18,15 @@ public class CommentListViewAdapter extends BaseAdapter {
     Context mContext;
     LayoutInflater inflater;
     ArrayList<CommentInfo> dataList;
+    String curNickname;
 //    String did;
 
-    public CommentListViewAdapter(Context context, ArrayList<CommentInfo> dataList) {
+    public CommentListViewAdapter(Context context, ArrayList<CommentInfo> dataList, String userNickname) {
         mContext = context;
         inflater = LayoutInflater.from(mContext);
         this.dataList = new ArrayList<CommentInfo>();
         this.dataList.addAll(dataList);
+        this.curNickname = userNickname;
         Log.e(TAG, "CommentListViewAdapter: "+this.dataList.size());
 
 
@@ -60,6 +63,13 @@ public class CommentListViewAdapter extends BaseAdapter {
         TextView commentContentTextView = itemView.findViewById(R.id.commentContentTextView);
         TextView commentNameTextView = itemView.findViewById(R.id.commentNameTextView);
         TextView commentWrittenTimeView = itemView.findViewById(R.id.commentWrittenTimeView);
+        ImageButton commentEditButton = itemView.findViewById(R.id.commentEditButton);
+        ImageButton commentDeleteButton = itemView.findViewById(R.id.commentDeleteButton);
+
+        if (curNickname.equals(commentItem.getName())){
+            commentDeleteButton.setVisibility(View.VISIBLE);
+            commentEditButton.setVisibility(View.VISIBLE);
+        }
         commentContentTextView.setText(commentItem.getContent());
         commentNameTextView.setText(commentItem.getName());
         commentWrittenTimeView.setText(commentItem.getWrittenTime());
