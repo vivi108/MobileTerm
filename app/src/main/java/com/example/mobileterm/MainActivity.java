@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUESTCODE = 101;
 
     public BoardInfo selectedBoardItem;
+    public String selectedAuthor;
     private static final String TAG = "MainActivity:";
 
     String mCurrentPhotoPath;
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String selectedBoardItemDid;
     private String uid;
-    private String name;
+//    private String name;
     private String email;
 
     //유저 프로필 pram
@@ -100,9 +101,9 @@ public class MainActivity extends AppCompatActivity {
         Bundle data = intent.getExtras();
         //로그인 액티비티에서 메인엑티비티 호출할때 넘겨준 유저 ID값
         uid = data.getString("uid");
-        name = data.getString("name");
+        nickname = data.getString("nickname");
         email = data.getString("email");
-        Log.d(TAG, "main : " + name + ", " + email + ", " + uid);
+        Log.d(TAG, "main : " + nickname + ", " + email + ", " + uid);
 
 
 //        Bundle putdata = new Bundle();
@@ -411,6 +412,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onFragmentChanged(String title, String content, String uName, String wTime){
         selectedBoardItemDid = wTime+" "+title;
+        selectedAuthor = uName;
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment).addToBackStack(null).commit();
     }
     @Override
@@ -428,6 +430,13 @@ public class MainActivity extends AppCompatActivity {
         return selectedBoardItemDid;
     }
 
+    public String sendAuthorName() {
+        return selectedAuthor;
+    }
+
+    public String sendUserNickname() {
+        return nickname;
+    }
 
 }
 

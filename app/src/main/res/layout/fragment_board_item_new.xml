@@ -152,6 +152,24 @@
                     android:layout_gravity="center_vertical"
                     android:text="0.00" />
 
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/editItemButton"
+                    android:background="@drawable/editing"
+                    android:scaleType="fitXY"
+                    android:layout_margin="10dp"
+                    android:visibility="invisible"/>
+
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/deleteItemButton"
+                    android:background="@drawable/delete"
+                    android:scaleType="fitXY"
+                    android:layout_margin="10dp"
+                    android:visibility="invisible"/>
+
 
             </LinearLayout>
 
