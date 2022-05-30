@@ -150,5 +150,5 @@ public class StudyGroupActivity extends AppCompatActivity {
 
             }
         }
-    }
+    };
 }
