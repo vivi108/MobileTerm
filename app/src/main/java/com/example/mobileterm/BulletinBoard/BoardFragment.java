@@ -118,7 +118,7 @@ public class BoardFragment extends Fragment {
 
 //                            activity.onFragmentChanged(arrayList.get(i), arrayList.get(i).getDid());
                             activity.onFragmentChanged(((TextView) view.findViewById(R.id.titleTextView)).getText().toString(), ((TextView) view.findViewById(R.id.contentTextView)).getText().toString(),
-                                    ((TextView) view.findViewById(R.id.nameTextView)).getText().toString(), ((TextView) view.findViewById(R.id.writtenTimeTextView)).getText().toString());
+                                    ((TextView) view.findViewById(R.id.nameTextView)).getText().toString(), ((TextView) view.findViewById(R.id.writtenTimeTextView)).getText().toString(), ((TextView) view.findViewById(R.id.hiddenDid)).getText().toString());
                         }
                     });
                     rootView.findViewById(R.id.searchButton).setOnClickListener(onClickListener);

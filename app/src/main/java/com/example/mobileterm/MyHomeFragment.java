@@ -203,11 +203,12 @@ public class MyHomeFragment extends Fragment {
                             String content=(String) document.getData().get("content");
                             String uName=(String) document.getData().get("name");
                             String wTime=(String) document.getData().get("writtenTime");
+                            String tempDid = (String) document.getData().get("did");
                             Log.d ("getchildid", title);
                             Log.d ("getchildid", content);
                             Log.d ("getchildid", uName);
                             Log.d ("getchildid", wTime);
-                            activity.onFragmentChanged(title, content, uName, wTime);
+                            activity.onFragmentChanged(title, content, uName, wTime, tempDid);
 
                         }
                     }

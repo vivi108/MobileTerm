@@ -65,6 +65,7 @@ public class ListViewAdapter extends BaseAdapter {
         TextView tagTextView = itemView.findViewById(R.id.tagTextView);
         TextView writtenTimeTextView = itemView.findViewById(R.id.writtenTimeTextView);
         TextView likedCountView = itemView.findViewById(R.id.likedCountView);
+        TextView hiddendDid = itemView.findViewById(R.id.hiddenDid);
 
 
 
@@ -76,6 +77,7 @@ public class ListViewAdapter extends BaseAdapter {
         tagTextView.setText("");
         writtenTimeTextView.setText(boardItem.getWrittenTime());
         String tempLike = Long.toString(boardItem.getLikedCount());
+        hiddendDid.setText(boardItem.getDid());
         likedCountView.setText(tempLike);
         did = boardItem.getDid();
 //        Log.d(TAG,did);

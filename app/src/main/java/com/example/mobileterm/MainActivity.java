@@ -410,8 +410,9 @@ public class MainActivity extends AppCompatActivity {
 //        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment).addToBackStack(null).commit();
 //    }
 
-    public void onFragmentChanged(String title, String content, String uName, String wTime){
-        selectedBoardItemDid = wTime+" "+title;
+    public void onFragmentChanged(String title, String content, String uName, String wTime, String newdid){
+//        selectedBoardItemDid = wTime+" "+title;
+        selectedBoardItemDid = newdid;
         selectedAuthor = uName;
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment).addToBackStack(null).commit();
     }
