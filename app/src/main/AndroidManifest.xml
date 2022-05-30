@@ -81,6 +81,26 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
+
+        <activity
+            android:name=".StudyGroup.StudyFindActivity"
+            android:exported="true" />
+        <activity
+            android:name=".StudyGroup.StudyMakeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".StudyGroup.StudyGroupActivity"
+            android:exported="true" />
+        <activity
+            android:name=".StudyGroup.StudySettingActivity"
+            android:exported="true" />
+        <activity
+            android:name=".StudyGroup.WritePostActivity"
+            android:exported="true" />
+        <activity
+            android:name=".StudyGroup.StudyPostActivity"
+            android:exported="true" />
+
     </application>
 
 </manifest>

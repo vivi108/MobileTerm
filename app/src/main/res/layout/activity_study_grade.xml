@@ -37,7 +37,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:layout_weight="6"
-            android:text="TextView"
+            android:text="별점"
             android:textSize="20dp" />
 
         <RatingBar

@@ -29,7 +29,7 @@
             android:layout_weight="1" />
 
         <ImageButton
-            android:id="@+id/btn_cancel"
+            android:id="@+id/imgbtn_make_study_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -232,6 +232,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_make_study_closed_pw"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -273,15 +274,27 @@
                                 android:layout_height="match_parent"
                                 android:layout_margin="3dp"
                                 android:layout_weight="8"
-                                android:orientation="vertical">
+                                android:orientation="horizontal">
 
                                 <EditText
                                     android:id="@+id/pt_entrance_pw"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_weight="1"
                                     android:ems="10"
                                     android:hint="password"
                                     android:inputType="textPassword"
+                                    tools:ignore="TouchTargetSizeCheck" />
+
+                                <ImageButton
+                                    android:id="@+id/btn_make_study_show_pw"
+                                    android:layout_width="60dp"
+                                    android:layout_height="45dp"
+                                    android:layout_weight="1"
+                                    android:background="@android:color/transparent"
+                                    android:contentDescription="패스워드 보여주기"
+                                    android:scaleType="fitCenter"
+                                    app:srcCompat="@drawable/eye_opened"
                                     tools:ignore="TouchTargetSizeCheck" />
                             </LinearLayout>
 
@@ -422,7 +435,7 @@
                                     android:id="@+id/et_make_study_description"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:ems="10"
+                                    android:ems="1"
                                     android:hint="스터디에 대한 간략한 설명"
                                     tools:ignore="TouchTargetSizeCheck" />
                             </LinearLayout>

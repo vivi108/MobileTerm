@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 
 import androidx.loader.content.CursorLoader;
 
-
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +38,7 @@ import com.example.mobileterm.BulletinBoard.BoardItemFragment;
 import com.example.mobileterm.Calendar.gCalendarFragment;
 import com.example.mobileterm.Calendar.iCalendarFragment;
 import com.example.mobileterm.Init.LoginSelectionActivity;
+import com.example.mobileterm.StudyGroup.StudyFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -86,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
     private Uri photoUrl;
     private String phone;
     private int token;
+
+    //화면 젼환 var
+    private Intent intent;
+    private Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -422,6 +427,7 @@ public class MainActivity extends AppCompatActivity {
     public String sendDid() {
         return selectedBoardItemDid;
     }
+
 
 }
 

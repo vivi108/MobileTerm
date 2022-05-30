@@ -34,7 +34,7 @@
             android:textSize="20dp" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/tv_study_setting_leader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -64,7 +64,7 @@
             app:srcCompat="@drawable/ic_circle" />
 
         <Button
-            android:id="@+id/btn_post_file_down"
+            android:id="@+id/btn_study_setting_groupCalender"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
@@ -101,6 +101,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_study_setting_onlineORnot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

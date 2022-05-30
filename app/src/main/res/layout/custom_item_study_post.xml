@@ -102,7 +102,7 @@
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/ic_post_clip" />
 
-                    <Button
+                    <TextView
                         android:id="@+id/btn_post_file_down"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -126,11 +126,12 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/btn_post_comments"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
                     android:background="@android:color/transparent"
                     android:contentDescription="댓글 버튼"
                     app:srcCompat="@drawable/ic_comment"
@@ -145,11 +146,12 @@
                     android:layout_marginRight="10dp"
                     android:text="횟수" />
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/btn_post_like"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
                     android:background="@android:color/transparent"
                     android:contentDescription="좋아요 버튼"
                     app:srcCompat="@drawable/ic_heart"
@@ -205,7 +207,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="0.00" />
+                    android:text="0.00"
+                    tools:ignore="TouchTargetSizeCheck" />
 
 
             </LinearLayout>
