@@ -134,7 +134,7 @@ public class BoardItemFragment extends Fragment {
                                         arrayList = newArrayList;
                                     }
 
-                                    commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList);
+                                    commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList, userNickName);
                                     commentListView.setAdapter(commentListViewAdapter);
 
                                 }
