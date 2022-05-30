@@ -4,21 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools">
     <item
         android:id="@+id/nav_menu_study"
-        android:icon="@drawable/selector_nav_menu_home"
+        android:icon="@drawable/selector_nav_menu_studygroup"
         android:title="스터디"
         app:showAsAction="always"
         tools:igore="AlwaysShowAction" />
 
     <item
         android:id="@+id/nav_menu_board"
-        android:icon="@drawable/selector_nav_menu_home"
+        android:icon="@drawable/selector_nav_menu_board"
         android:title="게시판"
         app:showAsAction="always"
         tools:igore="AlwaysShowAction" />
 
     <item
         android:id="@+id/nav_menu_calendar"
-        android:icon="@drawable/selector_nav_menu_home"
+        android:icon="@drawable/selector_nav_menu_calendar"
         android:title="캘린더"
         app:showAsAction="always"
         tools:igore="AlwaysShowAction" />

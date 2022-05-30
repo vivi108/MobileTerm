@@ -55,7 +55,7 @@
         tools:ignore="TouchTargetSizeCheck" />
 
     <EditText
-        android:id="@+id/tagEditText"
+        android:id="@+id/et_study_post_tag"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -64,7 +64,7 @@
         tools:ignore="TouchTargetSizeCheck" />
 
     <EditText
-        android:id="@+id/bodyEditText"
+        android:id="@+id/et_study_post_body"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="15dp"
@@ -88,13 +88,13 @@
             android:scaleType="fitXY"
             android:src="@drawable/ic_post_clip" />
 
-        <EditText
-            android:id="@+id/et_study_file_name"
+        <TextView
+            android:id="@+id/tv_study_file_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:ems="10"
-            android:inputType="textPersonName"
+            android:textSize="20dp"
+            android:layout_marginLeft="10dp"
             android:text="Name" />
 
 
