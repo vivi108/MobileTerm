@@ -415,6 +415,12 @@ public class MainActivity extends AppCompatActivity {
         selectedAuthor = uName;
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardItemFragment).addToBackStack(null).commit();
     }
+
+    public void onFragmentChanged(String deleted){
+        if (deleted.equals("deleted")){
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardFragment).addToBackStack(null).commit();
+        }
+    }
     @Override
     public void onBackPressed() {
         super.onBackPressed();
