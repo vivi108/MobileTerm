@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.mobileterm.BulletinBoard.BoardInfo;
@@ -23,12 +24,10 @@ public class iCalendarAdapter extends BaseAdapter {
     private static final String TAG = "iCalendarAdapter";
 
 //    private TextView scheduleTextView;
-    private TextView isdoneCheck;
+//    private TextView isdoneCheck;
     LayoutInflater inflater;
     private ArrayList<iCalendarItem> scheduleList;
-    //private ArrayList<iCalendarItem> scheduleList1;
-    private FirebaseFirestore db;
-    private FirebaseUser curUser;
+
 
     public iCalendarAdapter(ArrayList<iCalendarItem> arrayList) {
         this.scheduleList = new ArrayList<iCalendarItem>();
@@ -49,10 +48,22 @@ public class iCalendarAdapter extends BaseAdapter {
         }
 
         TextView scheduleTextView = (TextView) convertView.findViewById(R.id.text1);
+        CheckBox isdoneBox = (CheckBox) convertView.findViewById(R.id.isDone);
 
         iCalendarItem a = scheduleList.get(position);
 
         scheduleTextView.setText(a.getSchedule());
+        isdoneBox.setChecked(Boolean.parseBoolean(a.getIsDone()));
+
+
+
+//        LinearLayout eachlist = (LinearLayout) convertView.findViewById(R.id.eachlist);
+//        eachlist.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//            }
+//        });
 
         return convertView;
 

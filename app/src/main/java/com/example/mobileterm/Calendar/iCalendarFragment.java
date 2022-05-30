@@ -52,7 +52,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class iCalendarFragment extends Fragment {
-    public String readDay = null;
     public String str = null;
     MaterialCalendarView calendarView;
     public Button add_Btn, del_Btn, save_Btn;
@@ -66,7 +65,6 @@ public class iCalendarFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseUser curUser;
     private HashMap<String, ArrayList<iCalendarItem>> dateTable = new HashMap<String, ArrayList<iCalendarItem>>();
-    //ArrayList<iCalendarItem> scheduleList = new ArrayList<iCalendarItem>();
 
     private ListView listview;
     private iCalendarAdapter adapter;
@@ -81,7 +79,6 @@ public class iCalendarFragment extends Fragment {
         del_Btn = rootView.findViewById(R.id.del_Btn);
         add_Btn = rootView.findViewById(R.id.add_Btn);
         textView2 = rootView.findViewById(R.id.textView2); //일정 추가된 날짜 클릭 시 어떤 일정있나 보여주는 칸
-        //textView3 = rootView.findViewById(R.id.textView3); //맨 위 달력이라 표시
         contextEditText = rootView.findViewById(R.id.contextEditText); //선택 날짜 일정 수정하는 칸
         ctype = rootView.findViewById(R.id.ctype);
         radIndividual = rootView.findViewById(R.id.radIndividual);
@@ -121,13 +118,12 @@ public class iCalendarFragment extends Fragment {
                 listview.setVisibility(View.VISIBLE);
                 add_Btn.setVisibility(View.VISIBLE);
                 del_Btn.setVisibility(View.VISIBLE);
-                diaryTextView.setText(String.format("%d / %d / %d", date.getYear(), date.getMonth() + 1, date.getDay()));
+                diaryTextView.setText(String.format("%d / %d / %d", date.getYear(), date.getMonth() + 1, date.getDay())); //중간 일정 보여주는 텍스트뷰
                 ArrayList<iCalendarItem> newArrayList = new ArrayList<iCalendarItem>();
 
                 String month = String.valueOf(date.getMonth() + 1);
                 if(date.getMonth()+1 < 10)
                     month = "0".concat(month); //날짜 클릭시 받아오는 월은 month 그대로
-
                 String day = String.valueOf(date.getDay());
                 if(date.getDay() < 10)
                     day = "0".concat(day); //날짜 클릭시 받아오는 일은 day 그대로
@@ -135,11 +131,15 @@ public class iCalendarFragment extends Fragment {
                 String calendarDate = String.valueOf(date.getYear()) + month + day; //캘린더의 날짜 클릭 시 이걸로 받아옴
                 System.out.println("클릭날짜 : " + calendarDate);
 
+
                 try {
                     dateTable.get(calendarDate);
+                    System.out.println("136" + dateTable.get(calendarDate));
                 }catch (Exception e){
                     dateTable.put(calendarDate, new ArrayList<iCalendarItem>());
+                    System.out.println("139"+dateTable);
                 }
+
 
                //클릭한 날짜의 일정을 파베에서 불러와서 그 날에 해당하는 일정 리스트뷰 어댑터에 넣기
                docref
@@ -158,36 +158,32 @@ public class iCalendarFragment extends Fragment {
                                                 String schedule = ((String) document.getData().get("schedule")); //그 일정을 가져오겠다
                                                 String isDone = String.valueOf(document.getData().get("isDone"));
                                                 String date = ((String) document.getData().get("date"));
-//                                                adapter.addItem(schedule);
-//                                                adapter.notifyDataSetChanged();
                                                 iCalendarItem data = new iCalendarItem(schedule, date, isDone); //이 3개를 쌍으로 data에 넣음
                                                 newArrayList.add(0, data);
                                             }
                                         }
                                     }
-                                    try {
+                                    try { //키값 : 날짜 + 밸류값 : 어레이리스트(일정, 날짜, isdone)
                                         if(!dateTable.get(calendarDate).equals(newArrayList)){
-
-                                            dateTable.put(calendarDate, newArrayList);
+                                            dateTable.put(calendarDate, newArrayList); //날짜를 키값으로 밸류에 리스트 하나(newArr) 추가
                                         }
                                     }catch (Exception e){
                                         dateTable.put(calendarDate, newArrayList);
                                     }
-                                    Log.d(TAG,"should show schedules");
-                                    for (iCalendarItem itr : dateTable.get(calendarDate)){
-                                        Log.d(TAG,"item : "+itr.getDate()+" "+itr.getSchedule());
+
+
+                                    for (iCalendarItem itr : dateTable.get(calendarDate)){ //이 날짜에 어떤 어레이리스트 있나 출력
+                                        Log.d(TAG,"item : "+itr.getDate()+" "+itr.getSchedule()+ " " + itr.getIsDone());
                                     }
-                                    adapter = new iCalendarAdapter(dateTable.get(calendarDate));
-                                    listview.setAdapter(adapter);
+
+                                    adapter = new iCalendarAdapter(dateTable.get(calendarDate)); //어댑터에 이 날짜 해당 데이터 다 넘겨줌
+                                    listview.setAdapter(adapter); //리스트뷰에 보이도록 함
                                     contextEditText.setText("");
                                 }
                             }
                         });
 
-
-
-                //중간 날짜 어케 보여줄지 + 일정 추가되는 칸 초기화
-
+                //이 보여주는 와중에 버튼 체크 시 파베에 isdone 저장하기
 
 
 
@@ -200,6 +196,7 @@ public class iCalendarFragment extends Fragment {
                         contextEditText.setVisibility(View.VISIBLE);
                         contextEditText.setText("");
                         diaryTextView.setVisibility(View.VISIBLE);
+                        isDone.setVisibility(View.INVISIBLE);
 
                         listview.setVisibility(View.INVISIBLE);
                         save_Btn.setVisibility(View.VISIBLE);
@@ -235,8 +232,9 @@ public class iCalendarFragment extends Fragment {
 
                         //컬렉션에 넣을 준비
                         String Date = calendarDate; //일정 쓴 날짜겠지
-                        String IsDone = "false"; //방금 추가한거니까 false
+                        String IsDone = String.valueOf(isDone.isChecked()); //방금 추가한거니까 false "false" - 지금은 테스트용으로
                         String Context = str;
+                        //3개 묶음
                         iCalendarItem newItem = new iCalendarItem(Context, Date, IsDone);
 
                         //에딧텍스트 일정을 db 컬렉션에 넣음 - user 안 iSchedule 컬렉션에
@@ -253,6 +251,9 @@ public class iCalendarFragment extends Fragment {
 
                         dateTable.get(calendarDate).add(newItem);
                         adapter.addItem(newItem);
+
+
+
                         //이제 파베에서 불러옴
                         //불러와서 해당날짜 일정을 리스트뷰에 넣어놓음
 //                        docref

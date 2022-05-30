@@ -1,6 +1,6 @@
 package com.example.mobileterm.Calendar;
 
-public class iCalendarItem { //schedule 싹다 str로 바꿈 getSche이거말고
+public class iCalendarItem {
     private String schedule;
     private String date;
     private String isDone;
@@ -9,11 +9,6 @@ public class iCalendarItem { //schedule 싹다 str로 바꿈 getSche이거말고
     public iCalendarItem(String schedule, String date, String isDone) {
         this.schedule = schedule;
         this.date = date;
-        this.isDone = isDone;
-    }
-
-    public iCalendarItem(String str, String isDone) {
-        this.schedule = str;
         this.isDone = isDone;
     }
 
