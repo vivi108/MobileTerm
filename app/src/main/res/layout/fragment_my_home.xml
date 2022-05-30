@@ -89,7 +89,7 @@
         android:id="@+id/my_home_todo_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="오늘의 할 일이 N개 남았어요"
+        android:text="오늘도 잘 하고 있어요!!"
         app:layout_constraintTop_toBottomOf="@+id/my_home_profile_cl"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="15dp"
@@ -106,21 +106,21 @@
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/my_home_bar_chart"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="200dp"
         android:layout_margin="10dp"
         app:layout_constraintTop_toBottomOf="@id/my_home_make_todo_tv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintVertical_bias="0.471"
         app:layout_constraintHorizontal_bias="0.495"/>
-    <ListView
+    <ExpandableListView
         android:id="@+id/my_home_listview"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="200dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/my_home_bar_chart">
 
-    </ListView>
+    </ExpandableListView>
 </androidx.constraintlayout.widget.ConstraintLayout>

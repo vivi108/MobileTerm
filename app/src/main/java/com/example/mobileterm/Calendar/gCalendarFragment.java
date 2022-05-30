@@ -56,9 +56,12 @@ public class gCalendarFragment extends Fragment {
         radIndividual = rootView.findViewById(R.id.radIndividual);
         radGroup = rootView.findViewById(R.id.radGroup);
 
+        ctype.check(radGroup.getId());
+
         radIndividual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ctype.check(radIndividual.getId());
                 int radioId = ctype.getCheckedRadioButtonId();
                 if(radIndividual.getId()==radioId) {
                     MainActivity activity = (MainActivity) getActivity();

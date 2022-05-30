@@ -9,19 +9,50 @@ public class UserInfoClass {
     private String nickname;
     private String regDate;
     private String profileImageURL;
+    private String address;
+    private boolean isVerified;
 
-    public UserInfoClass() { }
+    public boolean isVerified() {
+        return isVerified;
+    }
 
-    public UserInfoClass(String name, String date, String phone, String email, String nickname, String regDate) {
+    public void setVerified(boolean isVerified) {
+        this.isVerified = isVerified;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public UserInfoClass(String name, String phone, String date, String email, String nickname, String regDate, String address) {
         this.name = name;
         this.phone = phone;
         this.date = date;
         this.email = email;
         this.nickname = nickname;
+        this.regDate = regDate;
+        this.address = address;
         this.token = "0";
         this.profileImageURL = "ic_profile_gray";
-        this.regDate = regDate;
+        this.isVerified = false;
     }
+
+    public UserInfoClass() { }
+
+//    public UserInfoClass(String name, String date, String phone, String email, String nickname, String regDate) {
+//        this.name = name;
+//        this.phone = phone;
+//        this.date = date;
+//        this.email = email;
+//        this.nickname = nickname;
+//        this.token = "0";
+//        this.profileImageURL = "ic_profile_gray";
+//        this.regDate = regDate;
+//    }
 
     public String getName() {
         return name;

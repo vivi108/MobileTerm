@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E7F6FF"
+    tools:context=".ChattingActivity.ChattingActivity">
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatting_recyvlerv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/chatting_ll">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <LinearLayout
+        android:id="@+id/chatting_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/editText1"
+            android:background="#ffffff"
+            android:maxLength="120"
+            android:maxLines="5"
+            android:padding="6dp"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:layout_width="0dp"
+            android:layout_weight="4"
+            android:layout_height="wrap_content"/>
+        <ImageButton
+            android:id="@+id/btn_send1"
+            android:src="@drawable/ic_baseline_chat"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="60dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:scaleType="fitXY"
+            android:layout_gravity="center_horizontal"/>
+    </LinearLayout>
+</RelativeLayout>

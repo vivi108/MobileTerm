@@ -43,7 +43,7 @@ public class BoardAddItemFragment extends Fragment {
     String tags;
     String[] tagIter;
     String TAG = "BoardAddItem";
-    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     long mnow;
     Date mDate;
     String boardId;
@@ -98,7 +98,7 @@ public class BoardAddItemFragment extends Fragment {
                                                 DocumentReference tempTagRef = db.collection("Tags").document(tag);
                                                 DocumentReference tagDocRef = db.collection("Tags").document(tag).collection("tagDocs").document(boardId);
                                                 BoardTags newTag = new BoardTags(tag);
-                                                TagDocs newDoc = new TagDocs(boardId);
+                                                TagDocs newDoc = new TagDocs(boardId, tag);
 
                                                 batch.set(tempref, newTag);
                                                 batch.set(tempTagRef, newTag);

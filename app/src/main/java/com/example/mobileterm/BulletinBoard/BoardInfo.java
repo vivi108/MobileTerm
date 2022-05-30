@@ -1,6 +1,6 @@
 package com.example.mobileterm.BulletinBoard;
 
-public class BoardInfo {
+public class BoardInfo implements Comparable<BoardInfo>{
     private String title;
     private String content;
     private String name;
@@ -81,4 +81,14 @@ public class BoardInfo {
         this.did = did;
     }
 
+
+    @Override
+    public int compareTo(BoardInfo boardInfo) {
+        if (boardInfo.likedCount < likedCount){
+            return -1;
+        }else if (boardInfo.likedCount > likedCount){
+            return 1;
+        }
+        return 0;
+    }
 }

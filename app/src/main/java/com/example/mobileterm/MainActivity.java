@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 
 import androidx.loader.content.CursorLoader;
 
-
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
