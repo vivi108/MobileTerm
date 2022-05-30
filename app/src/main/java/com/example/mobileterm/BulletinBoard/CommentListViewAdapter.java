@@ -1,15 +1,23 @@
 package com.example.mobileterm.BulletinBoard;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.example.mobileterm.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -19,14 +27,21 @@ public class CommentListViewAdapter extends BaseAdapter {
     LayoutInflater inflater;
     ArrayList<CommentInfo> dataList;
     String curNickname;
-//    String did;
-
-    public CommentListViewAdapter(Context context, ArrayList<CommentInfo> dataList, String userNickname) {
+    String did;
+    FirebaseFirestore db;
+    Dialog editCommentDialog;
+    ArrayList<ImageButton>  editButtons;
+    ArrayList<ImageButton> deleteButtons;
+    public CommentListViewAdapter(Context context, ArrayList<CommentInfo> dataList, String userNickname, String did, Dialog editCommentDialog) {
         mContext = context;
         inflater = LayoutInflater.from(mContext);
         this.dataList = new ArrayList<CommentInfo>();
+        this.editButtons = new ArrayList<ImageButton>();
+        this.deleteButtons = new ArrayList<ImageButton>();
         this.dataList.addAll(dataList);
         this.curNickname = userNickname;
+        this.did = did;
+        this.editCommentDialog = editCommentDialog;
         Log.e(TAG, "CommentListViewAdapter: "+this.dataList.size());
 
 
@@ -52,6 +67,8 @@ public class CommentListViewAdapter extends BaseAdapter {
         final Context context = viewGroup.getContext();
         final CommentInfo commentItem = dataList.get(i);
 
+        db = FirebaseFirestore.getInstance();
+
         if (itemView == null){
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             itemView = inflater.inflate(R.layout.fragment_board_comment_item_view, viewGroup, false);
@@ -66,6 +83,9 @@ public class CommentListViewAdapter extends BaseAdapter {
         ImageButton commentEditButton = itemView.findViewById(R.id.commentEditButton);
         ImageButton commentDeleteButton = itemView.findViewById(R.id.commentDeleteButton);
 
+        editButtons.add(commentEditButton);
+        deleteButtons.add(commentDeleteButton);
+
         if (curNickname.equals(commentItem.getName())){
             commentDeleteButton.setVisibility(View.VISIBLE);
             commentEditButton.setVisibility(View.VISIBLE);
@@ -74,6 +94,7 @@ public class CommentListViewAdapter extends BaseAdapter {
         commentNameTextView.setText(commentItem.getName());
         commentWrittenTimeView.setText(commentItem.getWrittenTime());
 
+
         return itemView;
     }
 
@@ -81,4 +102,7 @@ public class CommentListViewAdapter extends BaseAdapter {
         dataList.add(0,newComment);
         notifyDataSetChanged();
     }
+
+
+
 }

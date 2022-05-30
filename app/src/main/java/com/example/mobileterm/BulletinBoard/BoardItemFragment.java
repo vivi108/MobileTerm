@@ -1,5 +1,6 @@
 package com.example.mobileterm.BulletinBoard;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,6 +50,7 @@ public class BoardItemFragment extends Fragment {
     String TAG = "BoardItemFragment";
 
     String userNickName;
+    Dialog editCommentDialog;
 
     SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     long mnow;
@@ -133,8 +135,8 @@ public class BoardItemFragment extends Fragment {
                                     if (!newArrayList.equals(arrayList)) {
                                         arrayList = newArrayList;
                                     }
-
-                                    commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList, userNickName);
+                                    editCommentDialog = new Dialog(getActivity());
+                                    commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList, userNickName, did, editCommentDialog);
                                     commentListView.setAdapter(commentListViewAdapter);
 
                                 }
