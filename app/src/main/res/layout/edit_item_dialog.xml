@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="400dp"
+    android:layout_gravity="center"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="게시판 내용 수정"
+        android:gravity="center"
+        android:textSize="30dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/titleItemEditText"
+        android:hint="새로운 제목을 입력하세요"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/contentItemEditText"
+        android:hint="세로운 내용을 입력하세요"
+        android:inputType="textMultiLine"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tagItemEditText"
+        android:hint="추가할 태그를 입력하세요"
+        android:inputType="textMultiLine"/>
+
+    <ImageButton
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/editing"
+        android:id="@+id/endEditItem"/>
+
+
+</LinearLayout>
