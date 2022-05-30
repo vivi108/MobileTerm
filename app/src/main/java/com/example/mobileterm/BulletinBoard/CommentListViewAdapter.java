@@ -30,21 +30,18 @@ public class CommentListViewAdapter extends BaseAdapter {
     String did;
     FirebaseFirestore db;
     Dialog editCommentDialog;
-    ArrayList<ImageButton>  editButtons;
-    ArrayList<ImageButton> deleteButtons;
     public CommentListViewAdapter(Context context, ArrayList<CommentInfo> dataList, String userNickname, String did, Dialog editCommentDialog) {
         mContext = context;
         inflater = LayoutInflater.from(mContext);
         this.dataList = new ArrayList<CommentInfo>();
-        this.editButtons = new ArrayList<ImageButton>();
-        this.deleteButtons = new ArrayList<ImageButton>();
         this.dataList.addAll(dataList);
         this.curNickname = userNickname;
         this.did = did;
         this.editCommentDialog = editCommentDialog;
+        this.editCommentDialog.setContentView(R.layout.edit_comment_dialog);
         Log.e(TAG, "CommentListViewAdapter: "+this.dataList.size());
 
-
+        db = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -67,7 +64,7 @@ public class CommentListViewAdapter extends BaseAdapter {
         final Context context = viewGroup.getContext();
         final CommentInfo commentItem = dataList.get(i);
 
-        db = FirebaseFirestore.getInstance();
+
 
         if (itemView == null){
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -83,8 +80,6 @@ public class CommentListViewAdapter extends BaseAdapter {
         ImageButton commentEditButton = itemView.findViewById(R.id.commentEditButton);
         ImageButton commentDeleteButton = itemView.findViewById(R.id.commentDeleteButton);
 
-        editButtons.add(commentEditButton);
-        deleteButtons.add(commentDeleteButton);
 
         if (curNickname.equals(commentItem.getName())){
             commentDeleteButton.setVisibility(View.VISIBLE);
@@ -93,6 +88,45 @@ public class CommentListViewAdapter extends BaseAdapter {
         commentContentTextView.setText(commentItem.getContent());
         commentNameTextView.setText(commentItem.getName());
         commentWrittenTimeView.setText(commentItem.getWrittenTime());
+
+        commentEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG,"number "+Integer.toString(i));
+                editCommentDialog.show();
+                TextView updateCommentEditText = editCommentDialog.findViewById(R.id.updateCommentEditText);
+                ImageButton endEditComment = editCommentDialog.findViewById(R.id.endEditComment);
+
+                endEditComment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        db.collection("BulletinBoard").document(did).collection("Comments").document(dataList.get(i).getWrittenTime()+dataList.get(i).getName()).update("content",updateCommentEditText.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                dataList.get(i).setContent(updateCommentEditText.getText().toString());
+                                notifyDataSetChanged();
+                                updateCommentEditText.setText("");
+                                editCommentDialog.dismiss();
+                            }
+                        });
+                    }
+                });
+
+            }
+        });
+
+        commentDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                db.collection("BulletinBoard").document(did).collection("Comments").document(dataList.get(i).getWrittenTime()+dataList.get(i).getName()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        dataList.remove(i);
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+        });
 
 
         return itemView;
@@ -104,5 +138,10 @@ public class CommentListViewAdapter extends BaseAdapter {
     }
 
 
+    View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
 
+        }
+    };
 }
