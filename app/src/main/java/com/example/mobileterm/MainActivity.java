@@ -11,12 +11,10 @@ import androidx.fragment.app.Fragment;
 import androidx.loader.content.CursorLoader;
 
 
-
-import android.Manifest;
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -38,34 +36,23 @@ import com.example.mobileterm.BulletinBoard.BoardAddItemFragment;
 import com.example.mobileterm.BulletinBoard.BoardFragment;
 import com.example.mobileterm.BulletinBoard.BoardInfo;
 import com.example.mobileterm.BulletinBoard.BoardItemFragment;
-import com.example.mobileterm.Calendar.CalendarFragment;
 import com.example.mobileterm.Calendar.gCalendarFragment;
 import com.example.mobileterm.Calendar.iCalendarFragment;
-import com.example.mobileterm.Init.LoginActivity;
 import com.example.mobileterm.Init.LoginSelectionActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
+import com.example.mobileterm.StudyGroup.StudyFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
-import java.io.IOError;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static Fragment studyFragment, boardFragment, iCalendarFragment, gCalendarFragment, myHomeFragment, boardItemFragment, boardAddItemFragment;
@@ -101,6 +88,10 @@ public class MainActivity extends AppCompatActivity {
     private Uri photoUrl;
     private String phone;
     private int token;
+
+    //화면 젼환 var
+    private Intent intent;
+    private Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -437,6 +428,7 @@ public class MainActivity extends AppCompatActivity {
     public String sendDid() {
         return selectedBoardItemDid;
     }
+
 
 }
 
