@@ -1,5 +1,7 @@
 package com.example.mobileterm.Calendar;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,11 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.example.mobileterm.BulletinBoard.BoardInfo;
 import com.example.mobileterm.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -22,7 +31,11 @@ public class iCalendarAdapter extends BaseAdapter {
 
     Context mContext;
     private static final String TAG = "iCalendarAdapter";
+    public FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+    CollectionReference docref = db.collection("Users").document(user.getUid()).collection("iSchedule");
 //    private TextView scheduleTextView;
 //    private TextView isdoneCheck;
     LayoutInflater inflater;
@@ -51,9 +64,55 @@ public class iCalendarAdapter extends BaseAdapter {
         CheckBox isdoneBox = (CheckBox) convertView.findViewById(R.id.isDone);
 
         iCalendarItem a = scheduleList.get(position);
+        String docAA = a.getDocA();
+
 
         scheduleTextView.setText(a.getSchedule());
         isdoneBox.setChecked(Boolean.parseBoolean(a.getIsDone()));
+
+        isdoneBox.setOnCheckedChangeListener(null);
+        if (isdoneBox.isChecked())
+            isdoneBox.setChecked(true);
+        else isdoneBox.setChecked(false);
+
+        isdoneBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(scheduleList.get(pos).getIsDone().equals("false")) { //리스트뷰 보여줄때 체크 안된 상태에서 체크 시!
+                    Log.d(TAG, "78 - f에서t로 체크했고 이거 리스트뷰에 반영되나?");
+                    a.setIsDone("true");
+                    Toast.makeText(buttonView.getContext(), scheduleList.get(pos).getIsDone(), Toast.LENGTH_SHORT).show();
+                    docref.document(docAA).set(a).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "successfully added");
+                            }
+                        }
+                    });
+                }
+                else {
+                    Log.d(TAG, "78 - t에서f로 체크했고 이거 리스트뷰에 반영되나?");
+                    a.setIsDone("false");
+                    docref.document(docAA).set(a).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "successfully added");
+                            }
+                        }
+                    });
+                    Toast.makeText(buttonView.getContext(), scheduleList.get(pos).getIsDone(), Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "else" + scheduleList.get(pos).getIsDone());
+                    //scheduleList.get(pos).setIsDone("false");
+                }
+
+
+            }
+        });
+
+
 
 
 
@@ -61,7 +120,9 @@ public class iCalendarAdapter extends BaseAdapter {
 //        eachlist.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-//
+//                scheduleList.get(pos).setIsDone("true");
+//                Toast.makeText(view.getContext(), scheduleList.get(pos).getIsDone(),
+//                        Toast.LENGTH_SHORT).show();
 //            }
 //        });
 
@@ -87,9 +148,7 @@ public class iCalendarAdapter extends BaseAdapter {
 
     public void addItem(iCalendarItem newItem) // 일단 스케줄만 add 하도록 테스트
     {
-//        iCalendarItem item = new iCalendarItem();
-//
-//        item.setSchedule(schedule);
+
         scheduleList.add(newItem);
         notifyDataSetChanged();
 

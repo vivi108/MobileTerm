@@ -16,11 +16,13 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -158,19 +160,21 @@ public class iCalendarFragment extends Fragment {
                                                 String schedule = ((String) document.getData().get("schedule")); //그 일정을 가져오겠다
                                                 String isDone = String.valueOf(document.getData().get("isDone"));
                                                 String date = ((String) document.getData().get("date"));
-                                                iCalendarItem data = new iCalendarItem(schedule, date, isDone); //이 3개를 쌍으로 data에 넣음
+                                                String docA = ((String) document.getId());
+                                                iCalendarItem data = new iCalendarItem(schedule, date, isDone, docA); //이 3개를 쌍으로 data에 넣음
                                                 newArrayList.add(0, data);
                                             }
                                         }
                                     }
-                                    try { //키값 : 날짜 + 밸류값 : 어레이리스트(일정, 날짜, isdone)
-                                        if(!dateTable.get(calendarDate).equals(newArrayList)){
+                                    try
+                                    { //키값 : 날짜 + 밸류값 : 어레이리스트(일정, 날짜, isdone)
+                                        if(!dateTable.get(calendarDate).equals(newArrayList))
+                                        {
                                             dateTable.put(calendarDate, newArrayList); //날짜를 키값으로 밸류에 리스트 하나(newArr) 추가
                                         }
                                     }catch (Exception e){
-                                        dateTable.put(calendarDate, newArrayList);
+                                        dateTable.put(calendarDate, newArrayList); //날짜를 키값으로 밸류에 리스트 하나(newArr) 추가
                                     }
-
 
                                     for (iCalendarItem itr : dateTable.get(calendarDate)){ //이 날짜에 어떤 어레이리스트 있나 출력
                                         Log.d(TAG,"item : "+itr.getDate()+" "+itr.getSchedule()+ " " + itr.getIsDone());
@@ -234,8 +238,9 @@ public class iCalendarFragment extends Fragment {
                         String Date = calendarDate; //일정 쓴 날짜겠지
                         String IsDone = String.valueOf(isDone.isChecked()); //방금 추가한거니까 false "false" - 지금은 테스트용으로
                         String Context = str;
+                        String docA = " ";
                         //3개 묶음
-                        iCalendarItem newItem = new iCalendarItem(Context, Date, IsDone);
+                        iCalendarItem newItem = new iCalendarItem(Context, Date, IsDone, docA);
 
                         //에딧텍스트 일정을 db 컬렉션에 넣음 - user 안 iSchedule 컬렉션에
                         docref
@@ -292,6 +297,7 @@ public class iCalendarFragment extends Fragment {
         return rootView;
     }
 }
+
 
 //                                                iCalendarItem data = new iCalendarItem(schedule, date, isDone); //이 3개를 쌍으로 data에 넣음
 //                                                newArrayList.add(0, data);

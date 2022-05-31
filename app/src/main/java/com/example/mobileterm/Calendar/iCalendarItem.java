@@ -4,12 +4,15 @@ public class iCalendarItem {
     private String schedule;
     private String date;
     private String isDone;
+    private String docA;
 
 
-    public iCalendarItem(String schedule, String date, String isDone) {
+    public iCalendarItem(String schedule, String date, String isDone, String docA) {
         this.schedule = schedule;
         this.date = date;
         this.isDone = isDone;
+        this.docA = docA;
+
     }
 
 
@@ -17,6 +20,13 @@ public class iCalendarItem {
 
     public iCalendarItem() {    }
 
+    public String getDocA() {
+        return docA;
+    }
+
+    public void setDocA(String docA) {
+        this.docA = docA;
+    }
 
     public String getDate() {
         return date;
