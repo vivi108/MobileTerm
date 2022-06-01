@@ -1,34 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout
+<ScrollView
+    android:id="@+id/scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:ignore="ExtraText">
-
-
-    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/calendarView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:mcv_selectionColor="#a9dbf0cb"
-        app:mcv_showOtherDates="defaults"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ctype"/>
+    >
 
     <RadioGroup
         android:id="@+id/ctype"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints">
+        >
         <RadioButton
             android:id="@+id/radIndividual"
             android:layout_width="match_parent"
@@ -43,41 +34,53 @@
         </RadioButton>
     </RadioGroup>
 
-    //선택 날짜 보여줌
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        app:mcv_selectionColor="#a9dbf0cb"
+        app:mcv_showOtherDates="defaults"
+        />
+
     <TextView
         android:id="@+id/diaryTextView"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="여기에 날짜가 보여요"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="0dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calendarView" />
+        android:layout_gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-    //선택 날짜 일정 수정하는 칸
-    <EditText
-        android:id="@+id/contextEditText"
-        android:layout_width="237dp"
-        android:layout_height="112dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:hint="indiv 일정"
-        android:inputType="textMultiLine"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/diaryTextView" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:ignore="ExtraText">
 
+        <EditText
+            android:id="@+id/contextEditText"
+            android:layout_width="237dp"
+            android:layout_height="112dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:hint="indiv 일정"
+            android:inputType="textMultiLine"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.05"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints" />
 
-    //일정 추가된 날짜 클릭 시 어떤 일정있나 보여주는 칸
         <ListView
             android:id="@+id/list"
             android:layout_width="match_parent"
@@ -88,77 +91,49 @@
             app:layout_constraintStart_toStartOf="@+id/contextEditText"
             app:layout_constraintTop_toTopOf="@+id/contextEditText" />
 
+        <Button
+            android:id="@+id/save_Btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="20dp"
+            android:text="저장"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/contextEditText" />
 
-    <CheckBox
-        android:id="@+id/isDone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="isDone"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toRightOf="@+id/contextEditText"
-        app:layout_constraintTop_toTopOf="@+id/contextEditText"
-        android:visibility="invisible"
-        />
+        <Button
+            android:id="@+id/add_Btn"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="추가"
+            android:visibility="invisible"
+            app:layout_constraintBaseline_toBaselineOf="@+id/save_Btn"
+            app:layout_constraintEnd_toStartOf="@+id/del_Btn"
+            app:layout_constraintStart_toStartOf="parent" />
 
-
-    //수정 후 저장 버튼 건들 ㄴ
-    <Button
-        android:id="@+id/save_Btn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="20dp"
-        android:text="저장"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contextEditText" />
-
-<!--    //수정 버튼-->
-<!--    <Button-->
-<!--        android:id="@+id/edit_Btn"-->
-<!--        android:layout_width="180dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="8dp"-->
-<!--        android:layout_marginLeft="8dp"-->
-<!--        android:layout_marginEnd="8dp"-->
-<!--        android:layout_marginRight="8dp"-->
-<!--        android:text="수정"-->
-<!--        android:visibility="invisible"-->
-<!--        app:layout_constraintBaseline_toBaselineOf="@+id/save_Btn"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/del_Btn"-->
-<!--        app:layout_constraintStart_toStartOf="parent" />-->
-
-    //일정 추가 버튼
-    <Button
-        android:id="@+id/add_Btn"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="추가"
-        android:visibility="invisible"
-        app:layout_constraintBaseline_toBaselineOf="@+id/save_Btn"
-        app:layout_constraintEnd_toStartOf="@+id/del_Btn"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    //있는 일정 삭제 버튼
-    <Button
-        android:id="@+id/del_Btn"
-        android:layout_width="176dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="삭제"
-        android:visibility="invisible"
-        app:layout_constraintBaseline_toBaselineOf="@+id/add_Btn"
-        app:layout_constraintEnd_toEndOf="@+id/save_Btn"/>
+        <Button
+            android:id="@+id/del_Btn"
+            android:layout_width="176dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="삭제"
+            android:visibility="invisible"
+            app:layout_constraintBaseline_toBaselineOf="@+id/add_Btn"
+            app:layout_constraintEnd_toEndOf="@+id/save_Btn"/>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
+</ScrollView>

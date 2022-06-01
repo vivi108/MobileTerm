@@ -113,19 +113,6 @@ public class iCalendarAdapter extends BaseAdapter {
         });
 
 
-
-
-
-//        LinearLayout eachlist = (LinearLayout) convertView.findViewById(R.id.eachlist);
-//        eachlist.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                scheduleList.get(pos).setIsDone("true");
-//                Toast.makeText(view.getContext(), scheduleList.get(pos).getIsDone(),
-//                        Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
         return convertView;
 
     }

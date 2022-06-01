@@ -235,16 +235,17 @@ public class iCalendarFragment extends Fragment {
                         str = contextEditText.getText().toString(); //일정을 쓰면 그 내용이 str로 할당
 
                         //컬렉션에 넣을 준비
+
                         String Date = calendarDate; //일정 쓴 날짜겠지
                         String IsDone = String.valueOf(isDone.isChecked()); //방금 추가한거니까 false "false" - 지금은 테스트용으로
                         String Context = str;
-                        String docA = " ";
+                        String docA = Date +" "+ Context;
                         //3개 묶음
                         iCalendarItem newItem = new iCalendarItem(Context, Date, IsDone, docA);
 
                         //에딧텍스트 일정을 db 컬렉션에 넣음 - user 안 iSchedule 컬렉션에
                         docref
-                                .document()
+                                .document(Date +" "+ Context)
                                 .set(newItem).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {

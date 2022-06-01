@@ -15,6 +15,13 @@ public class iCalendarItem {
 
     }
 
+    public iCalendarItem(String schedule, String date, String isDone) {
+        this.schedule = schedule;
+        this.date = date;
+        this.isDone = isDone;
+
+    }
+
 
     public iCalendarItem(String str) { this.schedule = str; } //일단 이걸로 테스ㅡ트
 
