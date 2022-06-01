@@ -45,6 +45,7 @@ public class iCalendarAdapter extends BaseAdapter {
     public iCalendarAdapter(ArrayList<iCalendarItem> arrayList) {
         this.scheduleList = new ArrayList<iCalendarItem>();
         this.scheduleList.addAll(arrayList);
+
     }
 
 
@@ -68,21 +69,17 @@ public class iCalendarAdapter extends BaseAdapter {
 
 
         scheduleTextView.setText(a.getSchedule());
-        isdoneBox.setChecked(Boolean.parseBoolean(a.getIsDone()));
+
 
         isdoneBox.setOnCheckedChangeListener(null);
-        if (isdoneBox.isChecked())
-            isdoneBox.setChecked(true);
-        else isdoneBox.setChecked(false);
+        isdoneBox.setChecked(Boolean.parseBoolean(a.getIsDone()));
 
         isdoneBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if(scheduleList.get(pos).getIsDone().equals("false")) { //리스트뷰 보여줄때 체크 안된 상태에서 체크 시!
-                    Log.d(TAG, "78 - f에서t로 체크했고 이거 리스트뷰에 반영되나?");
+                if(scheduleList.get(pos).getIsDone().equals("false")&&isChecked==true) { //리스트뷰 보여줄때 체크 안된 상태에서 체크 시!
                     a.setIsDone("true");
-                    Toast.makeText(buttonView.getContext(), scheduleList.get(pos).getIsDone(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(buttonView.getContext(), "완료 처리되었습니다", Toast.LENGTH_SHORT).show();
                     docref.document(docAA).set(a).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -93,7 +90,6 @@ public class iCalendarAdapter extends BaseAdapter {
                     });
                 }
                 else {
-                    Log.d(TAG, "78 - t에서f로 체크했고 이거 리스트뷰에 반영되나?");
                     a.setIsDone("false");
                     docref.document(docAA).set(a).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -103,9 +99,8 @@ public class iCalendarAdapter extends BaseAdapter {
                             }
                         }
                     });
-                    Toast.makeText(buttonView.getContext(), scheduleList.get(pos).getIsDone(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(buttonView.getContext(), "완료 처리 취소되었습니다", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "else" + scheduleList.get(pos).getIsDone());
-                    //scheduleList.get(pos).setIsDone("false");
                 }
 
 

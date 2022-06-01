@@ -200,7 +200,6 @@ public class iCalendarFragment extends Fragment {
                         contextEditText.setVisibility(View.VISIBLE);
                         contextEditText.setText("");
                         diaryTextView.setVisibility(View.VISIBLE);
-                        isDone.setVisibility(View.INVISIBLE);
 
                         listview.setVisibility(View.INVISIBLE);
                         save_Btn.setVisibility(View.VISIBLE);
@@ -237,7 +236,7 @@ public class iCalendarFragment extends Fragment {
                         //컬렉션에 넣을 준비
 
                         String Date = calendarDate; //일정 쓴 날짜겠지
-                        String IsDone = String.valueOf(isDone.isChecked()); //방금 추가한거니까 false "false" - 지금은 테스트용으로
+                        String IsDone = "false"; //방금 추가한거니까 false "false" - 지금은 테스트용으로
                         String Context = str;
                         String docA = Date +" "+ Context;
                         //3개 묶음
@@ -258,32 +257,6 @@ public class iCalendarFragment extends Fragment {
                         dateTable.get(calendarDate).add(newItem);
                         adapter.addItem(newItem);
 
-
-
-                        //이제 파베에서 불러옴
-                        //불러와서 해당날짜 일정을 리스트뷰에 넣어놓음
-//                        docref
-//                                .get()
-//                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                                        if (task.isSuccessful()) {
-//                                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                                if (document.exists()) {
-//                                                    if (String.valueOf(document.getData().get("date")).equals(calendarDate))
-//                                                    {
-//                                                        String str = ((String) document.getData().get("schedule")); //그 일정을 가져오겠다
-//                                                        String isDone = String.valueOf(document.getData().get("isDone"));
-//                                                        String date = ((String) document.getData().get("date"));
-//                                                        adapter.addItem(str); //리스트에서는 스케줄만 보여줄거니까?
-//                                                        adapter.notifyDataSetChanged();
-//                                                    }
-//                                                }
-//                                            }
-//                                            listview.setAdapter(adapter);
-//                                        }
-//                                    }
-//                                });
                         //저장 버튼을 클릭 한 후 - 저장버튼과 edittext 안보이고 / 수정, 삭제 버튼, 일정 보여주는 거 보이게함
                         save_Btn.setVisibility(View.INVISIBLE);
                         add_Btn.setVisibility(View.VISIBLE);
@@ -299,13 +272,3 @@ public class iCalendarFragment extends Fragment {
     }
 }
 
-
-//                                                iCalendarItem data = new iCalendarItem(schedule, date, isDone); //이 3개를 쌍으로 data에 넣음
-//                                                newArrayList.add(0, data);
-
-//if (!newArrayList.equals(scheduleList)) {
-//        scheduleList = newArrayList;
-//        }
-//        Log.e(TAG, scheduleList.toString());
-//        //adapter = new iCalendarAdapter(rootView.getContext(), scheduleList);
-//        listview.setAdapter(adapter);
