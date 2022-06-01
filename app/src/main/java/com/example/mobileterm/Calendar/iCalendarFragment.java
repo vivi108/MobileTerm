@@ -119,7 +119,6 @@ public class iCalendarFragment extends Fragment {
                 contextEditText.setVisibility(View.INVISIBLE);
                 listview.setVisibility(View.VISIBLE);
                 add_Btn.setVisibility(View.VISIBLE);
-                del_Btn.setVisibility(View.VISIBLE);
                 diaryTextView.setText(String.format("%d / %d / %d", date.getYear(), date.getMonth() + 1, date.getDay())); //중간 일정 보여주는 텍스트뷰
                 ArrayList<iCalendarItem> newArrayList = new ArrayList<iCalendarItem>();
 
@@ -139,7 +138,7 @@ public class iCalendarFragment extends Fragment {
                     System.out.println("136" + dateTable.get(calendarDate));
                 }catch (Exception e){
                     dateTable.put(calendarDate, new ArrayList<iCalendarItem>());
-                    System.out.println("139"+dateTable);
+                    System.out.println("139" + dateTable);
                 }
 
 
@@ -187,9 +186,6 @@ public class iCalendarFragment extends Fragment {
                             }
                         });
 
-                //이 보여주는 와중에 버튼 체크 시 파베에 isdone 저장하기
-
-
 
                 //추가 버튼 -> 저장 버튼 로직으로
                 add_Btn.setOnClickListener(new View.OnClickListener() {
@@ -204,27 +200,9 @@ public class iCalendarFragment extends Fragment {
                         listview.setVisibility(View.INVISIBLE);
                         save_Btn.setVisibility(View.VISIBLE);
                         add_Btn.setVisibility(View.INVISIBLE);
-                        del_Btn.setVisibility(View.INVISIBLE);
                     }
                 });
 
-
-                //삭제 버튼 눌리면 -> 아직 노구현
-                del_Btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //1
-                        //이건 나중에 리스트 형태로 바꿨을때 구현하기로 - 어떤 항목 삭제할건지 2번 화면 띄우기
-                        textView2.setVisibility(View.VISIBLE);
-                        contextEditText.setText("");
-                        contextEditText.setVisibility(View.VISIBLE);
-                        //isDone.setVisibility(View.VISIBLE);
-                        listview.setVisibility(View.INVISIBLE);
-                        save_Btn.setVisibility(View.VISIBLE);
-                        add_Btn.setVisibility(View.INVISIBLE);
-                        del_Btn.setVisibility(View.INVISIBLE);
-                    }
-                });
 
 
                 //저장 버튼 클릭 시 -> 에딧텍스트에 일정 넣고 저장하면 그 날에 일정에 당연히 추가되고 리스트뷰로 그 날에 있는 모든 일정 보여주기
@@ -260,7 +238,6 @@ public class iCalendarFragment extends Fragment {
                         //저장 버튼을 클릭 한 후 - 저장버튼과 edittext 안보이고 / 수정, 삭제 버튼, 일정 보여주는 거 보이게함
                         save_Btn.setVisibility(View.INVISIBLE);
                         add_Btn.setVisibility(View.VISIBLE);
-                        del_Btn.setVisibility(View.VISIBLE);
                         contextEditText.setVisibility(View.INVISIBLE);
                         //isDone.setVisibility(View.INVISIBLE);
                         listview.setVisibility(View.VISIBLE);

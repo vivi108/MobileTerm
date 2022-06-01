@@ -2,8 +2,11 @@ package com.example.mobileterm.Calendar;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +29,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import android.app.AlertDialog;
 
 public class iCalendarAdapter extends BaseAdapter {
 
@@ -67,8 +71,47 @@ public class iCalendarAdapter extends BaseAdapter {
         iCalendarItem a = scheduleList.get(position);
         String docAA = a.getDocA();
 
-
         scheduleTextView.setText(a.getSchedule());
+
+
+        LinearLayout eachlist = (LinearLayout) convertView.findViewById(R.id.eachlist);
+        eachlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "80" + docAA);
+                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogTheme));
+
+                builder.setTitle("Confirm").setMessage("삭제하시겠습니까?");
+
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        docref.document(docAA).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "successfully delete");
+                                    //더이상 이거 안보이도록
+                                    eachlist.setVisibility(View.INVISIBLE);
+                                }
+                            }
+                        });
+                    }
+                });
+
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        Log.d(TAG, "취소" + docAA);
+                    }
+                });
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
 
 
         isdoneBox.setOnCheckedChangeListener(null);
