@@ -29,6 +29,9 @@
        <!-- <item name="android:windowBackground">@mipmap/title</item>-->
 
     </style>
+    <style name="AlertDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="colorPrimary">#0000FF</item>
+    </style>
 
 
 
