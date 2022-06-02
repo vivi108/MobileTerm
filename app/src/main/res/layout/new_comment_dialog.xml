@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="400dp"
+    android:layout_gravity="center"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="새로운 댓글 추가"
+        android:gravity="center"
+        android:textSize="30dp"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/secretGroup">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="게시자에게만 공개"
+            android:id="@+id/secret"
+            android:fontFamily="@font/kc_regular"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="전체 공개"
+            android:id="@+id/notsecret"
+            android:fontFamily="@font/kc_regular"
+            android:checked="true"/>
+
+
+    </RadioGroup>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="댓글 내용을 입력하세요"
+        android:inputType="textMultiLine"
+        android:id="@+id/newCommentEditText"/>
+
+
+    <ImageButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/newCommentDone"
+        android:background="@drawable/editing"
+        android:scaleType="fitXY"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"/>
+
+</LinearLayout>

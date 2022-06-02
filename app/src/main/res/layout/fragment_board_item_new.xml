@@ -181,37 +181,31 @@
         android:layout_width="match_parent"
         android:layout_height="3dp"
         android:background="?android:attr/listDivider" />
-    <ImageView
-        android:id="@+id/btn_post_comments"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center_vertical"
-        android:background="@android:color/transparent"
-        android:contentDescription="댓글 버튼"
-        app:srcCompat="@drawable/ic_comment"
-        tools:ignore="TouchTargetSizeCheck"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="2dp"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="5dp">
+        android:layout_marginTop="10dp">
+        <ImageView
+            android:id="@+id/btn_post_comments"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:contentDescription="댓글 버튼"
+            app:srcCompat="@drawable/ic_comment"
+            tools:ignore="TouchTargetSizeCheck"
+            android:layout_marginLeft="2dp"/>
 
-        <EditText
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:hint="댓글을 입력하세요"
-            android:inputType="textMultiLine"
-            android:id="@+id/commentEditText"/>
 
         <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
             android:id="@+id/addCommentButtonBoardItem"
-            android:background="@drawable/write_icon"/>
+            android:background="@drawable/write_icon"
+            android:layout_marginLeft="10dp"/>
 
 
     </LinearLayout>
