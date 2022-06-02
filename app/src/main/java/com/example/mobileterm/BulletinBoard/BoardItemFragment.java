@@ -223,9 +223,14 @@ public class BoardItemFragment extends Fragment {
                     endEditItem.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            db.collection("BulletinBoard").document(did).update("title",titleItemEditText.getText().toString(), "content",contentItemEditText.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            String newDid = timeTextView.getText().toString()+" "+titleItemEditText.getText().toString();
+                            BoardInfo changed = new BoardInfo(titleItemEditText.getText().toString(), contentItemEditText.getText().toString(), nameTextViewBoardItem.getText().toString(), newDid, timeTextView.getText().toString(), Long.parseLong(likedCountTextViewBoardItem.getText().toString()));
+
+                            db.collection("BulletinBoard").document(newDid).set(changed).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
+                                    Log.d(TAG, "게시물 수정 성공했고 이제 삭제해야함");
+
                                     WriteBatch batch = db.batch();
 
                                     String temptags;
@@ -236,11 +241,11 @@ public class BoardItemFragment extends Fragment {
                                     for (String tag: temptagIter) {
                                         if (tag.length() > 0){
                                             tag = "#"+tag.trim();
-                                            DocumentReference tempref = db.collection("BulletinBoard").document(did).collection("BoardTags").document(tag);
+                                            DocumentReference tempref = db.collection("BulletinBoard").document(newDid).collection("BoardTags").document(tag);
                                             DocumentReference tempTagRef = db.collection("Tags").document(tag);
-                                            DocumentReference tagDocRef = db.collection("Tags").document(tag).collection("tagDocs").document(did);
+                                            DocumentReference tagDocRef = db.collection("Tags").document(tag).collection("tagDocs").document(newDid);
                                             BoardTags newTag = new BoardTags(tag);
-                                            TagDocs newDoc = new TagDocs(did, tag);
+                                            TagDocs newDoc = new TagDocs(newDid, tag);
 
                                             batch.set(tempref, newTag);
                                             batch.set(tempTagRef, newTag);
@@ -259,10 +264,24 @@ public class BoardItemFragment extends Fragment {
                                                 titleItemEditText.setText("");
                                                 tagItemEditText.setText("");
                                                 contentItemEditText.setText("");
-                                                editItemDialog.dismiss();
+                                                db.collection("BulletinBoard").document(did).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void unused) {
+                                                        Log.d(TAG, "삭제 성공");
+                                                        editItemDialog.dismiss();
+                                                    }
+                                                });
+
                                             }
                                         }
                                     });
+                                }
+                            });
+
+                            db.collection("BulletinBoard").document(did).update("title",titleItemEditText.getText().toString(), "content",contentItemEditText.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
 
                                 }
                             });
