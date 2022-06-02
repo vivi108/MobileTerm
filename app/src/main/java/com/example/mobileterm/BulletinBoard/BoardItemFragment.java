@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +56,7 @@ public class BoardItemFragment extends Fragment {
     String userNickName;
     Dialog editCommentDialog;
     Dialog editItemDialog;
+    Dialog newCommentDialog;
 
     SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     long mnow;
@@ -83,6 +86,8 @@ public class BoardItemFragment extends Fragment {
         userNickName = mainActivity.sendUserNickname();
         editItemDialog = new Dialog(getActivity());
         editItemDialog.setContentView(R.layout.edit_item_dialog);
+        newCommentDialog = new Dialog(getActivity());
+        newCommentDialog.setContentView(R.layout.new_comment_dialog);
         Log.d(TAG,did);
         commentListView = rootView.findViewById(R.id.commentView);
         db = FirebaseFirestore.getInstance();
@@ -96,7 +101,7 @@ public class BoardItemFragment extends Fragment {
         titleTextViewBoardItem = rootView.findViewById(R.id.titleTextViewBoardItem);
         tagTextViewBoardItem = rootView.findViewById(R.id.tagTextViewBoardItem);
         ImageButton likeButton = rootView.findViewById(R.id.likeButton);
-        commentEditText = rootView.findViewById(R.id.commentEditText);
+//        commentEditText = rootView.findViewById(R.id.commentEditText);
         likedCountTextViewBoardItem = rootView.findViewById(R.id.likedCountViewBoardItem);
         ImageButton addCommentButtonBoardItem = rootView.findViewById(R.id.addCommentButtonBoardItem);
 
@@ -182,19 +187,7 @@ public class BoardItemFragment extends Fragment {
         return rootView;
     }
 
-    private void DBinsertion(String content, String userName, String writtenTime) {
-        CommentInfo newComment = new CommentInfo(content, userName, writtenTime);
-        commentId = getTime()+userName;
-        db.collection("BulletinBoard/"+did+"/Comments").document(commentId).set(newComment).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Log.e(TAG, "댓글 등록 성공");
-                }
-            }
-        });
 
-    }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -290,8 +283,33 @@ public class BoardItemFragment extends Fragment {
                     break;
                 }
                 case R.id.addCommentButtonBoardItem:{
+                    newCommentDialog.show();
 
-                    addComment();
+                    ImageButton newCommentDone = newCommentDialog.findViewById(R.id.newCommentDone);
+                    RadioButton secret = newCommentDialog.findViewById(R.id.secret);
+                    RadioButton notsecret = newCommentDialog.findViewById(R.id.notsecret);
+                    RadioGroup secretGroup = newCommentDialog.findViewById(R.id.secretGroup);
+                    EditText newCommentEditText= newCommentDialog.findViewById(R.id.newCommentEditText);
+
+                    newCommentDone.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String curTime = getTime();
+                            CommentInfo newComment = new CommentInfo(newCommentEditText.getText().toString(), nameTextViewBoardItem.getText().toString(), curTime);
+                            if (secretGroup.getCheckedRadioButtonId() == R.id.secret){
+                                newComment.setSecret(true);
+                            }
+
+                            db.collection("BulletinBoard").document(did).collection("Comments").document(curTime+nameTextViewBoardItem.getText().toString()).set(newComment).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    commentListViewAdapter.addComment(newComment);
+                                    newCommentEditText.setText("");
+                                    newCommentDialog.dismiss();
+                                }
+                            });
+                        }
+                    });
 
                     break;
                 }
@@ -330,18 +348,7 @@ public class BoardItemFragment extends Fragment {
         }
     };
 
-    private void addComment(){
 
-        if (userNickName.length() == 0) {
-            userNickName = "unidentified user";
-        }
-
-        String curTime = getTime();
-        CommentInfo newComment = new CommentInfo(commentEditText.getText().toString(), userNickName, curTime);
-        commentListViewAdapter.addComment(newComment);
-        DBinsertion(commentEditText.getText().toString(), userNickName, curTime);
-        commentEditText.setText("");
-    }
 
     public void addToLikedItem(String title){
          db.collection("Users").document(curUser.getUid()).collection("likedBoardItem").document(did).set(new LikedBoardItem(title, did)).addOnCompleteListener(new OnCompleteListener<Void>() {
