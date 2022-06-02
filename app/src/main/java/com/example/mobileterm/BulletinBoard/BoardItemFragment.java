@@ -309,7 +309,7 @@ public class BoardItemFragment extends Fragment {
                         @Override
                         public void onClick(View view) {
                             String curTime = getTime();
-                            CommentInfo newComment = new CommentInfo(newCommentEditText.getText().toString(), nameTextViewBoardItem.getText().toString(), curTime);
+                            CommentInfo newComment = new CommentInfo(newCommentEditText.getText().toString(), userNickName, curTime);
                             if (secretGroup.getCheckedRadioButtonId() == R.id.secret){
                                 newComment.setSecret(true);
                             }
