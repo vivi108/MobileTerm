@@ -61,8 +61,6 @@ public class BoardItemFragment extends Fragment {
     SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     long mnow;
     Date mDate;
-    String commentId;
-    EditText commentEditText;
     TextView titleTextViewBoardItem;
     TextView timeTextView ;
     TextView nameTextViewBoardItem;
@@ -81,7 +79,6 @@ public class BoardItemFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_board_item_new, container, false);
         MainActivity mainActivity = (MainActivity)getActivity();
-//        selectedBoardItem = mainActivity.sendBoardItem();
         did = mainActivity.sendDid();
         userNickName = mainActivity.sendUserNickname();
         editItemDialog = new Dialog(getActivity());
@@ -101,7 +98,6 @@ public class BoardItemFragment extends Fragment {
         titleTextViewBoardItem = rootView.findViewById(R.id.titleTextViewBoardItem);
         tagTextViewBoardItem = rootView.findViewById(R.id.tagTextViewBoardItem);
         ImageButton likeButton = rootView.findViewById(R.id.likeButton);
-//        commentEditText = rootView.findViewById(R.id.commentEditText);
         likedCountTextViewBoardItem = rootView.findViewById(R.id.likedCountViewBoardItem);
         ImageButton addCommentButtonBoardItem = rootView.findViewById(R.id.addCommentButtonBoardItem);
 
