@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.mobileterm.Calendar.CalendarFragment;
+import com.example.mobileterm.Calendar.iCalendarFragment;
 import com.example.mobileterm.ProfileSettingFragment;
 import com.example.mobileterm.R;
 import com.example.mobileterm.SettingFragment;
@@ -155,7 +156,7 @@ public class MyHomeFragment extends Fragment {
             public void onClick(View v) {
                 requireActivity().getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.main_frame_layout, new CalendarFragment())
+                        .replace(R.id.main_frame_layout, new iCalendarFragment())
                         .addToBackStack(null)
                         .commit();
             }
