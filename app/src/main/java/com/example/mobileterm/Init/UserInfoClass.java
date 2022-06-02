@@ -36,7 +36,7 @@ public class UserInfoClass {
         this.nickname = nickname;
         this.regDate = regDate;
         this.address = address;
-        this.token = 0;
+        this.token = 10;
         this.profileImageURL = "ic_profile_gray";
         this.isVerified = false;
     }
