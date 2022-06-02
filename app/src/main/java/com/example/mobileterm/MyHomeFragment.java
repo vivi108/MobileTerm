@@ -71,8 +71,8 @@ public class MyHomeFragment extends Fragment {
     String uid;
     BarChart barChart;
 
-    int[] cnt= new int[]{0, 0, 0, 0, 0, 0, 0}; //전체 할 일 개수
-
+    int[] cnt= new int[7]; //전체 할 일 개수
+    int[] isDone_cnt= new int[7];
     //Firebase로 로그인한 사용자 정보 알기 위해
     private FirebaseAuth mAuth;
     private FirebaseUser user;
@@ -108,7 +108,21 @@ public class MyHomeFragment extends Fragment {
         GetToken(user);
         get_todo(user);
         todo_tv(); // 오늘 할일 N개 남았어요 - 여기를 눌러서 오늘의 할일을 지정해주세요 문구변경
+        cnt[0]=0;
+        cnt[1]=0;
+        cnt[2]=0;
+        cnt[3]=0;
+        cnt[4]=0;
+        cnt[5]=0;
+        cnt[6]=0;
 
+        isDone_cnt[0]=0;
+        isDone_cnt[1]=0;
+        isDone_cnt[2]=0;
+        isDone_cnt[3]=0;
+        isDone_cnt[4]=0;
+        isDone_cnt[5]=0;
+        isDone_cnt[6]=0;
         //화장 리스트뷰
         Display newDisplay = requireActivity().getWindowManager().getDefaultDisplay();
         int width = newDisplay.getWidth();
@@ -260,13 +274,6 @@ public class MyHomeFragment extends Fragment {
 
     String datePattern = "yyyyMMdd";
     private void get_todo(FirebaseUser firebaseUser) {
-        cnt[0]=0;
-        cnt[1]=0;
-        cnt[2]=0;
-        cnt[3]=0;
-        cnt[4]=0;
-        cnt[5]=0;
-        cnt[6]=0;
 
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat(datePattern);
@@ -283,8 +290,6 @@ public class MyHomeFragment extends Fragment {
         String date2 = sdf.format(cal.getTime());
         cal.add(cal.DATE, -1);
         String date1 = sdf.format(cal.getTime());
-//        Date today = new Date();
-//        SimpleDateFormat format = new SimpleDateFormat(datePattern);
 
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
         CollectionReference collectionReference = fb.collection("Users").document(firebaseUser.getUid()).collection("iSchedule");
@@ -297,57 +302,99 @@ public class MyHomeFragment extends Fragment {
                         //데이터를 가져올 수 있다.
                         String date = (String) document.getData().get("date");
                        // Date getdate =changeDateFormat(date);
-                        Log.d("가져운 date", date);
+                        Log.d("가져온 date", date);
                         Log.d("MyFragment date", date7);
                         String isDone = (String) document.getData().get("isDone");
 
                         if (date7.equals(date)) {//오늘
-                            cnt[6]++;
-                            Log.d("MyhomeFragment", "cnt 6 :"+cnt[6]);
+                            cnt[6]=cnt[6]+1;
+
+                            if (isDone.equals("true")){
+                                isDone_cnt[6]++;
+                            }
+                           // Log.d("MyhomeFragment", "cnt 6 :"+cnt[6]);
                         }
                         else if (date6.equals(date)){
-                            cnt[5]++;
-                            Log.d("MyhomeFragment", "cnt 5 :"+cnt[5]);
+                            //cnt[5]++;
+                            cnt[5]=cnt[5]+1;
+                            if (isDone.equals("true")){
+                                isDone_cnt[5]++;
+                            }
+                           // Log.d("MyhomeFragment", "cnt 5 :"+cnt[5]);
                         }
                         else if (date5.equals(date)){
-                            cnt[4]++;
-                            Log.d("MyhomeFragment", "cnt 4 :"+cnt[4]);
+                            cnt[4]=cnt[4]+1;
+                            if (isDone.equals("true")){
+                                isDone_cnt[4]++;
+                            }
+                            //Log.d("MyhomeFragment", "cnt 4 :"+cnt[4]);
                         }
                         else if (date4.equals(date)){
-                            cnt[3]++;
-                            Log.d("MyhomeFragment", "cnt 3 :"+cnt[3]);
+                            cnt[3]=cnt[3]+1;
+                            if (isDone.equals("true")){
+                                isDone_cnt[3]++;
+                            }
+                            //Log.d("MyhomeFragment", "cnt 3 :"+cnt[3]);
                         }
                         else if (date3.equals(date)){
-                            cnt[2]++;
-                            Log.d("MyhomeFragment", "cnt 2 :"+cnt[2]);
+                            cnt[2]=cnt[2]+1;
+                            if (isDone.equals("true")){
+                                isDone_cnt[2]++;
+                            }
+                            //Log.d("MyhomeFragment", "cnt 2 :"+cnt[2]);
                         }
                         else if (date2.equals(date)){
-                            cnt[1]++;
-                            Log.d("MyhomeFragment", "cnt 1 :"+cnt[1]);
+                            cnt[1]=cnt[1]+1;
+                            if (isDone.equals("true")){
+                                isDone_cnt[1]++;
+                            }
+                            //Log.d("MyhomeFragment", "cnt 1 :"+cnt[1]);
                         }
                         else if (date1.equals(date)){
-                            cnt[0]++;
-                            Log.d("MyhomeFragment", "cnt 0 :"+cnt[0]);
-                        }
+                            //cnt[0]++;
+                            cnt[0]=cnt[0]+1;
+                            if (isDone.equals("true")){
+                                isDone_cnt[0]++;
+                            }
+
+                        };
                     }
                 }
             }
         });
+        for (int i=0 ; i<7; i++) {
+            Log.d("MyhomeFragment", "cnt(함수전)  " + i + " ; " + cnt[i]);
+        }
         graphInitSetting();
     }
     private void graphInitSetting() {
-        ArrayList<Integer> jsonList = new ArrayList<Integer>(); // ArrayList 선언
+        ArrayList<Float> jsonList = new ArrayList<>(); // ArrayList 선언
         ArrayList<String> labelList = new ArrayList<>(); // ArrayList 선언
+        float[] percentage = new float[]{0,0,0,0,0,0,0};
+        for (int i=0 ; i<7; i++){
+            Log.d("MyhomeFragment", "cnt  "+i +" ; "+cnt[i]);
+            if(cnt[i]==0){
+                percentage[i]=0;
+                Log.d("MyhomeFragment", "percentage  "+i +" ; "+percentage[i]);
+            }
+            else {
+                Log.d("MyhomeFragment", "isDone  "+i +" ; "+isDone_cnt[i]);
 
+                percentage[i] = (((float)isDone_cnt[i]/(float) cnt[i]))*100;
+                Log.d("MyhomeFragment", "divide  "+i +" ; "+((float)isDone_cnt[i]/(float) cnt[i]));
+                Log.d("MyhomeFragment", "percentage  "+i +" ; "+percentage[i]);
+            }
+
+        }
         jsonList.clear();
         //서버에서 정보 받아와야함.
-        jsonList.add(cnt[0]);
-        jsonList.add(cnt[1]);
-        jsonList.add(cnt[2]);
-        jsonList.add(cnt[3]);
-        jsonList.add(cnt[4]);
-        jsonList.add(cnt[5]);
-        jsonList.add(cnt[6]);
+        jsonList.add(percentage[0]);
+        jsonList.add(percentage[1]);
+        jsonList.add(percentage[2]);
+        jsonList.add(percentage[3]);
+        jsonList.add(percentage[4]);
+        jsonList.add(percentage[5]);
+        jsonList.add(percentage[6]);
 
 
         labelList.clear();
@@ -367,15 +414,15 @@ public class MyHomeFragment extends Fragment {
 //        barChart.setTop(50);
 //        barChart.setBottom(0);
 //        barChart.setAutoScaleMinMaxEnabled(true);
-        barChart.getAxisRight().setAxisMaxValue(10);
-        barChart.getAxisLeft().setAxisMaxValue(10);
+        barChart.getAxisRight().setAxisMaxValue(100);
+        barChart.getAxisLeft().setAxisMaxValue(100);
 
     }
 
-    private void BarChartGraph(ArrayList<String> labelList, ArrayList<Integer> valList) {
+    private void BarChartGraph(ArrayList<String> labelList, ArrayList<Float> valList) {
         ArrayList<BarEntry> entries = new ArrayList<>();
         for (int i = 0; i < valList.size(); i++) {
-            entries.add(new BarEntry((Integer) valList.get(i), i));
+            entries.add(new BarEntry((float) valList.get(i), i));
         }
 
         BarDataSet depenses = new BarDataSet(entries, "일일 완성도"); // 변수로 받아서 넣어줘도 됨
