@@ -116,6 +116,7 @@ public class BoardItemFragment extends Fragment {
                 if (task.isSuccessful()){
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()){
+                        Log.d(TAG,"nickname"+userNickName);
                         titleTextViewBoardItem.setText((String) document.getData().get("title"));
                         contentTextViewBoardItem.setText((String) document.getData().get("content"));
                         timeTextView.setText((String) document.getData().get("writtenTime"));
@@ -130,6 +131,8 @@ public class BoardItemFragment extends Fragment {
                             deleteItemButton.setOnClickListener(onClickListener);
                         }
 
+
+
                         ArrayList<CommentInfo> newArrayList = new ArrayList<CommentInfo>();
                         CollectionReference docRef = db.document("BulletinBoard/"+did).collection("Comments");
                         docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -142,7 +145,18 @@ public class BoardItemFragment extends Fragment {
                                             String content = (String) document.getData().get("content");
                                             String writtenTime = (String) document.getData().get("writtenTime");
                                             CommentInfo data = new CommentInfo(content, name, writtenTime);
-                                            newArrayList.add(0,data);
+                                            boolean isSecret = (boolean) document.getData().get("secret");
+                                            if (isSecret){
+                                                if (userNickName.equals(name) || userNickName.equals(nameTextViewBoardItem.getText().toString())){
+                                                    newArrayList.add(0,data);
+                                                }else{
+                                                    CommentInfo secretComment = new CommentInfo("비밀 댓글입니다. 댓글, 게시글 작성자만 볼 수 있습니다.","unknown", writtenTime);
+                                                    newArrayList.add(0, secretComment);
+                                                }
+                                            }else{
+                                                newArrayList.add(0,data);
+                                            }
+
                                         }
                                     }
                                     if (!newArrayList.equals(arrayList)) {
