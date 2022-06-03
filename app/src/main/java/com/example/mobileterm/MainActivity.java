@@ -40,7 +40,9 @@ import com.example.mobileterm.Calendar.iCalendarFragment;
 import com.example.mobileterm.Init.LoginSelectionActivity;
 import com.example.mobileterm.StudyGroup.StudyFindFragment;
 import com.example.mobileterm.StudyGroup.StudyFragment;
+import com.example.mobileterm.StudyGroup.StudyGroupFragment;
 import com.example.mobileterm.StudyGroup.StudyMakeFragment;
+import com.example.mobileterm.StudyGroup.WritePostFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -57,6 +59,7 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private static Fragment studyFragment, boardFragment, iCalendarFragment, gCalendarFragment, myHomeFragment, boardItemFragment, boardAddItemFragment, studyFindFragment, studyMakeFragment;
+    private static Fragment studyGroupFragment,writePostFragment;
     private static final int MY_PERMISSION_CAMERA = 1111;
     private static final int REQUEST_TAKE_PHOTO = 2222;
     private static final int REQUEST_TAKE_ALBUM = 3333;
@@ -87,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
     //유저 프로필 pram
     private String nickname;
+    private String studyTitle;
     private Uri photoUrl;
     private String phone;
     private int token;
@@ -159,6 +163,8 @@ public class MainActivity extends AppCompatActivity {
         boardAddItemFragment = new BoardAddItemFragment();
         studyFindFragment = new StudyFindFragment();
         studyMakeFragment = new StudyMakeFragment();
+        studyGroupFragment = new StudyGroupFragment();
+        writePostFragment = new WritePostFragment();
     }
 
     private void initiate_nav_menu() {
@@ -410,7 +416,14 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, studyMakeFragment).addToBackStack(null).commit();
         }else if (index == 302) {
             getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, studyFindFragment).addToBackStack(null).commit();
+        }else if (index == 400){
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, writePostFragment).addToBackStack(null).commit();
         }
+    }
+
+    public void onFragmentChanged(String title, int index){
+        studyTitle = title;
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, studyGroupFragment).addToBackStack(null).commit();
     }
 
 //    public void onFragmentChanged(BoardInfo data, String did) {
@@ -451,6 +464,10 @@ public class MainActivity extends AppCompatActivity {
 
     public String sendUserNickname() {
         return nickname;
+    }
+
+    public String sendStudyTitle(){
+        return studyTitle;
     }
 
 }

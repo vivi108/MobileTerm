@@ -13,16 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/btn_studypost_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/transparent"
-            android:contentDescription="뒤로가기"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/ic_back"
-            tools:ignore="TouchTargetSizeCheck" />
+
 
         <TextView
             android:layout_width="wrap_content"
