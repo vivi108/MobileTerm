@@ -30,8 +30,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 public class gCalendarAdapter extends BaseAdapter {
-
-
     Dialog dialogShow;
     Context mContext;
     private static final String TAG = "gCalendarAdapter";
@@ -105,21 +103,12 @@ public class gCalendarAdapter extends BaseAdapter {
                 TextView timeText = (TextView)dialogShow.findViewById(R.id.timeText);
                 TextView scheduleText = (TextView)dialogShow.findViewById(R.id.scheduleText);
 
-                placeText.setText(a.getPlace());
-                timeText.setText(a.getTime());
-                scheduleText.setText(a.getSchedule());
+                placeText.setText("장소 : " + a.getPlace());
+                timeText.setText("시간 : " +a.getTime());
+                scheduleText.setText("일정 : " +a.getSchedule());
 
-
-
-
-//                AlertDialog alertDialog = builder.create();
-//                alertDialog.show();
             }
         });
-
-
-
-
 
         return convertView;
 
