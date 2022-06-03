@@ -502,6 +502,7 @@ public class MyHomeFragment extends Fragment {
 
                     Glide.with(getActivity())
                             .load(uri)
+                            .circleCrop()
                             .into(profile);
 
                 }
