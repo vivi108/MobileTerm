@@ -101,7 +101,7 @@ public class StudyFindActivity extends AppCompatActivity {
             }
         }
 
-        popup_container = findViewById(R.id.popup_container);
+//        popup_container = findViewById(R.id.popup_container);
         btn_studyfind_back = findViewById(R.id.btn_studyfind_back);
         et_search_study = findViewById(R.id.et_search_study);
         btn_tag0 = findViewById(R.id.btn_tag0);
@@ -178,23 +178,23 @@ public class StudyFindActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             String getID = (String) view.findViewById(R.id.tv_find_study_name).getTag().toString();
-            FindStudyVo member = (FindStudyVo) adapter.getItem(i);
-            String pw = member.getPw();
-            String StudyName = member.getStudyName();
+//            FindStudyVo member = (FindStudyVo) adapter.getItem(i);
+//            String pw = member.getPw();
+//            String StudyName = member.getStudyName();
             //Toast.makeText(view.getContext(), "Clicked" + getID, Toast.LENGTH_SHORT).show();
-            if(getID.contains("open")){
-                getSupportFragmentManager().beginTransaction().replace(R.id.popup_container, open).addToBackStack(null).commit();
-                Bundle bundle = new Bundle();
-                bundle.putString("StudyName", StudyName);
-                open.setArguments(bundle);
-            }
-            else if(getID.contains("close")){
-                getSupportFragmentManager().beginTransaction().replace(R.id.popup_container, close).addToBackStack(null).commit();
-                Bundle bundle = new Bundle();
-                bundle.putString("PW", pw);
-                bundle.putString("StudyName", StudyName);
-                close.setArguments(bundle);
-            }
+//            if(getID.contains("open")){
+//                getSupportFragmentManager().beginTransaction().replace(R.id.popup_container, open).addToBackStack(null).commit();
+//                Bundle bundle = new Bundle();
+//                bundle.putString("StudyName", StudyName);
+//                open.setArguments(bundle);
+//            }
+//            else if(getID.contains("close")){
+//                getSupportFragmentManager().beginTransaction().replace(R.id.popup_container, close).addToBackStack(null).commit();
+//                Bundle bundle = new Bundle();
+//                bundle.putString("PW", pw);
+//                bundle.putString("StudyName", StudyName);
+//                close.setArguments(bundle);
+//            }
         }
     };
 
