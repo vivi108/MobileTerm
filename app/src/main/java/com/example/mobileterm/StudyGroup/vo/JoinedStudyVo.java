@@ -7,6 +7,23 @@ public class JoinedStudyVo {
     private String studyName;
     private String tags;
     private String studyCapacity;
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public JoinedStudyVo( String studyName, String studyCapacity,String[] members, String tags,  String description) {
+        this.members = members;
+        this.studyName = studyName;
+        this.tags = tags;
+        this.studyCapacity = studyCapacity;
+        this.description = description;
+    }
 
     public JoinedStudyVo(String studyName, String studyCapacity, String[] members, String tags) {
         this.studyName = studyName;

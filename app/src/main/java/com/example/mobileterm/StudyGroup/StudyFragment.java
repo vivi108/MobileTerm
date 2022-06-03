@@ -61,6 +61,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     String memberList;
     String[] members;
     String tags;
+    String description;
     MainActivity mainActivity;
     @Nullable
     @Override
@@ -92,10 +93,10 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                         memberList = (String) document.getData().get("memberList");
                         members = (String[]) memberList.split("/");
                         tags = (String) document.getData().get("tags");
-
+                        description = (String) document.getData().get("description");
                         Log.d(TAG, studyName + " " + maxNumPeople + " " + members[0] + " " + tags);
 
-                        studies.add(new JoinedStudyVo(studyName, maxNumPeople, members, tags));
+                        studies.add(new JoinedStudyVo(studyName, maxNumPeople, members, tags, description));
                     }
                     Log.d(TAG, "study size : " + studies.size());
                     for (int i = 0; i < studies.size(); i++){
