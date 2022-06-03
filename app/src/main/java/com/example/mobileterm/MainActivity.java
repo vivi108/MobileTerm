@@ -42,6 +42,7 @@ import com.example.mobileterm.StudyGroup.StudyFindFragment;
 import com.example.mobileterm.StudyGroup.StudyFragment;
 import com.example.mobileterm.StudyGroup.StudyGroupFragment;
 import com.example.mobileterm.StudyGroup.StudyMakeFragment;
+import com.example.mobileterm.StudyGroup.StudyPostFragment;
 import com.example.mobileterm.StudyGroup.WritePostFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -59,7 +60,7 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private static Fragment studyFragment, boardFragment, iCalendarFragment, gCalendarFragment, myHomeFragment, boardItemFragment, boardAddItemFragment, studyFindFragment, studyMakeFragment;
-    private static Fragment studyGroupFragment,writePostFragment;
+    private static Fragment studyGroupFragment,writePostFragment,studyPostFragment;
     private static final int MY_PERMISSION_CAMERA = 1111;
     private static final int REQUEST_TAKE_PHOTO = 2222;
     private static final int REQUEST_TAKE_ALBUM = 3333;
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
     //유저 프로필 pram
     private String nickname;
     private String studyTitle;
+    private String pid;
     private Uri photoUrl;
     private String phone;
     private int token;
@@ -165,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
         studyMakeFragment = new StudyMakeFragment();
         studyGroupFragment = new StudyGroupFragment();
         writePostFragment = new WritePostFragment();
+        studyPostFragment = new StudyPostFragment();
     }
 
     private void initiate_nav_menu() {
@@ -421,6 +424,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void onFragmentChanged(int index, String postid){
+        pid = postid;
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, studyPostFragment).addToBackStack(null).commit();
+    }
+
     public void onFragmentChanged(String title, int index){
         studyTitle = title;
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, studyGroupFragment).addToBackStack(null).commit();
@@ -468,6 +476,10 @@ public class MainActivity extends AppCompatActivity {
 
     public String sendStudyTitle(){
         return studyTitle;
+    }
+
+    public String sendPid() {
+        return pid;
     }
 
 }

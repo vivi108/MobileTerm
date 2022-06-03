@@ -42,7 +42,7 @@ public class WritePostFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         myNickname = activity.sendUserNickname();
         studyName = activity.sendStudyTitle();
-        btn_studypost_back = rootView.findViewById(R.id.btn_studypost_back);
+//        btn_studypost_back = rootView.findViewById(R.id.btn_studypost_back);
         btn_finish_writing = rootView.findViewById(R.id.btn_finish_writing);
         btn_study_fileupload = rootView.findViewById(R.id.btn_study_fileupload);
         tv_study_file_name = rootView.findViewById(R.id.tv_study_file_name);

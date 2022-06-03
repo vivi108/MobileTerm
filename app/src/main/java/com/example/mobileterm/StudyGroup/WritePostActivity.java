@@ -43,7 +43,7 @@ public class WritePostActivity extends AppCompatActivity {
 
         writer = mainActivity.sendUserNickname();
         studyName = studyMakeActivity.sendStudyID();
-        btn_studypost_back = findViewById(R.id.btn_studypost_back);
+//        btn_studypost_back = findViewById(R.id.btn_studypost_back);
         btn_finish_writing = findViewById(R.id.btn_finish_writing);
         btn_study_fileupload = findViewById(R.id.btn_study_fileupload);
         tv_study_file_name = findViewById(R.id.tv_study_file_name);

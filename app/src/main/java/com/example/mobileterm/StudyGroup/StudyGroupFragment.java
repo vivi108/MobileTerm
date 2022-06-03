@@ -1,9 +1,11 @@
 package com.example.mobileterm.StudyGroup;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,6 +34,7 @@ public class StudyGroupFragment extends Fragment {
     String title;
     MainActivity activity;
     FirebaseFirestore db ;
+    Dialog settingDialog ;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,6 +43,8 @@ public class StudyGroupFragment extends Fragment {
         title = activity.sendStudyTitle();
         db = FirebaseFirestore.getInstance();
         arrayList = new ArrayList<StudyPostInfo>();
+        settingDialog = new Dialog(getActivity());
+        settingDialog.setContentView(R.layout.activity_study_setting);
 
 //        btn_studygroup_back = rootView.findViewById(R.id.btn_studygroup_back);
         btn_studygroup_setting = rootView.findViewById(R.id.btn_studygroup_setting);
@@ -63,6 +68,13 @@ public class StudyGroupFragment extends Fragment {
                     }
                     adapter = new PostAdapter(rootView.getContext(), arrayList);
                     lv_studygroup_posts.setAdapter(adapter);
+
+                    lv_studygroup_posts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            activity.onFragmentChanged(i, adapter.getItem(i).getWrittenTime()+" "+adapter.getItem(i).getTitle());
+                        }
+                    });
                 }
             }
         });
@@ -73,6 +85,14 @@ public class StudyGroupFragment extends Fragment {
                 activity.onFragmentChanged(400);
             }
         });
+
+        btn_studygroup_setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                settingDialog.show();
+            }
+        });
+
 
         return rootView;
     }
