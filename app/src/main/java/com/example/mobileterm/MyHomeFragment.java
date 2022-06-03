@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -41,6 +42,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -68,12 +71,12 @@ public class MyHomeFragment extends Fragment {
     ExpandableListView listview;
     ArrayList<myGroup> DataList;
     ExpandAdapter adapter;
-    String[][]  childids =new String[999][999];
+    String[][] childids = new String[999][999];
     String uid;
     BarChart barChart;
 
-    int[] cnt= new int[7]; //전체 할 일 개수
-    int[] isDone_cnt= new int[7];
+    int[] cnt = new int[7]; //전체 할 일 개수
+    int[] isDone_cnt = new int[7];
     //Firebase로 로그인한 사용자 정보 알기 위해
     private FirebaseAuth mAuth;
     private FirebaseUser user;
@@ -109,21 +112,21 @@ public class MyHomeFragment extends Fragment {
         GetToken(user);
         get_todo(user);
         todo_tv(); // 오늘 할일 N개 남았어요 - 여기를 눌러서 오늘의 할일을 지정해주세요 문구변경
-        cnt[0]=0;
-        cnt[1]=0;
-        cnt[2]=0;
-        cnt[3]=0;
-        cnt[4]=0;
-        cnt[5]=0;
-        cnt[6]=0;
+        cnt[0] = 0;
+        cnt[1] = 0;
+        cnt[2] = 0;
+        cnt[3] = 0;
+        cnt[4] = 0;
+        cnt[5] = 0;
+        cnt[6] = 0;
 
-        isDone_cnt[0]=0;
-        isDone_cnt[1]=0;
-        isDone_cnt[2]=0;
-        isDone_cnt[3]=0;
-        isDone_cnt[4]=0;
-        isDone_cnt[5]=0;
-        isDone_cnt[6]=0;
+        isDone_cnt[0] = 0;
+        isDone_cnt[1] = 0;
+        isDone_cnt[2] = 0;
+        isDone_cnt[3] = 0;
+        isDone_cnt[4] = 0;
+        isDone_cnt[5] = 0;
+        isDone_cnt[6] = 0;
         //화장 리스트뷰
         Display newDisplay = requireActivity().getWindowManager().getDefaultDisplay();
         int width = newDisplay.getWidth();
@@ -154,11 +157,26 @@ public class MyHomeFragment extends Fragment {
         beforetodo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requireActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.main_frame_layout, new iCalendarFragment())
-                        .addToBackStack(null)
-                        .commit();
+
+                BottomNavigationView botNavView = requireActivity().findViewById(R.id.main_bnv);
+               // botNavView.getMenu().getItem(2);
+//                botNavView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+//                    @Override
+//                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                        switch (item.getItemId()) {
+//                            case requireActivity().findViewById(R.id.nav_menu_calendar):
+//                                // StudyFragment로 교체
+//                                requireActivity().getSupportFragmentManager()
+//                                        .beginTransaction()
+//                                        .replace(R.id.main_frame_layout, new iCalendarFragment())
+//                                        .addToBackStack(null)
+//                                        .commit();
+//                                return true;
+//                        }
+//                        return false;
+//
+//                    }
+//                });
             }
         });
         // 프로필 이미지 눌렀을 때.
@@ -192,9 +210,9 @@ public class MyHomeFragment extends Fragment {
 
                         break;
                     case 1:
-                        Log.e("boardItemClicked","by setOnItemCLick from LikedBoardItem");
+                        Log.e("boardItemClicked", "by setOnItemCLick from LikedBoardItem");
                         String getchildid = childids[1][childPosition];
-                        Log.d ("getchildid", getchildid+"가 선택됨");
+                        Log.d("getchildid", getchildid + "가 선택됨");
                         GetLikedBoardItem(user, getchildid);
                         break;
                 }
@@ -204,6 +222,8 @@ public class MyHomeFragment extends Fragment {
         });
         return rootView;
     }
+
+
     private void GetLikedBoardItem(FirebaseUser firebaseUser, String did) {
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
         DocumentReference documentReference = fb.collection("BulletinBoard").document(did);
@@ -215,14 +235,14 @@ public class MyHomeFragment extends Fragment {
                     if (document != null) {
                         if (document.exists()) {
                             MainActivity activity = (MainActivity) getActivity();
-                            String title =(String) document.getData().get("title");
-                            String content=(String) document.getData().get("content");
-                            String uName=(String) document.getData().get("name");
-                            String wTime=(String) document.getData().get("writtenTime");
-                            Log.d ("getchildid", title);
-                            Log.d ("getchildid", content);
-                            Log.d ("getchildid", uName);
-                            Log.d ("getchildid", wTime);
+                            String title = (String) document.getData().get("title");
+                            String content = (String) document.getData().get("content");
+                            String uName = (String) document.getData().get("name");
+                            String wTime = (String) document.getData().get("writtenTime");
+                            Log.d("getchildid", title);
+                            Log.d("getchildid", content);
+                            Log.d("getchildid", uName);
+                            Log.d("getchildid", wTime);
                             activity.onFragmentChanged(title, content, uName, wTime);
 
                         }
@@ -232,8 +252,9 @@ public class MyHomeFragment extends Fragment {
         });
 
     }
+
     //확장 리스트뷰 차일드 정보 가져오기 by likedBoardItem-->완성
-    private void addChildListView_Board(myGroup temp, FirebaseUser firebaseUser){
+    private void addChildListView_Board(myGroup temp, FirebaseUser firebaseUser) {
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
         CollectionReference collectionReference = fb.collection("Users").document(firebaseUser.getUid()).collection("likedBoardItem");
 
@@ -241,16 +262,16 @@ public class MyHomeFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    int i=0;
+                    int i = 0;
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         //document.getData() or document.getId() 등등 여러 방법으로
                         //데이터를 가져올 수 있다.
 
                         String childTitle = (String) document.getData().get("title");
                         String childid = (String) document.getData().get("did");
-                       // temp.childId.add(childid);
+                        // temp.childId.add(childid);
                         temp.child.add(childTitle);
-                        childids[1][i]=childid;
+                        childids[1][i] = childid;
                         i++;
 
                     }
@@ -267,13 +288,14 @@ public class MyHomeFragment extends Fragment {
 
         beforetodo.setVisibility(View.GONE);
         aftertodo.setVisibility(View.VISIBLE);
-        if(cnt[6]==0){
+        if (cnt[6] == 0) {
             beforetodo.setVisibility(View.VISIBLE);
             aftertodo.setVisibility(View.GONE);
         }
     }
 
     String datePattern = "yyyyMMdd";
+
     private void get_todo(FirebaseUser firebaseUser) {
 
         Calendar cal = Calendar.getInstance();
@@ -302,88 +324,83 @@ public class MyHomeFragment extends Fragment {
                         //document.getData() or document.getId() 등등 여러 방법으로
                         //데이터를 가져올 수 있다.
                         String date = (String) document.getData().get("date");
-                       // Date getdate =changeDateFormat(date);
+                        // Date getdate =changeDateFormat(date);
                         Log.d("가져온 date", date);
                         Log.d("MyFragment date", date7);
                         String isDone = (String) document.getData().get("isDone");
 
                         if (date7.equals(date)) {//오늘
-                            cnt[6]=cnt[6]+1;
+                            cnt[6] = cnt[6] + 1;
 
-                            if (isDone.equals("true")){
+                            if (isDone.equals("true")) {
                                 isDone_cnt[6]++;
                             }
-                           // Log.d("MyhomeFragment", "cnt 6 :"+cnt[6]);
-                        }
-                        else if (date6.equals(date)){
+                            // Log.d("MyhomeFragment", "cnt 6 :"+cnt[6]);
+                        } else if (date6.equals(date)) {
                             //cnt[5]++;
-                            cnt[5]=cnt[5]+1;
-                            if (isDone.equals("true")){
+                            cnt[5] = cnt[5] + 1;
+                            if (isDone.equals("true")) {
                                 isDone_cnt[5]++;
                             }
-                           // Log.d("MyhomeFragment", "cnt 5 :"+cnt[5]);
-                        }
-                        else if (date5.equals(date)){
-                            cnt[4]=cnt[4]+1;
-                            if (isDone.equals("true")){
+                            // Log.d("MyhomeFragment", "cnt 5 :"+cnt[5]);
+                        } else if (date5.equals(date)) {
+                            cnt[4] = cnt[4] + 1;
+                            if (isDone.equals("true")) {
                                 isDone_cnt[4]++;
                             }
                             //Log.d("MyhomeFragment", "cnt 4 :"+cnt[4]);
-                        }
-                        else if (date4.equals(date)){
-                            cnt[3]=cnt[3]+1;
-                            if (isDone.equals("true")){
+                        } else if (date4.equals(date)) {
+                            cnt[3] = cnt[3] + 1;
+                            if (isDone.equals("true")) {
                                 isDone_cnt[3]++;
                             }
                             //Log.d("MyhomeFragment", "cnt 3 :"+cnt[3]);
-                        }
-                        else if (date3.equals(date)){
-                            cnt[2]=cnt[2]+1;
-                            if (isDone.equals("true")){
+                        } else if (date3.equals(date)) {
+                            cnt[2] = cnt[2] + 1;
+                            if (isDone.equals("true")) {
                                 isDone_cnt[2]++;
                             }
                             //Log.d("MyhomeFragment", "cnt 2 :"+cnt[2]);
-                        }
-                        else if (date2.equals(date)){
-                            cnt[1]=cnt[1]+1;
-                            if (isDone.equals("true")){
+                        } else if (date2.equals(date)) {
+                            cnt[1] = cnt[1] + 1;
+                            if (isDone.equals("true")) {
                                 isDone_cnt[1]++;
                             }
                             //Log.d("MyhomeFragment", "cnt 1 :"+cnt[1]);
-                        }
-                        else if (date1.equals(date)){
+                        } else if (date1.equals(date)) {
                             //cnt[0]++;
-                            cnt[0]=cnt[0]+1;
-                            if (isDone.equals("true")){
+                            cnt[0] = cnt[0] + 1;
+                            if (isDone.equals("true")) {
                                 isDone_cnt[0]++;
                             }
 
-                        };
+                        }
+                        ;
                     }
                 }
             }
         });
-        for (int i=0 ; i<7; i++) {
+        for (int i = 0; i < 7; i++) {
             Log.d("MyhomeFragment", "cnt(함수전)  " + i + " ; " + cnt[i]);
         }
         graphInitSetting();
     }
+
     private void graphInitSetting() {
         ArrayList<Float> jsonList = new ArrayList<>(); // ArrayList 선언
         ArrayList<String> labelList = new ArrayList<>(); // ArrayList 선언
-        float[] percentage = new float[]{0,0,0,0,0,0,0};
-        for (int i=0 ; i<7; i++){
-            Log.d("MyhomeFragment", "cnt  "+i +" ; "+cnt[i]);
-            if(cnt[i]==0){
-                percentage[i]=0;
-                Log.d("MyhomeFragment", "percentage  "+i +" ; "+percentage[i]);
-            }
-            else {
-                Log.d("MyhomeFragment", "isDone  "+i +" ; "+isDone_cnt[i]);
+        float[] percentage = new float[]{0, 0, 0, 0, 0, 0, 0};
+        for (int i = 0; i < 7; i++) {
+            Log.d("MyhomeFragment", "cnt  " + i + " ; " + cnt[i]);
+            if (cnt[i] == 0) {
+                percentage[i] = 0;
+                Log.d("MyhomeFragment", "percentage  " + i + " ; " + percentage[i]);
+            } else {
+                Log.d("MyhomeFragment", "isDone  " + i + " ; " + isDone_cnt[i]);
 
-                percentage[i] = (((float)isDone_cnt[i]/(float) cnt[i]))*100;
-                Log.d("MyhomeFragment", "divide  "+i +" ; "+((float)isDone_cnt[i]/(float) cnt[i]));
-                Log.d("MyhomeFragment", "percentage  "+i +" ; "+percentage[i]);
+                percentage[i] = (((float) isDone_cnt[i] / (float) cnt[i])) * 100;
+                Log.d("MyhomeFragment", "divide  " + i + " ; " + ((float) isDone_cnt[i] / (float) cnt[i]));
+                Log.d("MyhomeFragment", "percentage  " + i + " ; " + percentage[i]);
             }
 
         }
@@ -473,8 +490,8 @@ public class MyHomeFragment extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document != null) {
                         if (document.exists()) {
-                            String a = (String) document.getData().get("token");
-                            token.setText(a);
+                            int a = (int) document.getData().get("token");
+                            token.setText(" "+a);
                         }
                     }
                 }
@@ -539,3 +556,4 @@ public class MyHomeFragment extends Fragment {
         }
     }
 }
+
