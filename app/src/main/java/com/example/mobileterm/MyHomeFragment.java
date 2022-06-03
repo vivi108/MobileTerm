@@ -70,10 +70,9 @@ public class MyHomeFragment extends Fragment {
     TextView name, beforetodo, aftertodo, token;
     ExpandableListView listview;
     ArrayList<myGroup> DataList;
-    ArrayList<myGroup> LikedStudyList;
     ExpandAdapter adapter;
     String[][] childids = new String[999][999];
-    String[][] childids_study = new String[999][999];
+
     String uid;
     BarChart barChart;
 
@@ -134,18 +133,16 @@ public class MyHomeFragment extends Fragment {
         int width = newDisplay.getWidth();
         DataList = new ArrayList<myGroup>();
         myGroup temp = new myGroup("관심스터디");
-        temp.child.add("여");
-        temp.child.add("기");
-        temp.child.add("도");
-        DataList.add(temp);
-        temp = new myGroup("관심게시글");
+        addChildListView_Study(temp, user);
 
+        temp = new myGroup("관심게시글");
         addChildListView_Board(temp, user);
+
         adapter = new ExpandAdapter(requireActivity(), R.layout.expandable_liistview_parent, R.layout.expandable_listview_child, DataList);
         listview.setIndicatorBounds(width - 50, width); //이 코드를 지우면 화살표 위치가 바뀐다.
         listview.setAdapter(adapter);
 
-        //톱니바퀴, 설정 그림 눌렀을 때
+        //톱니바퀴, 설정 그림 눌렀을 때 ->완성
         setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -155,7 +152,7 @@ public class MyHomeFragment extends Fragment {
                         .commit();
             }
         });
-        //여기를 눌러서 오늘의 할일을 지정해주세요 -> 캘린더 fragment로 이동
+        //여기를 눌러서 오늘의 할일을 지정해주세요 -> 캘린더 fragment로 이동 ->완성
         beforetodo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,7 +167,7 @@ public class MyHomeFragment extends Fragment {
 
             }
         });
-        // 프로필 이미지 눌렀을 때.
+        // 프로필 이미지 눌렀을 때.->완성
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -198,8 +195,8 @@ public class MyHomeFragment extends Fragment {
                 MainActivity activity = (MainActivity) getActivity();
                 switch (groupPosition) {
                     case 0://관심스터디
-                        Log.e("boardItemClicked", "by setOnItemCLick from LikedBoardItem");
-                        String getchild = childids[1][childPosition];
+                        Log.e("StudyItemClicked", "by setOnItemCLick from LikedStudyItem");
+                        String getchild = childids[0][childPosition];
                         Log.d("getchildid", getchild + "가 선택됨");
                         GetLikedStudyItem(user, getchild);
                         break;
@@ -217,9 +214,9 @@ public class MyHomeFragment extends Fragment {
         return rootView;
     }
     //관심스터디의 child listview눌렀을때
-    private void GetLikedStudyItem(FirebaseUser firebaseUser, String did) {
+    private void GetLikedStudyItem(FirebaseUser firebaseUser, String sid) {
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
-        DocumentReference documentReference = fb.collection("경로설정").document(did);
+        DocumentReference documentReference = fb.collection("경로설정").document(sid);
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -293,7 +290,7 @@ public class MyHomeFragment extends Fragment {
     //확장 리스트뷰 차일드 정보 가져오기 by likedStudyItem-->완성
     private void addChildListView_Study(myGroup temp, FirebaseUser firebaseUser) {
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
-        CollectionReference collectionReference = fb.collection("Users").document(firebaseUser.getUid()).collection("경로설정");
+        CollectionReference collectionReference = fb.collection("Users").document(firebaseUser.getUid()).collection("likedStudy");
 
         collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -304,11 +301,11 @@ public class MyHomeFragment extends Fragment {
                         //document.getData() or document.getId() 등등 여러 방법으로
                         //데이터를 가져올 수 있다.
 
-                        String childTitle = (String) document.getData().get("likedstudy내용");
-                        String childid = (String) document.getData().get("Likedstduy제목");
+                        String childTitle = (String) document.getData().get("name");
+                        String childid = (String) document.getData().get("sid");
                         // temp.childId.add(childid);
                         temp.child.add(childTitle);
-                        childids_study[1][i] = childid;
+                        childids[0][i] = childid;
                         i++;
 
                     }
@@ -316,7 +313,7 @@ public class MyHomeFragment extends Fragment {
             }
         });
 
-        LikedStudyList.add(temp);
+        DataList.add(temp);
     }
     //확장 리스트뷰 차일드 정보 가져오기 by likedBoardItem-->완성
     private void addChildListView_Board(myGroup temp, FirebaseUser firebaseUser) {
