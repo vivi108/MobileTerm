@@ -46,6 +46,8 @@ public class FindStudyAdapter  extends BaseAdapter {
         this.context = context;
         this.dataList = new ArrayList<StudyInfo>();
         this.dataList.addAll(list);
+        this.itemList = new ArrayList<StudyInfo>();
+        this.itemList.addAll(list);
         this.likedStudies = new ArrayList<String>();
         this.likedStudies.addAll(likedStudies);
         Log.d(TAG, "list size"+dataList.size());
@@ -54,12 +56,12 @@ public class FindStudyAdapter  extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return dataList.size();
+        return itemList.size();
     }
 
     @Override
     public StudyInfo getItem(int i) {
-        return dataList.get(i);
+        return itemList.get(i);
     }
 
     @Override
@@ -91,7 +93,7 @@ public class FindStudyAdapter  extends BaseAdapter {
 
         btn_find_study_liked.setFocusable(false);
 
-        StudyInfo findStudy = (StudyInfo) dataList.get(position);
+        StudyInfo findStudy = (StudyInfo) itemList.get(position);
         tv_find_study_name.setText(findStudy.getStudyName());
         tv_find_study_member.setText(Long.toString(findStudy.getMaxNumPeople()));
         tv_find_study_tag.setText(findStudy.getTags());
@@ -108,7 +110,7 @@ public class FindStudyAdapter  extends BaseAdapter {
             btn_find_study_liked.setImageResource(R.drawable.ic_heart);
         }
 
-        tv_find_study_name.setTag("xptmxm");
+//        tv_find_study_name.setTag("xptmxm");
         btn_find_study_liked.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,31 +136,35 @@ public class FindStudyAdapter  extends BaseAdapter {
             }
         });
 
-//        if(findStudy.getIsLiked() == "false"){
-//            viewHolder.btn_find_study_liked.setImageResource(R.drawable.ic_heart);
-//        }
-//        else if(findStudy.getIsLiked() == "true"){
-//            viewHolder.btn_find_study_liked.setImageResource(R.drawable.ic_heart_filled);
-//        }
-
-//        viewHolder.btn_find_study_liked.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if(findStudy.getIsLiked() == "true"){
-//                    viewHolder.btn_find_study_liked.setImageResource(R.drawable.ic_heart);
-//                    findStudy.setIsLiked("false");
-//                }
-//                else if(findStudy.getIsLiked() == "false"){
-//                    viewHolder.btn_find_study_liked.setImageResource(R.drawable.ic_heart_filled);
-//                    findStudy.setIsLiked("true");
-//                }
-//            }
-//        });
-//
-//        ID = findStudy.getIsOpened() + " " + findStudy.getStudyName();
-
-//        viewHolder.tv_find_study_name.setTag(ID);
-
         return convertView;
+    }
+
+    public void renew(){
+        itemList.clear();
+        for (StudyInfo temp : dataList){
+            itemList.add(temp);
+        }
+        notifyDataSetChanged();
+    }
+
+
+    public void filter(String s){
+        itemList.clear();
+        for (StudyInfo temp:dataList){
+            if (temp.getTags().contains(s)){
+                itemList.add(temp);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    public void filter(String s, int a){
+        itemList.clear();
+        for (StudyInfo temp:dataList){
+            if (temp.getStudyName().contains(s)){
+                itemList.add(temp);
+            }
+        }
+        notifyDataSetChanged();
     }
 }
