@@ -43,7 +43,7 @@ public class StudySettingActivity extends AppCompatActivity {
 
     private void init(){
         activity = this;
-        btn_study_setting_back = findViewById(R.id.btn_study_setting_back);
+//        btn_study_setting_back = findViewById(R.id.btn_study_setting_back);
         btn_study_setting_groupCalender = findViewById(R.id.btn_study_setting_groupCalender);
         btn_study_chatting = findViewById(R.id.btn_study_chatting);
         sw_online_offline_study = findViewById(R.id.sw_online_offline_study);
