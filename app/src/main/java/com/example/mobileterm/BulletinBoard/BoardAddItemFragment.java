@@ -114,7 +114,24 @@ public class BoardAddItemFragment extends Fragment {
                                                     titleEditText.setText("");
                                                     tagEditText.setText("");
                                                     bodyEditText.setText("");
-                                                    fragmentChange();
+                                                    db.collection("Users").document(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                            if (task.isSuccessful()) {
+                                                                DocumentSnapshot tempDoc = task.getResult();
+                                                                long curtoken = (long) tempDoc.getData().get("token");
+                                                                long updatetoken = curtoken+1;
+                                                                db.collection("Users").document(user.getUid()).update("token",updatetoken).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        Log.d(TAG,"token update success");
+
+                                                                        fragmentChange();
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                    });
                                                 }
                                             }
                                         });
@@ -123,37 +140,6 @@ public class BoardAddItemFragment extends Fragment {
                                 }
                             });
 
-//                            db.collection("BulletinBoard").add(newItem).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<DocumentReference> task) {
-//                                    if (task.isSuccessful()) {
-//                                        DocumentReference document = task.getResult();
-//                                        Log.e(TAG, "did:"+document.getId());
-//                                        did = document.getId();
-////                                        newBoardItem = new BoardInfo(title, content, nickname, did);
-//                                        WriteBatch batch = db.batch();
-//                                        for (String tag: tagIter) {
-//                                            DocumentReference tempref = db.collection("BulletinBoard").document(did).collection("BoardTags").document(tag);
-//                                            BoardTags newTag = new BoardTags(tag);
-//                                            batch.set(tempref, newTag);
-//                                        }
-//
-//                                        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                            @Override
-//                                            public void onComplete(@NonNull Task<Void> task) {
-//                                                if (task.isSuccessful()) {
-//                                                    Log.e(TAG,"tag add success");
-//                                                    fragmentChange();
-//                                                }
-//                                            }
-//                                        });
-//
-//
-//
-//
-//                                    }
-//                                }
-//                            });
                         }
                     }
                 });

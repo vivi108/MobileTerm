@@ -4,6 +4,7 @@ public class CommentInfo {
     private String content;
     private String name;
     private String writtenTime;
+    private boolean isSecret;
 
     public String getWrittenTime() {
         return writtenTime;
@@ -13,10 +14,19 @@ public class CommentInfo {
         this.writtenTime = writtenTime;
     }
 
+    public boolean isSecret() {
+        return isSecret;
+    }
+
+    public void setSecret(boolean secret) {
+        isSecret = secret;
+    }
+
     public CommentInfo(String content, String name, String writtenTime) {
         this.content = content;
         this.name = name;
         this.writtenTime = writtenTime;
+        this.isSecret = false;
     }
 
     public CommentInfo(String content, String name) {

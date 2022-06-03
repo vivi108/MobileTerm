@@ -24,7 +24,7 @@
         android:gravity="center"
         android:orientation="horizontal">
         <EditText
-            android:id="@+id/editText1"
+            android:id="@+id/chat_edit"
             android:background="#ffffff"
             android:maxLength="120"
             android:maxLines="5"
@@ -34,7 +34,7 @@
             android:layout_weight="4"
             android:layout_height="wrap_content"/>
         <ImageButton
-            android:id="@+id/btn_send1"
+            android:id="@+id/chat_send_btn"
             android:src="@drawable/ic_baseline_chat"
             android:layout_width="0dp"
             android:layout_weight="1"

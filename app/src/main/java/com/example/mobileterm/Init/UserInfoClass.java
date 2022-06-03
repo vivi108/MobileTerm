@@ -5,7 +5,7 @@ public class UserInfoClass {
     private String phone;
     private String date;
     private String email;
-    private String token;
+    private long token;
     private String nickname;
     private String regDate;
     private String profileImageURL;
@@ -36,23 +36,12 @@ public class UserInfoClass {
         this.nickname = nickname;
         this.regDate = regDate;
         this.address = address;
-        this.token = "0";
+        this.token = 10;
         this.profileImageURL = "ic_profile_gray";
         this.isVerified = false;
     }
 
-    public UserInfoClass() { }
 
-//    public UserInfoClass(String name, String date, String phone, String email, String nickname, String regDate) {
-//        this.name = name;
-//        this.phone = phone;
-//        this.date = date;
-//        this.email = email;
-//        this.nickname = nickname;
-//        this.token = "0";
-//        this.profileImageURL = "ic_profile_gray";
-//        this.regDate = regDate;
-//    }
 
     public String getName() {
         return name;
@@ -82,9 +71,13 @@ public class UserInfoClass {
 
     public void setEmail(String email) { this.email = email; }
 
-    public String getToken() { return token;}
+    public long getToken() {
+        return token;
+    }
 
-    public void setToken(String token) {this.token = token;}
+    public void setToken(long token) {
+        this.token = token;
+    }
 
     public String getNickname() { return nickname; }
 

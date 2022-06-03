@@ -3,13 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:layout_weight="8"
         android:background="?android:attr/listDivider" />
 
     <LinearLayout
@@ -20,15 +19,12 @@
         <View
             android:layout_width="3dp"
             android:layout_height="match_parent"
-            android:layout_weight="8"
-            android:background="?android:attr/listDivider"
-            tools:layout_weight="1" />
+            android:background="?android:attr/listDivider" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
-            android:layout_weight="8"
             android:orientation="vertical">
 
             <LinearLayout
@@ -47,15 +43,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:text="사용자 이름" />
+                    android:text="사용자 이름"
+                    android:layout_marginRight="100dp"/>
 
                 <TextView
                     android:id="@+id/timeTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
                     android:text="업로드 날짜" />
             </LinearLayout>
 
@@ -152,6 +147,24 @@
                     android:layout_gravity="center_vertical"
                     android:text="0.00" />
 
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/editItemButton"
+                    android:background="@drawable/editing"
+                    android:scaleType="fitXY"
+                    android:layout_margin="10dp"
+                    android:visibility="invisible"/>
+
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/deleteItemButton"
+                    android:background="@drawable/delete"
+                    android:scaleType="fitXY"
+                    android:layout_margin="10dp"
+                    android:visibility="invisible"/>
+
 
             </LinearLayout>
 
@@ -160,55 +173,48 @@
         <View
             android:layout_width="3dp"
             android:layout_height="match_parent"
-            android:layout_weight="8"
-            android:background="?android:attr/listDivider"
-            tools:layout_weight="1" />
+            android:background="?android:attr/listDivider" />
 
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:layout_weight="1"
         android:background="?android:attr/listDivider" />
-    <ImageView
-        android:id="@+id/btn_post_comments"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center_vertical"
-        android:background="@android:color/transparent"
-        android:contentDescription="댓글 버튼"
-        app:srcCompat="@drawable/ic_comment"
-        tools:ignore="TouchTargetSizeCheck"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="2dp"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="5dp">
+        android:layout_marginTop="10dp">
+        <ImageView
+            android:id="@+id/btn_post_comments"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:contentDescription="댓글 버튼"
+            app:srcCompat="@drawable/ic_comment"
+            tools:ignore="TouchTargetSizeCheck"
+            android:layout_marginLeft="2dp"/>
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="댓글을 입력하세요"
-            android:inputType="textMultiLine"
-            android:layout_weight="2"
-            android:id="@+id/commentEditText"/>
 
         <ImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:id="@+id/addCommentButtonBoardItem"
-            android:background="@drawable/write_icon"/>
+            android:background="@drawable/write_icon"
+            android:layout_marginLeft="10dp"/>
 
 
     </LinearLayout>
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="8"
         android:id="@+id/commentView"/>
+
 
 </LinearLayout>
