@@ -29,8 +29,8 @@ import java.util.ArrayList;
 
 public class ChattingActivity extends AppCompatActivity {
     private ArrayList<DataItem> dataList;
-    private String CHAT_NAME = "testchatting";
-    private String USER_NAME = "chatter1";
+    private String CHAT_NAME = "testchatting"; // 스터디 그룹 이름
+    private String USER_NAME = "chatter1"; // 사용자 이름
 
     private RecyclerView chat_view; //채팅내용
     private EditText chat_edit; //보낼내용쓰기

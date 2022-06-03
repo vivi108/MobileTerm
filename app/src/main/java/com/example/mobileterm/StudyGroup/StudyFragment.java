@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.Task;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -37,6 +38,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class StudyFragment extends Fragment implements View.OnClickListener {
     private ViewGroup rootView;
@@ -48,17 +50,16 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     ArrayList<JoinedStudyVo> joinedStudies;
     private JoinedStudyAdapter adapter;
 
-    private FirebaseFirestore db;
-    FirebaseUser user;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String uid;
-    String myNickName = "jiyeonleeee";
-    private String studyID;
-    private ArrayList<String> members;
-    private ArrayList<String> tags;
-    private String leader;
-    private String studyCap;
-    private String studyName;
+    String myNickName;
     private String TAG = "MyStudyGroup";
+    String studyName;
+    String maxNumPeople;
+    String memberList;
+    String[] members;
+    String tags;
 
     @Nullable
     @Override
@@ -66,14 +67,17 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_study_main, container, false);
         studies = new ArrayList<>();
         joinedStudies = new ArrayList<>();
-        db = FirebaseFirestore.getInstance();
-        user = FirebaseAuth.getInstance().getCurrentUser();
+        //db =
 
         if(user != null){
             uid = user.getUid();
         }
         getName(user);
 
+        addStudyListView(user);
+
+        Log.d(TAG, "String size" + myNickName);
+/*
         // db에서 데이터 받아와서 저장후 리스트로 넘기기
         String[] member1 = {"jiyeonleeee", "abc", "j", "i", "k"};
         String[] member2 = {"abc", "j", "i", "k"};
@@ -86,7 +90,9 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         studies.add(new JoinedStudyVo("스터디3", "8", member2, mergeTag2));
         studies.add(new JoinedStudyVo("스터디4", "12", member1, mergeTag1));
         studies.add(new JoinedStudyVo("스터디5", "15", member2, mergeTag2));
+*/
 
+        Log.d(TAG, "String size" + studies.size());
         for (int i = 0; i < studies.size(); i++){
             String[] getMembers = studies.get(i).getMembers();
             if(Arrays.asList(getMembers).contains(myNickName)){
@@ -109,6 +115,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String studyName = (String) view.findViewById(R.id.tv_joined_study_name).getTag().toString();
+                Bundle bundle = new Bundle();
                 intent = new Intent(getActivity(), StudyGroupActivity.class);
                 intent.putExtra("JoinedStudy", studyName);
                 startActivity(intent);
@@ -116,6 +123,33 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         });
 
         return rootView;
+    }
+
+    private void addStudyListView(FirebaseUser firebaseUser){
+        CollectionReference collectionReference = db.collection("Study").document("Study")
+                .collection("StudyName");
+
+        collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        //document.getData() or document.getId() 등등 여러 방법으로
+                        //데이터를 가져올 수 있다.
+
+                        studyName = (String) document.getData().get("studyName");
+                        maxNumPeople = (String) document.getData().get("maxNumPeople");
+                        memberList = (String) document.getData().get("memberList");
+                        members = (String[]) memberList.split("/");
+                        tags = (String) document.getData().get("tags");
+
+                        Log.d(TAG, studyName + " " + maxNumPeople + " " + members[0] + " " + tags);
+
+                        studies.add(new JoinedStudyVo(studyName, maxNumPeople, members, tags));
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -133,7 +167,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    private void getName(FirebaseUser firebaseUser) {
+    public void getName(FirebaseUser firebaseUser) {
         DocumentReference documentReference = db.collection("Users").document(firebaseUser.getUid());
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
