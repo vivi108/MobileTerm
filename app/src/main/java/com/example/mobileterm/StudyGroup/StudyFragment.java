@@ -150,4 +150,8 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    public String sendStudyName(){
+        return studyName;
+    }
+
 }
