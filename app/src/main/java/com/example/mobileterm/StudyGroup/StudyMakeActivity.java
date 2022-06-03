@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -154,19 +155,22 @@ public class StudyMakeActivity extends AppCompatActivity {
             String ID = openORnot + " " + getStudyName;
 
             Map<String, Object> study = new HashMap<>();
-            study.put("StudyName", getStudyName);
-            study.put("StudyCapacity", getMembers);
-            study.put("Opened", openORnot);
-            study.put("Password", password);
-            study.put("Description", description);
-            study.put("Leader", myNickName);
-            study.put("Members", myNickName);
-            study.put("studyID", ID);
-            study.put("Tags", tags.split("#"));
-            db.collection("Study").document(ID).set(study).addOnSuccessListener(new OnSuccessListener<Void>() {
+            study.put("studyName", getStudyName);
+            study.put("maxNumPeople", getMembers);
+            study.put("siOpened", openORnot);
+            study.put("password", password);
+            study.put("description", description);
+            study.put("leader", myNickName);
+            study.put("memberList", myNickName + "/");
+            // study.put("studyID", ID);
+            study.put("tags", tags);
+            db.collection("Study").document("Study")
+                    .collection("StudyName").document(ID)
+                    .set(study).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
                     Log.d(TAG, "Make Study Success!");
+                    Toast.makeText(activity, "Make study success!", Toast.LENGTH_SHORT);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

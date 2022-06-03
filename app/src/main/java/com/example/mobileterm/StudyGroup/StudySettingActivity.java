@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.mobileterm.ChattingActivity.ChattingActivity;
 import com.example.mobileterm.R;
 
 public class StudySettingActivity extends AppCompatActivity {
@@ -28,6 +29,8 @@ public class StudySettingActivity extends AppCompatActivity {
     Switch sw_online_offline_study;
     TextView tv_study_setting_leader;
     LinearLayout ll_study_setting_onlineORnot;
+    String studyName = null;
+    String myNickName = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +42,7 @@ public class StudySettingActivity extends AppCompatActivity {
     }
 
     private void init(){
+        activity = this;
         btn_study_setting_back = findViewById(R.id.btn_study_setting_back);
         btn_study_setting_groupCalender = findViewById(R.id.btn_study_setting_groupCalender);
         btn_study_chatting = findViewById(R.id.btn_study_chatting);
@@ -79,6 +83,10 @@ public class StudySettingActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             // goto Chatting room
+            intent = new Intent(activity, ChattingActivity.class);
+            intent.putExtra("StudyName", studyName);
+            intent.putExtra("myNickName", myNickName);
+
         }
     };
 }
