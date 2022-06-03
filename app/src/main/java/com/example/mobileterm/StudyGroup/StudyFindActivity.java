@@ -84,15 +84,15 @@ public class StudyFindActivity extends AppCompatActivity {
         String[] member2 = {"abc", "j", "i", "k"};
         String[] tag1 = {"#어학", "#토익", "#아침", "#서울"};
         String description1 = "서울에서 진행하는 토익 아침 스터디입니다.";
-        String mergeTag1 = String.join(" ", tag1);
+//        String mergeTag1 = String.join(" ", tag1);
         String[] tag2 = {"#전공", "#모프", "#오후", "#성남"};
         String description2 = "성남에서 진행하는 모바일프로그래밍 오후 스터디입니다.";
-        String mergeTag2 = String.join(" ", tag2);
-        studies.add(new FindStudyVo("스터디1", "10", member1, mergeTag2, description2, "open", "true", null));
-        studies.add(new FindStudyVo("스터디2", "5", member2, mergeTag1, description1, "open", "true", null));
-        studies.add(new FindStudyVo("스터디3", "8", member2, mergeTag2, description2, "close", "true", "1234"));
-        studies.add(new FindStudyVo("스터디4", "12", member2, mergeTag1, description1, "close", "false", "5678"));
-        studies.add(new FindStudyVo("스터디5", "15", member2, mergeTag2, description2, "open", "false", null));
+//        String mergeTag2 = String.join(" ", tag2);
+//        studies.add(new FindStudyVo("스터디1", "10", member1, mergeTag2, description2, "open", "true", null));
+//        studies.add(new FindStudyVo("스터디2", "5", member2, mergeTag1, description1, "open", "true", null));
+//        studies.add(new FindStudyVo("스터디3", "8", member2, mergeTag2, description2, "close", "true", "1234"));
+//        studies.add(new FindStudyVo("스터디4", "12", member2, mergeTag1, description1, "close", "false", "5678"));
+//        studies.add(new FindStudyVo("스터디5", "15", member2, mergeTag2, description2, "open", "false", null));
         //Log.d(this.getClass().getName(), "데이터 삽입 완료");
         for (int i = 0; i < studies.size(); i++){
             String[] getMembers = studies.get(i).getMembers();
@@ -101,7 +101,7 @@ public class StudyFindActivity extends AppCompatActivity {
             }
         }
 
-        popup_container = findViewById(R.id.popup_container);
+//        popup_container = findViewById(R.id.popup_container);
         btn_studyfind_back = findViewById(R.id.btn_studyfind_back);
         et_search_study = findViewById(R.id.et_search_study);
         btn_tag0 = findViewById(R.id.btn_tag0);
@@ -114,7 +114,7 @@ public class StudyFindActivity extends AppCompatActivity {
         btn_tag7 = findViewById(R.id.btn_tag7);
         lv_study_find = findViewById(R.id.lv_study_find);
 
-        adapter = new FindStudyAdapter(this, findStudies);
+//        adapter = new FindStudyAdapter(this, findStudies);
         lv_study_find.setAdapter(adapter);
 
         btn_studyfind_back.setOnClickListener(Listener_back);
@@ -146,7 +146,7 @@ public class StudyFindActivity extends AppCompatActivity {
                     tagStudies.add(studies.get(i));
                 }
             }
-            adapter = new FindStudyAdapter(view.getContext(), tagStudies);
+//            adapter = new FindStudyAdapter(view.getContext(), tagStudies);
             lv_study_find.setAdapter(adapter);
         }
     };
@@ -169,7 +169,7 @@ public class StudyFindActivity extends AppCompatActivity {
                     }
                 }
             }
-            adapter = new FindStudyAdapter(v.getContext(), tagStudies);
+//            adapter = new FindStudyAdapter(v.getContext(), tagStudies);
             lv_study_find.setAdapter(adapter);
         }
     };
@@ -178,23 +178,23 @@ public class StudyFindActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             String getID = (String) view.findViewById(R.id.tv_find_study_name).getTag().toString();
-            FindStudyVo member = (FindStudyVo) adapter.getItem(i);
-            String pw = member.getPw();
-            String StudyName = member.getStudyName();
+//            FindStudyVo member = (FindStudyVo) adapter.getItem(i);
+//            String pw = member.getPw();
+//            String StudyName = member.getStudyName();
             //Toast.makeText(view.getContext(), "Clicked" + getID, Toast.LENGTH_SHORT).show();
-            if(getID.contains("open")){
-                getSupportFragmentManager().beginTransaction().replace(R.id.popup_container, open).addToBackStack(null).commit();
-                Bundle bundle = new Bundle();
-                bundle.putString("StudyName", StudyName);
-                open.setArguments(bundle);
-            }
-            else if(getID.contains("close")){
-                getSupportFragmentManager().beginTransaction().replace(R.id.popup_container, close).addToBackStack(null).commit();
-                Bundle bundle = new Bundle();
-                bundle.putString("PW", pw);
-                bundle.putString("StudyName", StudyName);
-                close.setArguments(bundle);
-            }
+//            if(getID.contains("open")){
+//                getSupportFragmentManager().beginTransaction().replace(R.id.popup_container, open).addToBackStack(null).commit();
+//                Bundle bundle = new Bundle();
+//                bundle.putString("StudyName", StudyName);
+//                open.setArguments(bundle);
+//            }
+//            else if(getID.contains("close")){
+//                getSupportFragmentManager().beginTransaction().replace(R.id.popup_container, close).addToBackStack(null).commit();
+//                Bundle bundle = new Bundle();
+//                bundle.putString("PW", pw);
+//                bundle.putString("StudyName", StudyName);
+//                close.setArguments(bundle);
+//            }
         }
     };
 
