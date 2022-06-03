@@ -38,7 +38,9 @@ import com.example.mobileterm.BulletinBoard.BoardItemFragment;
 import com.example.mobileterm.Calendar.gCalendarFragment;
 import com.example.mobileterm.Calendar.iCalendarFragment;
 import com.example.mobileterm.Init.LoginSelectionActivity;
+import com.example.mobileterm.StudyGroup.StudyFindFragment;
 import com.example.mobileterm.StudyGroup.StudyFragment;
+import com.example.mobileterm.StudyGroup.StudyMakeFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -54,7 +56,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
-    private static Fragment studyFragment, boardFragment, iCalendarFragment, gCalendarFragment, myHomeFragment, boardItemFragment, boardAddItemFragment;
+    private static Fragment studyFragment, boardFragment, iCalendarFragment, gCalendarFragment, myHomeFragment, boardItemFragment, boardAddItemFragment, studyFindFragment, studyMakeFragment;
     private static final int MY_PERMISSION_CAMERA = 1111;
     private static final int REQUEST_TAKE_PHOTO = 2222;
     private static final int REQUEST_TAKE_ALBUM = 3333;
@@ -155,6 +157,8 @@ public class MainActivity extends AppCompatActivity {
         boardFragment = new BoardFragment();
         boardItemFragment = new BoardItemFragment();
         boardAddItemFragment = new BoardAddItemFragment();
+        studyFindFragment = new StudyFindFragment();
+        studyMakeFragment = new StudyMakeFragment();
     }
 
     private void initiate_nav_menu() {
@@ -400,7 +404,12 @@ public class MainActivity extends AppCompatActivity {
 //            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardAddItemFragment);
 //            transaction.addToBackStack(null).commit();
             getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardAddItemFragment).addToBackStack(null).commit();
-
+        }else if (index == 300){
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, studyFragment).addToBackStack(null).commit();
+        }else if (index == 301){
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, studyMakeFragment).addToBackStack(null).commit();
+        }else if (index == 302) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, studyFindFragment).addToBackStack(null).commit();
         }
     }
 

@@ -61,37 +61,18 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     String memberList;
     String[] members;
     String tags;
-
+    MainActivity mainActivity;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_study_main, container, false);
-        MainActivity mainActivity = (MainActivity)getActivity();
+        mainActivity = (MainActivity)getActivity();
         studies = new ArrayList<>();
         joinedStudies = new ArrayList<>();
         myNickName = mainActivity.sendUserNickname();
-        //db =
 
 
-//        if(user != null){
-//            uid = user.getUid();
-//            Log.d(TAG, "uid : " + uid);
-//            DocumentReference documentReference = db.collection("Users").document(uid);
-//            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                @Override
-//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                    if (task.isSuccessful()) {
-//                        DocumentSnapshot document = task.getResult();
-//                        if (document != null) {
-//                            if (document.exists()) {
-//                                String a = (String) document.getData().get("nickname");
-//                                myNickName = a;
-//                            }
-//                        }
-//                    }
-//                }
-//            });
-//        }
+
 
         Log.d(TAG, "myNickName : " + myNickName); // 닉네임 로그 출력시 에러 닉네임에 저장은 되어 있으나 출력은 안되는 것으로 확인됨
 
@@ -157,10 +138,12 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
             case R.id.btn_find_study:
                 intent = new Intent(getActivity(), StudyFindActivity.class);
                 startActivity(intent);
+                mainActivity.onFragmentChanged(301);
                 break;
             case R.id.btn_make_study_make:
-                intent = new Intent(getActivity(), StudyMakeActivity.class);
-                startActivity(intent); // 생성 버튼 클릭 -> 자동 반영을 위한 코드 작성 필요
+//                intent = new Intent(getActivity(), StudyMakeActivity.class);
+//                startActivity(intent); // 생성 버튼 클릭 -> 자동 반영을 위한 코드 작성 필요
+                mainActivity.onFragmentChanged(301);
                 break;
         }
 
