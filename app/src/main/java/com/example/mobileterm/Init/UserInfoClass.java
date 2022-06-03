@@ -5,7 +5,7 @@ public class UserInfoClass {
     private String phone;
     private String date;
     private String email;
-    private long token;
+    private String token;
     private String nickname;
     private String regDate;
     private String profileImageURL;
@@ -36,7 +36,7 @@ public class UserInfoClass {
         this.nickname = nickname;
         this.regDate = regDate;
         this.address = address;
-        this.token = 10;
+        this.token = "10";
         this.profileImageURL = "ic_profile_gray";
         this.isVerified = false;
     }
@@ -71,11 +71,11 @@ public class UserInfoClass {
 
     public void setEmail(String email) { this.email = email; }
 
-    public long getToken() {
+    public String getToken() {
         return token;
     }
 
-    public void setToken(long token) {
+    public void setToken(String token) {
         this.token = token;
     }
 
