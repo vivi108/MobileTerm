@@ -159,18 +159,22 @@ public class MyHomeFragment extends Fragment {
             public void onClick(View v) {
 
                 BottomNavigationView botNavView = requireActivity().findViewById(R.id.main_bnv);
-               // botNavView.getMenu().getItem(2);
+//                MenuItem onlycalitem = botNavView.getMenu().getItem(R.id.nav_menu_calendar);
+//                MenuItem onlyhomeitem = botNavView.getMenu().getItem(R.id.nav_menu_my_home);
+//                onlycalitem.setChecked(true);
+//                onlyhomeitem.setChecked(false);
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.main_frame_layout, new iCalendarFragment())
+                        .addToBackStack(null)
+                        .commit();
 //                botNavView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
 //                    @Override
 //                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 //                        switch (item.getItemId()) {
-//                            case requireActivity().findViewById(R.id.nav_menu_calendar):
+//                            case R.id.nav_menu_calendar:
 //                                // StudyFragment로 교체
-//                                requireActivity().getSupportFragmentManager()
-//                                        .beginTransaction()
-//                                        .replace(R.id.main_frame_layout, new iCalendarFragment())
-//                                        .addToBackStack(null)
-//                                        .commit();
+//
 //                                return true;
 //                        }
 //                        return false;
@@ -376,14 +380,14 @@ public class MyHomeFragment extends Fragment {
 
                         }
                         ;
-                    }
+                    }graphInitSetting();
                 }
             }
         });
         for (int i = 0; i < 7; i++) {
             Log.d("MyhomeFragment", "cnt(함수전)  " + i + " ; " + cnt[i]);
         }
-        graphInitSetting();
+
     }
 
     private void graphInitSetting() {
@@ -427,11 +431,11 @@ public class MyHomeFragment extends Fragment {
         BarChartGraph(labelList, jsonList);
 
         barChart.setTouchEnabled(false); //확대하지못하게 막아버림
-        //barChart.setRendererLeftYAxis();
-//        barChart.setMaxVisibleValueCount(50);
-//        barChart.setTop(50);
-//        barChart.setBottom(0);
-//        barChart.setAutoScaleMinMaxEnabled(true);
+//        barChart.setRendererLeftYAxis();
+        barChart.setMaxVisibleValueCount(50);
+        barChart.setTop(50);
+        barChart.setBottom(0);
+        barChart.setAutoScaleMinMaxEnabled(true);
         barChart.getAxisRight().setAxisMaxValue(100);
         barChart.getAxisLeft().setAxisMaxValue(100);
 
@@ -490,7 +494,7 @@ public class MyHomeFragment extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document != null) {
                         if (document.exists()) {
-                            int a = (int) document.getData().get("token");
+                            String a = (String) document.getData().get("token");
                             token.setText(" "+a);
                         }
                     }
@@ -549,7 +553,6 @@ public class MyHomeFragment extends Fragment {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
                     //이미지 로드 실패시
-                    //Toast.makeText(getApplicationContext(), "실패", Toast.LENGTH_SHORT).show();
                     loadbasicImage();
                 }
             });
