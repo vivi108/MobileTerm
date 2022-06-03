@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.ListFragment;
 
 import com.example.mobileterm.BulletinBoard.BoardInfo;
+import com.example.mobileterm.MainActivity;
 import com.example.mobileterm.R;
 import com.example.mobileterm.StudyGroup.adapter.JoinedStudyAdapter;
 import com.example.mobileterm.StudyGroup.vo.JoinedStudyVo;
@@ -65,29 +66,32 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_study_main, container, false);
+        MainActivity mainActivity = (MainActivity)getActivity();
         studies = new ArrayList<>();
         joinedStudies = new ArrayList<>();
+        myNickName = mainActivity.sendUserNickname();
         //db =
 
-        if(user != null){
-            uid = user.getUid();
-            Log.d(TAG, "uid : " + uid);
-            DocumentReference documentReference = db.collection("Users").document(uid);
-            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document != null) {
-                            if (document.exists()) {
-                                String a = (String) document.getData().get("nickname");
-                                myNickName = a;
-                            }
-                        }
-                    }
-                }
-            });
-        }
+
+//        if(user != null){
+//            uid = user.getUid();
+//            Log.d(TAG, "uid : " + uid);
+//            DocumentReference documentReference = db.collection("Users").document(uid);
+//            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                @Override
+//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                    if (task.isSuccessful()) {
+//                        DocumentSnapshot document = task.getResult();
+//                        if (document != null) {
+//                            if (document.exists()) {
+//                                String a = (String) document.getData().get("nickname");
+//                                myNickName = a;
+//                            }
+//                        }
+//                    }
+//                }
+//            });
+//        }
 
         Log.d(TAG, "myNickName : " + myNickName); // 닉네임 로그 출력시 에러 닉네임에 저장은 되어 있으나 출력은 안되는 것으로 확인됨
 
