@@ -159,28 +159,13 @@ public class MyHomeFragment extends Fragment {
             public void onClick(View v) {
 
                 BottomNavigationView botNavView = requireActivity().findViewById(R.id.main_bnv);
-//                MenuItem onlycalitem = botNavView.getMenu().getItem(R.id.nav_menu_calendar);
-//                MenuItem onlyhomeitem = botNavView.getMenu().getItem(R.id.nav_menu_my_home);
-//                onlycalitem.setChecked(true);
-//                onlyhomeitem.setChecked(false);
                 requireActivity().getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.main_frame_layout, new iCalendarFragment())
                         .addToBackStack(null)
                         .commit();
-//                botNavView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-//                    @Override
-//                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                        switch (item.getItemId()) {
-//                            case R.id.nav_menu_calendar:
-//                                // StudyFragment로 교체
-//
-//                                return true;
-//                        }
-//                        return false;
-//
-//                    }
-//                });
+                botNavView.setSelectedItemId(R.id.nav_menu_calendar);
+
             }
         });
         // 프로필 이미지 눌렀을 때.
