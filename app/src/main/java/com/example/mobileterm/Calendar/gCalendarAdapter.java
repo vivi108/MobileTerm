@@ -1,6 +1,7 @@
 package com.example.mobileterm.Calendar;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 public class gCalendarAdapter extends BaseAdapter {
 
 
+    Dialog dialogShow;
     Context mContext;
     private static final String TAG = "gCalendarAdapter";
     public FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -41,9 +44,11 @@ public class gCalendarAdapter extends BaseAdapter {
     LayoutInflater inflater;
     private ArrayList<gCalendarItem> scheduleList;
 
-    public gCalendarAdapter(ArrayList<gCalendarItem> arrayList) {
+    public gCalendarAdapter(ArrayList<gCalendarItem> arrayList, Dialog dialogShow) {
         this.scheduleList = new ArrayList<gCalendarItem>();
         this.scheduleList.addAll(arrayList);
+        this.dialogShow = dialogShow;
+        this.dialogShow.setContentView(R.layout.dialog_show);
     }
 
     @Override
@@ -92,39 +97,23 @@ public class gCalendarAdapter extends BaseAdapter {
         eachlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit, null); //일단 여기까지
+                dialogShow.show();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogTheme));
 
-                builder.setTitle("Confirm").setMessage("삭제하시겠습니까?");
+                TextView placeText = (TextView)dialogShow.findViewById(R.id.placeText);
+                TextView timeText = (TextView)dialogShow.findViewById(R.id.timeText);
+                TextView scheduleText = (TextView)dialogShow.findViewById(R.id.scheduleText);
 
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int id)
-                    {
-                        docref.document(docAA).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "successfully delete");
-                                    //더이상 이거 안보이도록
-                                    eachlist.setVisibility(View.INVISIBLE);
-                                }
-                            }
-                        });
-                    }
-                });
+                placeText.setText(a.getPlace());
+                timeText.setText(a.getTime());
+                scheduleText.setText(a.getSchedule());
 
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int id)
-                    {
-                        Log.d(TAG, "취소" + docAA);
-                    }
-                });
 
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
+
+
+//                AlertDialog alertDialog = builder.create();
+//                alertDialog.show();
             }
         });
 

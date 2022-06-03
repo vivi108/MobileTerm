@@ -161,7 +161,6 @@ public class BoardItemFragment extends Fragment {
                                     editCommentDialog = new Dialog(getActivity());
                                     commentListViewAdapter = new CommentListViewAdapter(rootView.getContext(), arrayList, userNickName, did, editCommentDialog);
                                     commentListView.setAdapter(commentListViewAdapter);
-
                                 }
                             }
                         });

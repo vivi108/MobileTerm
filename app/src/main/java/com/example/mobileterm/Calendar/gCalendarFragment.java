@@ -3,6 +3,7 @@ package com.example.mobileterm.Calendar;
 import static android.content.ContentValues.TAG;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -58,6 +59,7 @@ public class gCalendarFragment extends Fragment {
     private HashMap<String, ArrayList<gCalendarItem>> dateTable = new HashMap<String, ArrayList<gCalendarItem>>();
 
 
+    Dialog dialogShow;
     private ListView listview;
     private gCalendarAdapter adapter;
 
@@ -79,6 +81,9 @@ public class gCalendarFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         curUser = mAuth.getCurrentUser();
+
+        dialogShow = new Dialog(getActivity());
+        dialogShow.setContentView(R.layout.dialog_show);
 
         //현재 들어와있는 그룹원만의 그룹스케줄
         CollectionReference docref = db.collection("Schedule").document("aGroup").collection("gSchedule");
@@ -167,7 +172,8 @@ public class gCalendarFragment extends Fragment {
                                     for (gCalendarItem itr : dateTable.get(calendarDate)){ //이 날짜에 어떤 어레이리스트 있나 출력
                                         Log.d(TAG,"item : "+itr.getDate()+" "+itr.getSchedule()+ " " + itr.getTime());
                                     }
-                                    adapter = new gCalendarAdapter(dateTable.get(calendarDate)); //어댑터에 이 날짜 해당 데이터 다 넘겨줌
+                                    dialogShow = new Dialog(getActivity());
+                                    adapter = new gCalendarAdapter(dateTable.get(calendarDate), dialogShow); //어댑터에 이 날짜 해당 데이터 다 넘겨줌
                                     listview.setAdapter(adapter); //리스트뷰에 보이도록 함
                                 }
                             }
