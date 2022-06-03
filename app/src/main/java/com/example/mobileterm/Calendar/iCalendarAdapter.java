@@ -93,7 +93,8 @@ public class iCalendarAdapter extends BaseAdapter {
                                 if (task.isSuccessful()) {
                                     Log.d(TAG, "successfully delete");
                                     //더이상 이거 안보이도록
-                                    eachlist.setVisibility(View.INVISIBLE);
+                                    scheduleList.remove(a);
+                                    notifyDataSetChanged();
                                 }
                             }
                         });
@@ -149,8 +150,6 @@ public class iCalendarAdapter extends BaseAdapter {
 
             }
         });
-
-
         return convertView;
 
     }
@@ -173,7 +172,6 @@ public class iCalendarAdapter extends BaseAdapter {
 
     public void addItem(iCalendarItem newItem) // 일단 스케줄만 add 하도록 테스트
     {
-
         scheduleList.add(newItem);
         notifyDataSetChanged();
 
