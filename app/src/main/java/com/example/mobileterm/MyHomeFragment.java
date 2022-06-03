@@ -241,57 +241,57 @@ public class MyHomeFragment extends Fragment {
 
     private void GetLikedBoardItem(FirebaseUser firebaseUser, String did) {
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
-        DocumentReference documentReference = fb.collection("BulletinBoard").document(did);
-        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document != null) {
-                        if (document.exists()) {
-                            MainActivity activity = (MainActivity) getActivity();
-                            String title = (String) document.getData().get("title");
-                            String content = (String) document.getData().get("content");
-                            String uName = (String) document.getData().get("name");
-                            String wTime = (String) document.getData().get("writtenTime");
-                            Log.d("getchildid", title);
-                            Log.d("getchildid", content);
-                            Log.d("getchildid", uName);
-                            Log.d("getchildid", wTime);
-                            activity.onFragmentChanged(title, content, uName, wTime);
-
-                        }
-                    }
-                }
-            }
-        });
-
-//        fb.collection("BulletinBoard").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//        DocumentReference documentReference = fb.collection("BulletinBoard").document(did);
+//        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
 //            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 //                if (task.isSuccessful()) {
-//                    QuerySnapshot querySnapshot = task.getResult();
-//                    for (DocumentSnapshot document : querySnapshot){
-//                        if (document.exists()){
-//                            String tempTitle = (String) document.getData().get("title");
-//                            if (tempTitle.equals(did)) {
-//                                title = (String) document.getData().get("title");
-//                                content = (String) document.getData().get("content");
-//                                uName = (String) document.getData().get("name");
-//                                wTime = (String) document.getData().get("writtenTime");
-//                                Log.d("getchildid", title);
-//                                Log.d("getchildid", content);
-//                                Log.d("getchildid", uName);
-//                                Log.d("getchildid", wTime);
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document != null) {
+//                        if (document.exists()) {
+//                            MainActivity activity = (MainActivity) getActivity();
+//                            String title = (String) document.getData().get("title");
+//                            String content = (String) document.getData().get("content");
+//                            String uName = (String) document.getData().get("name");
+//                            String wTime = (String) document.getData().get("writtenTime");
+//                            Log.d("getchildid", title);
+//                            Log.d("getchildid", content);
+//                            Log.d("getchildid", uName);
+//                            Log.d("getchildid", wTime);
+//                            activity.onFragmentChanged(title, content, uName, wTime);
 //
-//                                break;
-//                            }
 //                        }
 //                    }
-//                    activity.onFragmentChanged(title, content, uName, wTime);
 //                }
 //            }
 //        });
+
+        fb.collection("BulletinBoard").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    for (DocumentSnapshot document : querySnapshot){
+                        if (document.exists()){
+                            String tempTitle = (String) document.getData().get("title");
+                            if (tempTitle.equals(did)) {
+                                title = (String) document.getData().get("title");
+                                content = (String) document.getData().get("content");
+                                uName = (String) document.getData().get("name");
+                                wTime = (String) document.getData().get("writtenTime");
+                                Log.d("getchildid", title);
+                                Log.d("getchildid", content);
+                                Log.d("getchildid", uName);
+                                Log.d("getchildid", wTime);
+
+                                break;
+                            }
+                        }
+                    }
+                    activity.onFragmentChanged(title, content, uName, wTime);
+                }
+            }
+        });
     }
     //확장 리스트뷰 차일드 정보 가져오기 by likedStudyItem-->완성
     private void addChildListView_Study(myGroup temp, FirebaseUser firebaseUser) {
@@ -339,7 +339,7 @@ public class MyHomeFragment extends Fragment {
                         String childid = (String) document.getData().get("did");
                         // temp.childId.add(childid);
                         temp.child.add(childTitle);
-                        childids[1][i] = childid;
+                        childids[1][i] = childTitle;
                         i++;
 
                     }
