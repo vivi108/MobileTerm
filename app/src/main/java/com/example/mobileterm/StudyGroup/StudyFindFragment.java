@@ -1,6 +1,7 @@
 package com.example.mobileterm.StudyGroup;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -50,7 +52,6 @@ public class StudyFindFragment extends Fragment {
     private FirebaseFirestore db;
     FirebaseUser user;
     String uid;
-    String myNickName;
     private String studyID;
     private ArrayList<String> members;
     private String[] tags;
@@ -59,8 +60,10 @@ public class StudyFindFragment extends Fragment {
     private String studyName;
     private String TAG = "FindStudyGroup";
 
+    Dialog joinStudy;
     MainActivity activity;
     FirebaseAuth mAuth;
+    String myNickName;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,12 +75,14 @@ public class StudyFindFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.activity_study_find, container, false);
         activity = (MainActivity) getActivity();
+        joinStudy = new Dialog(activity);
         showStudies = new ArrayList<StudyInfo>();
         likedStudies = new ArrayList<String>();
         buttonMap = new HashMap<Integer, String>();
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
+        myNickName = activity.sendUserNickname();
         studySearchButton = rootView.findViewById(R.id.studySearchButton);
         btn_studyfind_back = rootView.findViewById(R.id.btn_studyfind_back);
         et_search_study = rootView.findViewById(R.id.et_search_study);
@@ -179,9 +184,76 @@ public class StudyFindFragment extends Fragment {
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             String getID = (String) view.findViewById(R.id.tv_find_study_name).getTag().toString();
             StudyInfo member = (StudyInfo) adapter.getItem(i);
-//            String pw = member.getPw();
-            String StudyName = member.getStudyName();
-            //Toast.makeText(view.getContext(), "Clicked" + getID, Toast.LENGTH_SHORT).show();
+            if (member.isOpened()){
+                joinStudy.setContentView(R.layout.dialog_join_open_study);
+                joinStudy.show();
+                Button joinButton = joinStudy.findViewById(R.id.openJoinButton);
+                Button cancelButton = joinStudy.findViewById(R.id.openCancelButton);
+                ArrayList<String> newMem = member.getMemberList();
+                for (String itr : newMem){
+                    Log.d(TAG,itr);
+                }
+                joinButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if ((member.getMaxNumPeople() > newMem.size()) && !newMem.contains(myNickName)){
+                            newMem.add(myNickName);
+                            db.collection("Study").document(getID).update("memberList", newMem).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Log.d(TAG,"스터디조인성공함");
+                                    joinStudy.dismiss();
+                                }
+                            });
+                        }else{
+                            Toast.makeText(getContext(), "가득찬 스터디입니다.",Toast.LENGTH_LONG);
+                        }
+
+                    }
+                });
+
+                cancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        joinStudy.dismiss();
+                    }
+                });
+
+            }else{
+                joinStudy.setContentView(R.layout.dialog_join_closed_study);
+                joinStudy.show();
+                Button joinButton = joinStudy.findViewById(R.id.closeJoinButton);
+                Button cancelButton = joinStudy.findViewById(R.id.closeCancelButton);
+                EditText pwd = joinStudy.findViewById(R.id.closedPassword);
+
+                ArrayList<String> newMem = member.getMemberList();
+
+                joinButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if ((member.getMaxNumPeople() > newMem.size()) && !newMem.contains(myNickName) && member.getPassword().equals(pwd.getText().toString())){
+                            newMem.add(myNickName);
+                            db.collection("Study").document(getID).update("memberList", newMem).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Log.d(TAG,"스터디조인성공함");
+                                    joinStudy.dismiss();
+                                }
+                            });
+                        }else{
+                            Toast.makeText(getContext(), "가득찬 스터디입니다.",Toast.LENGTH_LONG);
+                        }
+                    }
+                });
+
+                cancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        joinStudy.dismiss();
+                    }
+                });
+            }
+
 
         }
     };

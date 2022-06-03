@@ -2,6 +2,7 @@ package com.example.mobileterm.StudyGroup.adapter;
 
 import static android.view.View.GONE;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.media.Image;
 import android.text.Layout;
@@ -100,9 +101,11 @@ public class FindStudyAdapter  extends BaseAdapter {
         tv_find_study_description.setText(findStudy.getDescription());
         if(findStudy.isOpened()){
             iv_find_study_locked.setVisibility(View.GONE);
+            tv_find_study_name.setTag("open "+findStudy.getStudyName());
         }
         else {
             iv_find_study_locked.setVisibility(View.VISIBLE);
+            tv_find_study_name.setTag("close "+findStudy.getStudyName());
         }
         if (likedStudies.contains(findStudy.getStudyName())) {
             btn_find_study_liked.setImageResource(R.drawable.ic_heart_filled);
@@ -110,7 +113,7 @@ public class FindStudyAdapter  extends BaseAdapter {
             btn_find_study_liked.setImageResource(R.drawable.ic_heart);
         }
 
-//        tv_find_study_name.setTag("xptmxm");
+
         btn_find_study_liked.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
