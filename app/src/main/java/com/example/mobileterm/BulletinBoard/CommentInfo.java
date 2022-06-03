@@ -6,6 +6,9 @@ public class CommentInfo {
     private String writtenTime;
     private boolean isSecret;
 
+    public CommentInfo() {
+    }
+
     public String getWrittenTime() {
         return writtenTime;
     }

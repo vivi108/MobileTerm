@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.Task;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -37,6 +38,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class StudyFragment extends Fragment implements View.OnClickListener {
     private ViewGroup rootView;
@@ -48,17 +50,16 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     ArrayList<JoinedStudyVo> joinedStudies;
     private JoinedStudyAdapter adapter;
 
-    private FirebaseFirestore db;
-    FirebaseUser user;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String uid;
-    String myNickName = "jiyeonleeee";
-    private String studyID;
-    private ArrayList<String> members;
-    private ArrayList<String> tags;
-    private String leader;
-    private String studyCap;
-    private String studyName;
+    String myNickName;
     private String TAG = "MyStudyGroup";
+    String studyName;
+    String maxNumPeople;
+    String memberList;
+    String[] members;
+    String tags;
 
     @Nullable
     @Override
@@ -66,33 +67,63 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_study_main, container, false);
         studies = new ArrayList<>();
         joinedStudies = new ArrayList<>();
-        db = FirebaseFirestore.getInstance();
-        user = FirebaseAuth.getInstance().getCurrentUser();
+        //db =
 
         if(user != null){
             uid = user.getUid();
+            Log.d(TAG, "uid : " + uid);
+            DocumentReference documentReference = db.collection("Users").document(uid);
+            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document != null) {
+                            if (document.exists()) {
+                                String a = (String) document.getData().get("nickname");
+                                myNickName = a;
+                            }
+                        }
+                    }
+                }
+            });
         }
-        getName(user);
 
-        // db에서 데이터 받아와서 저장후 리스트로 넘기기
-        String[] member1 = {"jiyeonleeee", "abc", "j", "i", "k"};
-        String[] member2 = {"abc", "j", "i", "k"};
-        String[] tag1 = {"#어학", "#토익", "#아침", "#서울"};
-        String mergeTag1 = String.join(" ", tag1);
-        String[] tag2 = {"#전공", "#모프", "#오후", "#경기"};
-        String mergeTag2 = String.join(" ", tag2);
-        studies.add(new JoinedStudyVo("스터디1", "10", member1, mergeTag2));
-        studies.add(new JoinedStudyVo("스터디2", "5", member2, mergeTag1));
-        studies.add(new JoinedStudyVo("스터디3", "8", member2, mergeTag2));
-        studies.add(new JoinedStudyVo("스터디4", "12", member1, mergeTag1));
-        studies.add(new JoinedStudyVo("스터디5", "15", member2, mergeTag2));
+        Log.d(TAG, "myNickName : " + myNickName); // 닉네임 로그 출력시 에러 닉네임에 저장은 되어 있으나 출력은 안되는 것으로 확인됨
 
-        for (int i = 0; i < studies.size(); i++){
-            String[] getMembers = studies.get(i).getMembers();
-            if(Arrays.asList(getMembers).contains(myNickName)){
-                joinedStudies.add(studies.get(i));
+        CollectionReference collectionReference = db.collection("Study").document("Study")
+                .collection("StudyName");
+
+        collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        //document.getData() or document.getId() 등등 여러 방법으로
+                        //데이터를 가져올 수 있다.
+
+                        studyName = (String) document.getData().get("studyName");
+                        maxNumPeople = (String) document.getData().get("maxNumPeople");
+                        memberList = (String) document.getData().get("memberList");
+                        members = (String[]) memberList.split("/");
+                        tags = (String) document.getData().get("tags");
+
+                        Log.d(TAG, studyName + " " + maxNumPeople + " " + members[0] + " " + tags);
+
+                        studies.add(new JoinedStudyVo(studyName, maxNumPeople, members, tags));
+                    }
+                    Log.d(TAG, "study size : " + studies.size());
+                    for (int i = 0; i < studies.size(); i++){
+                        String[] getMembers = studies.get(i).getMembers();
+                        if(Arrays.asList(getMembers).contains(myNickName)){
+                            joinedStudies.add(studies.get(i));
+                        }
+                    }
+                    adapter = new JoinedStudyAdapter(getContext(), joinedStudies);
+                    lv_study_joined.setAdapter(adapter);
+                }
             }
-        }
+        });
 
         lv_study_joined = (ListView) rootView.findViewById(R.id.lv_study_joined);
 
@@ -102,13 +133,11 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         btn_find_study.setOnClickListener (this);
         btn_make_study_make.setOnClickListener(this);
 
-        adapter = new JoinedStudyAdapter(getContext(), joinedStudies);
-        lv_study_joined.setAdapter(adapter);
-
         lv_study_joined.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String studyName = (String) view.findViewById(R.id.tv_joined_study_name).getTag().toString();
+                Bundle bundle = new Bundle();
                 intent = new Intent(getActivity(), StudyGroupActivity.class);
                 intent.putExtra("JoinedStudy", studyName);
                 startActivity(intent);
@@ -131,24 +160,6 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 break;
         }
 
-    }
-
-    private void getName(FirebaseUser firebaseUser) {
-        DocumentReference documentReference = db.collection("Users").document(firebaseUser.getUid());
-        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document != null) {
-                        if (document.exists()) {
-                            String a = (String) document.getData().get("nickname");
-                            myNickName = a;
-                        }
-                    }
-                }
-            }
-        });
     }
 
 }
