@@ -34,6 +34,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -71,22 +72,15 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         studies = new ArrayList<>();
         joinedStudies = new ArrayList<>();
         myNickName = mainActivity.sendUserNickname();
-        StudyMakeFragment studyMakeFragment = new StudyMakeFragment();
-        String StudyID = studyMakeFragment.sendStudyID();
-
-
 
         Log.d(TAG, "myNickName : " + myNickName); // 닉네임 로그 출력시 에러 닉네임에 저장은 되어 있으나 출력은 안되는 것으로 확인됨
 
-        DocumentReference documentReference = db.collection("Study").document(StudyID);
-        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        db.collection("Study").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        //document.getData() or document.getId() 등등 여러 방법으로
-                        //데이터를 가져올 수 있다.
-
+                    QuerySnapshot querySnapshot = task.getResult();
+                    for(DocumentSnapshot document:querySnapshot){
                         studyName = (String) document.getData().get("studyName");
                         maxNumPeople = (String) document.getData().get("maxNumPeople");
                         memberList = (String) document.getData().get("memberList");
@@ -96,23 +90,21 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                         Log.d(TAG, studyName + " " + maxNumPeople + " " + members[0] + " " + tags);
 
                         studies.add(new JoinedStudyVo(studyName, maxNumPeople, members, tags, description));
-                    }
-                    Log.d(TAG, "study size : " + studies.size());
-                    for (int i = 0; i < studies.size(); i++){
-                        String[] getMembers = studies.get(i).getMembers();
-                        if(Arrays.asList(getMembers).contains(myNickName)){
-                            joinedStudies.add(studies.get(i));
+                        Log.d(TAG, "study size : " + studies.size());
+                        for (int i = 0; i < studies.size(); i++){
+                            String[] getMembers = studies.get(i).getMembers();
+                            if(Arrays.asList(getMembers).contains(myNickName)){
+                                joinedStudies.add(studies.get(i));
+                            }
                         }
                     }
                     adapter = new JoinedStudyAdapter(getContext(), joinedStudies);
                     lv_study_joined.setAdapter(adapter);
                 }
             }
+        });
 
-            });
-        })
-
-                lv_study_joined = (ListView) rootView.findViewById(R.id.lv_study_joined);
+        lv_study_joined = (ListView) rootView.findViewById(R.id.lv_study_joined);
 
         btn_find_study = rootView.findViewById(R.id.btn_find_study);
         btn_make_study_make = rootView.findViewById(R.id.btn_make_study_make);
@@ -143,8 +135,6 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 mainActivity.onFragmentChanged(301);
                 break;
             case R.id.btn_make_study_make:
-//                intent = new Intent(getActivity(), StudyMakeActivity.class);
-//                startActivity(intent); // 생성 버튼 클릭 -> 자동 반영을 위한 코드 작성 필요
                 mainActivity.onFragmentChanged(301);
                 break;
         }
