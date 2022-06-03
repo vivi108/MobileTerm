@@ -196,7 +196,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:visibility="visible">
+                android:visibility="visible"
+                android:layout_margin="10dp">
 
                 <TextView
                     android:id="@+id/textView4"
@@ -204,9 +205,18 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:layout_weight="6"
                     android:text="총점"
-                    android:textSize="20dp" />
+                    android:textSize="20dp"
+                    android:layout_marginRight="10dp"/>
+
+
+                <ImageButton
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/editing"
+                    android:scaleType="fitXY"
+                    android:id="@+id/postAddComment"/>
+
 
                 <RatingBar
                     android:id="@+id/rb_mean_rate"
