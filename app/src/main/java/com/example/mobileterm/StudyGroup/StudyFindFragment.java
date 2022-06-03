@@ -36,7 +36,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class StudyFindFragment extends Fragment {
-    ImageButton btn_studyfind_back;
+    ImageButton btn_studyfind_back, studySearchButton;
     EditText et_search_study;
     Button btn_tag0, btn_tag1, btn_tag2, btn_tag3, btn_tag4, btn_tag5, btn_tag6, btn_tag7;
 
@@ -78,6 +78,7 @@ public class StudyFindFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
+        studySearchButton = rootView.findViewById(R.id.studySearchButton);
         btn_studyfind_back = rootView.findViewById(R.id.btn_studyfind_back);
         et_search_study = rootView.findViewById(R.id.et_search_study);
         btn_tag0 = rootView.findViewById(R.id.btn_tag0);
@@ -101,15 +102,21 @@ public class StudyFindFragment extends Fragment {
         btn_tag7.setOnClickListener(Listener_get_tag_study);
 
         buttonMap.put(Integer.valueOf(R.id.btn_tag1), btn_tag1.getText().toString());
-        buttonMap.put(Integer.valueOf(R.id.btn_tag2), btn_tag1.getText().toString());
-        buttonMap.put(Integer.valueOf(R.id.btn_tag3), btn_tag1.getText().toString());
-        buttonMap.put(Integer.valueOf(R.id.btn_tag4), btn_tag1.getText().toString());
-        buttonMap.put(Integer.valueOf(R.id.btn_tag5), btn_tag1.getText().toString());
-        buttonMap.put(Integer.valueOf(R.id.btn_tag6), btn_tag1.getText().toString());
-        buttonMap.put(Integer.valueOf(R.id.btn_tag7), btn_tag1.getText().toString());
+        buttonMap.put(Integer.valueOf(R.id.btn_tag2), btn_tag2.getText().toString());
+        buttonMap.put(Integer.valueOf(R.id.btn_tag3), btn_tag3.getText().toString());
+        buttonMap.put(Integer.valueOf(R.id.btn_tag4), btn_tag4.getText().toString());
+        buttonMap.put(Integer.valueOf(R.id.btn_tag5), btn_tag5.getText().toString());
+        buttonMap.put(Integer.valueOf(R.id.btn_tag6), btn_tag6.getText().toString());
+        buttonMap.put(Integer.valueOf(R.id.btn_tag7), btn_tag7.getText().toString());
 
 
         lv_study_find.setOnItemClickListener(Listener_join_study);
+        studySearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                adapter.filter((String) et_search_study.getText().toString(), 1);
+            }
+        });
 
 
         db.collection("Study").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -130,7 +137,7 @@ public class StudyFindFragment extends Fragment {
                             if (task.isSuccessful()) {
                                 QuerySnapshot querySnapshot1 = task.getResult();
                                 for (DocumentSnapshot document1 : querySnapshot1){
-                                    likedStudies.add((String) document1.getData().get("studyName"));
+                                    likedStudies.add((String) document1.getData().get("name"));
                                 }
                                 adapter = new FindStudyAdapter(rootView.getContext(), studies, likedStudies);
                                 lv_study_find.setAdapter(adapter);
@@ -146,6 +153,7 @@ public class StudyFindFragment extends Fragment {
     private View.OnClickListener Listener_back = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            activity.onFragmentChanged(300);
         }
     };
 
@@ -153,16 +161,7 @@ public class StudyFindFragment extends Fragment {
         @Override
         public void onClick(View view) {
             // 전체 스터디 보여주깅
-
-//            tagStudies.clear();
-            for (int i = 0; i < studies.size(); i++) {
-//                String[] getMembers = studies.get(i).getMembers();
-//                if (!Arrays.asList(getMembers).contains(myNickName)) {
-////                    tagStudies.add(studies.get(i));
-//                }
-            }
-//            adapter = new FindStudyAdapter(view.getContext(), tagStudies);
-            lv_study_find.setAdapter(adapter);
+            adapter.renew();
         }
     };
 
@@ -171,21 +170,7 @@ public class StudyFindFragment extends Fragment {
         public void onClick(View v) {
 //            tagStudies.clear();
             //해당 태그 스터디 보여주기
-            String tag = "#" + buttonMap.get(v.getId());
-            //tag 이용 -> firebase에 데이터 전달 및 수신
-            int size = studies.size();
-            for (int i = 0; i < size; i++){
-                String getTags = studies.get(i).getTags();
-                tags = getTags.split(" ");
-//                String[] members = studies.get(i).getMembers();
-                if(!Arrays.asList(members).contains(myNickName)){
-                    if(Arrays.asList(tags).contains(tag)){
-//                        tagStudies.add(studies.get(i));
-                    }
-                }
-            }
-//            adapter = new FindStudyAdapter(v.getContext(), tagStudies);
-            lv_study_find.setAdapter(adapter);
+            adapter.filter(buttonMap.get(v.getId()));
         }
     };
 
