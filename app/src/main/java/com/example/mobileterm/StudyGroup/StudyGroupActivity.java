@@ -90,13 +90,13 @@ public class StudyGroupActivity extends AppCompatActivity {
         posts.add(new PostVo(user[1], upload[2], postName[2], content[2], tag, fileName, commentSize, likeNum, downLoad, rating, starRate));
         posts.add(new PostVo(user[2], upload[1], postName[3], content[3], tag, fileName, commentSize, likeNum, downLoad, rating, starRate));
 
-        btn_studygroup_back = findViewById(R.id.btn_studygroup_back);
+//        btn_studygroup_back = findViewById(R.id.btn_studygroup_back);
         btn_studygroup_setting = findViewById(R.id.btn_studygroup_setting);
         btn_studygroup_write_post = findViewById(R.id.btn_studygroup_write_post);
         tv_studygroup_title = findViewById(R.id.tv_studygroup_title);
         lv_studygroup_posts = findViewById(R.id.lv_studygroup_posts);
 
-        adapter = new PostAdapter(this, posts);
+//        adapter = new PostAdapter(this, posts);
         lv_studygroup_posts.setAdapter(adapter);
 
         btn_studygroup_write_post.setFocusable(false);
@@ -140,20 +140,20 @@ public class StudyGroupActivity extends AppCompatActivity {
     private AdapterView.OnItemClickListener Listener_post = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            PostVo member = (PostVo) adapter.getItem(i);
-            String writer = member.getWriter();
-            intent = new Intent(view.getContext(), StudyPostActivity.class);
-            intent.putExtra("user", member.getWriter());
-            intent.putExtra("upload", member.getUploadDate());
-            intent.putExtra("postName", member.getPostName());
-            intent.putExtra("content", member.getContent());
-            intent.putExtra("tag", member.getTag());
-            intent.putExtra("fileName", member.getFileName());
-            intent.putExtra("commentSize", member.getCommentSize());
-            intent.putExtra("likeNum", member.getLikeNum());
-            intent.putExtra("download", member.getDownLoad());
-            intent.putExtra("rating", member.getRating());
-            intent.putExtra("starRate", member.getStarRate());
+//            PostVo member = (PostVo) adapter.getItem(i);
+//            String writer = member.getWriter();
+//            intent = new Intent(view.getContext(), StudyPostActivity.class);
+//            intent.putExtra("user", member.getWriter());
+//            intent.putExtra("upload", member.getUploadDate());
+//            intent.putExtra("postName", member.getPostName());
+//            intent.putExtra("content", member.getContent());
+//            intent.putExtra("tag", member.getTag());
+//            intent.putExtra("fileName", member.getFileName());
+//            intent.putExtra("commentSize", member.getCommentSize());
+//            intent.putExtra("likeNum", member.getLikeNum());
+//            intent.putExtra("download", member.getDownLoad());
+//            intent.putExtra("rating", member.getRating());
+//            intent.putExtra("starRate", member.getStarRate());
 
             if(writer.equals(myNickName)){
                 intent.putExtra("myPost", "true");

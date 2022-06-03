@@ -117,10 +117,11 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String studyName = (String) view.findViewById(R.id.tv_joined_study_name).getTag().toString();
-                Bundle bundle = new Bundle();
-                intent = new Intent(getActivity(), StudyGroupActivity.class);
-                intent.putExtra("JoinedStudy", studyName);
-                startActivity(intent);
+//                Bundle bundle = new Bundle();
+//                intent = new Intent(getActivity(), StudyGroupActivity.class);
+//                intent.putExtra("JoinedStudy", studyName);
+//                startActivity(intent);
+                mainActivity.onFragmentChanged(studyName,101);
             }
         });
 
