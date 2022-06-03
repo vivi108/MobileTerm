@@ -84,6 +84,9 @@ public class CommentListViewAdapter extends BaseAdapter {
         if (curNickname.equals(commentItem.getName())){
             commentDeleteButton.setVisibility(View.VISIBLE);
             commentEditButton.setVisibility(View.VISIBLE);
+        }else{
+            commentDeleteButton.setVisibility(View.INVISIBLE);
+            commentEditButton.setVisibility(View.INVISIBLE);
         }
         commentContentTextView.setText(commentItem.getContent());
         commentNameTextView.setText(commentItem.getName());
