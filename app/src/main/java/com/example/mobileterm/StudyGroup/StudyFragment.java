@@ -130,9 +130,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_find_study:
-                intent = new Intent(getActivity(), StudyFindActivity.class);
-                startActivity(intent);
-                mainActivity.onFragmentChanged(301);
+                mainActivity.onFragmentChanged(302);
                 break;
             case R.id.btn_make_study_make:
                 mainActivity.onFragmentChanged(301);
