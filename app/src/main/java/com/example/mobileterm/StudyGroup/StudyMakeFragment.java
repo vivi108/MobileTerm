@@ -141,7 +141,7 @@ public class StudyMakeFragment extends Fragment {
         public void onClick(View view) {
             String openORnot = null;
             boolean isOpen = true;
-            String password = null;
+            String password = "default";
             String getStudyName = et_make_study_name.getText().toString();
             String getMembers = et_make_study_set_member.getText().toString();
             if (ll_make_study_closed_pw.getVisibility() == View.GONE){
@@ -169,7 +169,7 @@ public class StudyMakeFragment extends Fragment {
             // study.put("studyID", ID);
             study.put("tags", tags);
 
-            StudyInfo newStudy = new StudyInfo(description, myNickName, Long.parseLong(getMembers), isOpen, getStudyName, tags);
+            StudyInfo newStudy = new StudyInfo(description, myNickName, Long.parseLong(getMembers), isOpen, getStudyName, tags, password);
             db.collection("Study").document(ID)
                     .set(newStudy).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override

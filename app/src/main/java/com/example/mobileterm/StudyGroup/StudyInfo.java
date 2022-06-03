@@ -10,6 +10,7 @@ public class StudyInfo {
     private boolean isOpened;
     private String studyName;
     private String tags;
+    private String password;
 
     public String getDescription() {
         return description;
@@ -59,6 +60,14 @@ public class StudyInfo {
         this.studyName = studyName;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getTags() {
         return tags;
     }
@@ -70,7 +79,7 @@ public class StudyInfo {
     public StudyInfo() {
     }
 
-    public StudyInfo(String description, String leader, long maxNumPeople, boolean isOpened, String studyName, String tags) {
+    public StudyInfo(String description, String leader, long maxNumPeople, boolean isOpened, String studyName, String tags, String password) {
         this.description = description;
         this.leader = leader;
         this.maxNumPeople = maxNumPeople;
@@ -79,5 +88,6 @@ public class StudyInfo {
         this.isOpened = isOpened;
         this.studyName = studyName;
         this.tags = tags;
+        this.password = password;
     }
 }
