@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.annotation.SuppressLint;
@@ -21,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,6 +72,7 @@ public class iCalendarFragment extends Fragment {
 
     private ListView listview;
     private iCalendarAdapter adapter;
+    private ScrollView scroll;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup main_frame_layout, @Nullable Bundle savedInstanceState) {
@@ -78,7 +81,6 @@ public class iCalendarFragment extends Fragment {
         calendarView = rootView.findViewById(R.id.calendarView);
         diaryTextView = rootView.findViewById(R.id.diaryTextView); //중간에 몇월 몇일 보여주는
         save_Btn = rootView.findViewById(R.id.save_Btn);
-        del_Btn = rootView.findViewById(R.id.del_Btn);
         add_Btn = rootView.findViewById(R.id.add_Btn);
         textView2 = rootView.findViewById(R.id.textView2); //일정 추가된 날짜 클릭 시 어떤 일정있나 보여주는 칸
         contextEditText = rootView.findViewById(R.id.contextEditText); //선택 날짜 일정 수정하는 칸
@@ -87,6 +89,7 @@ public class iCalendarFragment extends Fragment {
         radGroup = rootView.findViewById(R.id.radGroup);
         isDone = rootView.findViewById(R.id.isDone);
         listview = rootView.findViewById(R.id.list);
+        scroll = rootView.findViewById(R.id.scroll);
 
         mAuth = FirebaseAuth.getInstance();
         curUser = mAuth.getCurrentUser();
@@ -106,6 +109,14 @@ public class iCalendarFragment extends Fragment {
                     MainActivity activity = (MainActivity) getActivity();
                     activity.onFragmentChanged(1);
                 }
+            }
+        });
+
+        listview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                scroll.requestDisallowInterceptTouchEvent(true);
+                return false;
             }
         });
 
