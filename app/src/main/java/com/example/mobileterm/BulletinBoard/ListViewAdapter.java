@@ -217,7 +217,6 @@ public class ListViewAdapter extends BaseAdapter {
                 break;
             }
             case R.id.orderOld:{
-                DataList.clear();
                 if (didList.size() > 0){
 
                     for (BoardInfo itr : itemList){
@@ -226,9 +225,6 @@ public class ListViewAdapter extends BaseAdapter {
                         }
                     }
 
-                }
-                for (BoardInfo itr:itemList){
-                    DataList.add(0, itr);
                 }
                 notifyDataSetChanged();
                 break;
@@ -308,7 +304,6 @@ public class ListViewAdapter extends BaseAdapter {
                         break;
                     }
                     case R.id.orderOld:{
-                        DataList.clear();
                         if (didList.size() > 0){
 
                             for (BoardInfo itr : itemList){
