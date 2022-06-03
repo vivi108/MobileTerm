@@ -142,13 +142,26 @@ public class StudyGroupActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             PostVo member = (PostVo) adapter.getItem(i);
             String writer = member.getWriter();
-            if(writer.equals(myNickName)){
-                intent = new Intent(view.getContext(), StudyPostActivity.class);
+            intent = new Intent(view.getContext(), StudyPostActivity.class);
+            intent.putExtra("user", member.getWriter());
+            intent.putExtra("upload", member.getUploadDate());
+            intent.putExtra("postName", member.getPostName());
+            intent.putExtra("content", member.getContent());
+            intent.putExtra("tag", member.getTag());
+            intent.putExtra("fileName", member.getFileName());
+            intent.putExtra("commentSize", member.getCommentSize());
+            intent.putExtra("likeNum", member.getLikeNum());
+            intent.putExtra("download", member.getDownLoad());
+            intent.putExtra("rating", member.getRating());
+            intent.putExtra("starRate", member.getStarRate());
 
+            if(writer.equals(myNickName)){
+                intent.putExtra("myPost", "true");
             }
             else {
-
+                intent.putExtra("myPost", "false");
             }
+            startActivity(intent);
         }
     };
 }
