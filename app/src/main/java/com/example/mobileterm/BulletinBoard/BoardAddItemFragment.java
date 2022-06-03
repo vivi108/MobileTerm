@@ -117,8 +117,8 @@ public class BoardAddItemFragment extends Fragment {
                                                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                             if (task.isSuccessful()) {
                                                                 DocumentSnapshot tempDoc = task.getResult();
-                                                                long curtoken = (long) tempDoc.getData().get("token");
-                                                                long updatetoken = curtoken+1;
+                                                                String curtoken = (String) tempDoc.getData().get("token");
+                                                                String updatetoken = Long.toString(Long.parseLong(curtoken)+1);
                                                                 db.collection("Users").document(user.getUid()).update("token",updatetoken).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                     @Override
                                                                     public void onComplete(@NonNull Task<Void> task) {
