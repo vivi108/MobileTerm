@@ -70,8 +70,10 @@ public class MyHomeFragment extends Fragment {
     TextView name, beforetodo, aftertodo, token;
     ExpandableListView listview;
     ArrayList<myGroup> DataList;
+    ArrayList<myGroup> LikedStudyList;
     ExpandAdapter adapter;
     String[][] childids = new String[999][999];
+    String[][] childids_study = new String[999][999];
     String uid;
     BarChart barChart;
 
@@ -196,7 +198,10 @@ public class MyHomeFragment extends Fragment {
                 MainActivity activity = (MainActivity) getActivity();
                 switch (groupPosition) {
                     case 0://관심스터디
-
+                        Log.e("boardItemClicked", "by setOnItemCLick from LikedBoardItem");
+                        String getchild = childids[1][childPosition];
+                        Log.d("getchildid", getchild + "가 선택됨");
+                        GetLikedStudyItem(user, getchild);
                         break;
                     case 1:
                         Log.e("boardItemClicked", "by setOnItemCLick from LikedBoardItem");
@@ -211,7 +216,25 @@ public class MyHomeFragment extends Fragment {
         });
         return rootView;
     }
+    //관심스터디의 child listview눌렀을때
+    private void GetLikedStudyItem(FirebaseUser firebaseUser, String did) {
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+        DocumentReference documentReference = fb.collection("경로설정").document(did);
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null) {
+                        if (document.exists()) {
 
+                        }
+                    }
+                }
+            }
+        });
+
+    }
 
     private void GetLikedBoardItem(FirebaseUser firebaseUser, String did) {
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
@@ -241,7 +264,34 @@ public class MyHomeFragment extends Fragment {
         });
 
     }
+    //확장 리스트뷰 차일드 정보 가져오기 by likedStudyItem-->완성
+    private void addChildListView_Study(myGroup temp, FirebaseUser firebaseUser) {
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+        CollectionReference collectionReference = fb.collection("Users").document(firebaseUser.getUid()).collection("경로설정");
 
+        collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    int i = 0;
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        //document.getData() or document.getId() 등등 여러 방법으로
+                        //데이터를 가져올 수 있다.
+
+                        String childTitle = (String) document.getData().get("likedstudy내용");
+                        String childid = (String) document.getData().get("Likedstduy제목");
+                        // temp.childId.add(childid);
+                        temp.child.add(childTitle);
+                        childids_study[1][i] = childid;
+                        i++;
+
+                    }
+                }
+            }
+        });
+
+        LikedStudyList.add(temp);
+    }
     //확장 리스트뷰 차일드 정보 가져오기 by likedBoardItem-->완성
     private void addChildListView_Board(myGroup temp, FirebaseUser firebaseUser) {
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
