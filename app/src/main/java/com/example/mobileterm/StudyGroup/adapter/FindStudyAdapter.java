@@ -15,9 +15,17 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.example.mobileterm.R;
+import com.example.mobileterm.StudyGroup.LikedStudyInfo;
 import com.example.mobileterm.StudyGroup.StudyInfo;
 import com.example.mobileterm.StudyGroup.vo.FindStudyVo;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +39,9 @@ public class FindStudyAdapter  extends BaseAdapter {
 
     private String TAG = "find study adapter";
 
-
-
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
     public FindStudyAdapter(Context context, ArrayList<StudyInfo> list, ArrayList<String> likedStudies){
         this.context = context;
         this.dataList = new ArrayList<StudyInfo>();
@@ -40,6 +49,7 @@ public class FindStudyAdapter  extends BaseAdapter {
         this.likedStudies = new ArrayList<String>();
         this.likedStudies.addAll(likedStudies);
         Log.d(TAG, "list size"+dataList.size());
+
     }
 
     @Override
@@ -60,7 +70,9 @@ public class FindStudyAdapter  extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final Context context = parent.getContext();
         String ID;
-
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
         if(convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.custom_item_study_find, parent, false);
@@ -90,12 +102,35 @@ public class FindStudyAdapter  extends BaseAdapter {
         else {
             iv_find_study_locked.setVisibility(View.VISIBLE);
         }
-        btn_find_study_liked.setImageResource(R.drawable.ic_heart);
+        if (likedStudies.contains(findStudy.getStudyName())) {
+            btn_find_study_liked.setImageResource(R.drawable.ic_heart_filled);
+        }else{
+            btn_find_study_liked.setImageResource(R.drawable.ic_heart);
+        }
+
         tv_find_study_name.setTag("xptmxm");
         btn_find_study_liked.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG,position+" liked clicked");
+                if (!likedStudies.contains(findStudy.getStudyName())){
+                    btn_find_study_liked.setImageResource(R.drawable.ic_heart_filled);
+                    // 디비 업데이트하고 유저에 츄가해줘야함, 음 그냥 좋아요니까 유저에만 추가해주면 될듯하네
+                    String sid = "";
+                    if (findStudy.isOpened()) {
+                        sid = "open ";
+                    }else{
+                        sid = "close ";
+                    }
+                    sid += findStudy.getStudyName();
+                    LikedStudyInfo newLiked = new LikedStudyInfo(sid, findStudy.getStudyName());
+                    db.collection("Users").document(user.getUid()).collection("likedStudy").document(sid).set(newLiked).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Log.d(TAG,"관심스터디 등록성공");
+                        }
+                    });
+               }
             }
         });
 
