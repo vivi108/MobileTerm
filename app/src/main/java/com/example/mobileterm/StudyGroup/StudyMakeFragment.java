@@ -140,15 +140,18 @@ public class StudyMakeFragment extends Fragment {
         @Override
         public void onClick(View view) {
             String openORnot = null;
+            boolean isOpen = true;
             String password = null;
             String getStudyName = et_make_study_name.getText().toString();
             String getMembers = et_make_study_set_member.getText().toString();
             if (ll_make_study_closed_pw.getVisibility() == View.GONE){
                 openORnot = "open";
+
             }
             else if(ll_make_study_closed_pw.getVisibility() == View.VISIBLE){
                 openORnot = "close";
                 password = pt_entrance_pw.getText().toString();
+                isOpen = false;
             }
             String tags = et_make_study_tag.getText().toString();
             String description = et_make_study_description.getText().toString();
@@ -165,12 +168,14 @@ public class StudyMakeFragment extends Fragment {
             study.put("memberList", myNickName + "/");
             // study.put("studyID", ID);
             study.put("tags", tags);
+
+            StudyInfo newStudy = new StudyInfo(description, myNickName, Long.parseLong(getMembers), isOpen, getStudyName, tags);
             db.collection("Study").document(ID)
-                    .set(study).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    .set(newStudy).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
                             Log.d(TAG, "Make Study Success!");
-                            Toast.makeText(activity, "Make study success!", Toast.LENGTH_SHORT);
+//                            Toast.makeText(activity, "Make study success!", Toast.LENGTH_SHORT);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -190,8 +195,8 @@ public class StudyMakeFragment extends Fragment {
                     case "#대외활동":
                     case "#취업/면접":
                     case "#어학":
-                        db.collection("StudyTags").document(tag[i])
-                                .set(study).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        db.collection("StudyTags").document(tag[i]).collection("Studies").document(getStudyName)
+                                .set(newStudy).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
                                     }

@@ -59,7 +59,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     private String TAG = "MyStudyGroup";
     String studyName;
     String maxNumPeople;
-    String memberList;
+    ArrayList<String> memberList;
     String[] members;
     String tags;
     String description;
@@ -82,20 +82,21 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                     QuerySnapshot querySnapshot = task.getResult();
                     for(DocumentSnapshot document:querySnapshot){
                         studyName = (String) document.getData().get("studyName");
-                        maxNumPeople = (String) document.getData().get("maxNumPeople");
-                        memberList = (String) document.getData().get("memberList");
-                        members = (String[]) memberList.split("/");
+                        maxNumPeople = Long.toString((Long) document.getData().get("maxNumPeople"));
+                        memberList = (ArrayList<String>) document.getData().get("memberList");
+                        members = memberList.toArray(new String[0]);
                         tags = (String) document.getData().get("tags");
                         description = (String) document.getData().get("description");
                         Log.d(TAG, studyName + " " + maxNumPeople + " " + members[0] + " " + tags);
 
                         studies.add(new JoinedStudyVo(studyName, maxNumPeople, members, tags, description));
                         Log.d(TAG, "study size : " + studies.size());
-                        for (int i = 0; i < studies.size(); i++){
-                            String[] getMembers = studies.get(i).getMembers();
-                            if(Arrays.asList(getMembers).contains(myNickName)){
-                                joinedStudies.add(studies.get(i));
-                            }
+
+                    }
+                    for (int i = 0; i < studies.size(); i++){
+                        String[] getMembers = studies.get(i).getMembers();
+                        if(Arrays.asList(getMembers).contains(myNickName)){
+                            joinedStudies.add(studies.get(i));
                         }
                     }
                     adapter = new JoinedStudyAdapter(getContext(), joinedStudies);
