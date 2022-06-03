@@ -112,7 +112,8 @@ public class StudyFindFragment extends Fragment {
                     QuerySnapshot querySnapshot = task.getResult();
                     for (DocumentSnapshot document : querySnapshot){
                         if (document.exists()) {
-
+                            StudyInfo tempStudy = document.toObject(StudyInfo.class);
+                            studies.add(tempStudy);
                         }
                     }
 
