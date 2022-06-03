@@ -19,5 +19,6 @@ public class StudyPostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_study_post);
 
         activity = this;
+        intent = getIntent();
     }
 }

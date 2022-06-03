@@ -36,7 +36,6 @@ public class BoardAddItemFragment extends Fragment {
     FirebaseUser user;
     FirebaseFirestore db;
 
-//    String did;
     String nickname;
     String content;
     String title;
@@ -82,7 +81,6 @@ public class BoardAddItemFragment extends Fragment {
                             tagIter = tags.split("#");
 
 
-//                            BulletinBoardCollection newItem = new BulletinBoardCollection(content, nickname, "default",title);
 
                             boardId = getTime()+" "+title;
                             BoardInfo newItem = new BoardInfo(title, content, nickname, boardId, getTime(), (long)0);
@@ -152,7 +150,6 @@ public class BoardAddItemFragment extends Fragment {
 
     public void fragmentChange() {
         BoardFragment boardFragment = new BoardFragment();
-//        boardFragment.addNewItem(newBoardItem);
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, boardFragment).addToBackStack(null).commit();
     }
 

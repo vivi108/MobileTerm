@@ -43,8 +43,6 @@ public class BoardFragment extends Fragment {
     private FirebaseFirestore db;
     private String TAG = "boardFragment";
     EditText searchEditText;
-//    QuerySnapshot boardBoardTags;
-//    QuerySnapshot boardComments;
     ArrayList<BoardInfo> arrayList = new ArrayList<BoardInfo>();
     ArrayList<String> tagList = new ArrayList<String>();
     ArrayList<String> didList = new ArrayList<String>();
@@ -98,7 +96,6 @@ public class BoardFragment extends Fragment {
                             String name = (String) document.getData().get("name");
                             String writtenTime = (String) document.getData().get("writtenTime");
                             Long likedCount = (Long) document.getData().get("likedCount");
-//                               Log.e(TAG, did+"title : "+title);
                             BoardInfo data = new BoardInfo(title, content, name, did, writtenTime, likedCount);
                             newArrayList.add(0,data);
                         }
@@ -106,7 +103,6 @@ public class BoardFragment extends Fragment {
                     if (!newArrayList.equals(arrayList)){
                         arrayList = newArrayList;
                     }
-//                        Log.e(TAG,arrayList.toString());
                     adapter = new ListViewAdapter(rootView.getContext(), arrayList);
                     listView.setAdapter(adapter);
 
@@ -116,7 +112,6 @@ public class BoardFragment extends Fragment {
                             MainActivity activity = (MainActivity) getActivity();
                             Log.e("boardItemClicked","by setOnItemCLick");
 
-//                            activity.onFragmentChanged(arrayList.get(i), arrayList.get(i).getDid());
                             activity.onFragmentChanged(((TextView) view.findViewById(R.id.titleTextView)).getText().toString(), ((TextView) view.findViewById(R.id.contentTextView)).getText().toString(),
                                     ((TextView) view.findViewById(R.id.nameTextView)).getText().toString(), ((TextView) view.findViewById(R.id.writtenTimeTextView)).getText().toString());
                         }
@@ -152,7 +147,6 @@ public class BoardFragment extends Fragment {
                                         }
                                     }
                                     adapter.filter(didList,radioGroup.getCheckedRadioButtonId());
-//                                    filterDialog.dismiss();
                                 }
                             }
                         });
@@ -177,7 +171,6 @@ public class BoardFragment extends Fragment {
                                         }
                                     }
                                     adapter.searchTagReorder(searchEditText.getText().toString(),didList,radioGroup.getCheckedRadioButtonId());
-//                                    filterDialog.dismiss();
                                 }
                             }
                         });

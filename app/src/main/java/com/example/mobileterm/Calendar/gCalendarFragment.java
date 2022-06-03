@@ -1,19 +1,24 @@
 package com.example.mobileterm.Calendar;
 
-import static android.content.Context.MODE_NO_LOCALIZED_COLLATORS;
+import static android.content.ContentValues.TAG;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.nfc.Tag;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -22,23 +27,39 @@ import androidx.annotation.NonNull;
 
 import com.example.mobileterm.MainActivity;
 import com.example.mobileterm.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class gCalendarFragment extends Fragment {
-    public String readDay = null;
     public String str = null;
     MaterialCalendarView calendarView;
-    public Button cha_Btn, del_Btn, save_Btn;
+    public Button add_Btn, del_Btn, save_Btn;
     public TextView diaryTextView, textView2, textView3;
     public EditText contextEditText;
     public RadioGroup ctype;
     public RadioButton radIndividual, radGroup;
+    public CheckBox isDone;
+    final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private gCalendarFragment gCalendarFragment;
+    private FirebaseAuth mAuth;
+    private FirebaseUser curUser;
+    private HashMap<String, ArrayList<gCalendarItem>> dateTable = new HashMap<String, ArrayList<gCalendarItem>>();
+
+
+    private ListView listview;
+    private gCalendarAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup main_frame_layout, @Nullable Bundle savedInstanceState) {
@@ -47,17 +68,23 @@ public class gCalendarFragment extends Fragment {
         calendarView = rootView.findViewById(R.id.calendarView);
         diaryTextView = rootView.findViewById(R.id.diaryTextView); //중간에 몇월 몇일 보여주는
         save_Btn = rootView.findViewById(R.id.save_Btn);
-        del_Btn = rootView.findViewById(R.id.del_Btn);
-        cha_Btn = rootView.findViewById(R.id.cha_Btn);
+        add_Btn = rootView.findViewById(R.id.add_Btn);
         textView2 = rootView.findViewById(R.id.textView2); //일정 추가된 날짜 클릭 시 어떤 일정있나 보여주는 칸
-        //textView3 = rootView.findViewById(R.id.textView3); //맨 위 달력이라 표시
         contextEditText = rootView.findViewById(R.id.contextEditText); //선택 날짜 일정 수정하는 칸
         ctype = rootView.findViewById(R.id.ctype);
         radIndividual = rootView.findViewById(R.id.radIndividual);
         radGroup = rootView.findViewById(R.id.radGroup);
+        isDone = rootView.findViewById(R.id.isDone);
+        listview = rootView.findViewById(R.id.list);
 
+        mAuth = FirebaseAuth.getInstance();
+        curUser = mAuth.getCurrentUser();
+
+        //현재 들어와있는 그룹원만의 그룹스케줄
+        CollectionReference docref = db.collection("Schedule").document("aGroup").collection("gSchedule");
+
+        //위 라디오버튼
         ctype.check(radGroup.getId());
-
         radIndividual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,175 +98,183 @@ public class gCalendarFragment extends Fragment {
         });
 
 
-        // 날짜가 변경될 때 이벤트를 받기 위한 리스너
-        calendarView.setOnDateChangedListener(new OnDateSelectedListener()
-        {
-            // 선택된 날짜를 알려주는 메서드
+        // 날짜 클릭할 때 일어날 일들
+        calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
-            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected)
-            {
-                //중간 날짜 표시, 저장 버튼, 일정 수정 - 보이도록
+            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 diaryTextView.setVisibility(View.VISIBLE);
-                save_Btn.setVisibility(View.VISIBLE);
-                contextEditText.setVisibility(View.VISIBLE);
-                //어떤 일정 있나, 수정, 삭제 버튼 - 안보이도록 - 아직 어떤 작업도 수행 안됐으니
-                textView2.setVisibility(View.INVISIBLE);
-                cha_Btn.setVisibility(View.INVISIBLE);
-                del_Btn.setVisibility(View.INVISIBLE);
-                //중간 날짜 어케 보여줄지 + 일정 추가되는 칸 초기화
-                diaryTextView.setText(String.format("%d / %d / %d",  date.getYear(), date.getMonth() + 1, date.getDay()));
-                contextEditText.setText("");
-                //빨간 점 찍기 -------------
-                calendarView.setSelectedDate(CalendarDay.today());
-                calendarView.addDecorator(new EventDecorator(Color.RED, Collections.singleton(CalendarDay.today())));
-                //이제 날짜 체크 후 일정 삽입 or 수정 작업
-                checkDay(date.getYear(), date.getMonth() + 1, date.getDay());
-            }
-        });
-
-        //저장 버튼 클릭 시
-        save_Btn.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                saveDiary(readDay); //아마 일정 저장
-                str = contextEditText.getText().toString(); //일정을 쓰면 그 내용을 str로 저장
-                textView2.setText(str); //t2(일정 보여주는)에 str 저장
-                //저장 버튼을 클릭 한 후 - 저장버튼과 edittext 안보이고 수정, 삭제 버튼, 일정 보여주는 거 보이게함
                 save_Btn.setVisibility(View.INVISIBLE);
-                cha_Btn.setVisibility(View.VISIBLE);
-                del_Btn.setVisibility(View.VISIBLE);
                 contextEditText.setVisibility(View.INVISIBLE);
-                textView2.setVisibility(View.VISIBLE);
+                listview.setVisibility(View.VISIBLE);
+                add_Btn.setVisibility(View.VISIBLE);
+                diaryTextView.setText(String.format("%d / %d / %d", date.getYear(), date.getMonth() + 1, date.getDay())); //중간 일정 보여주는 텍스트뷰
+                ArrayList<gCalendarItem> newArrayList = new ArrayList<gCalendarItem>();
+
+                String month = String.valueOf(date.getMonth() + 1);
+                if(date.getMonth()+1 < 10)
+                    month = "0".concat(month); //날짜 클릭시 받아오는 월은 month 그대로
+                String day = String.valueOf(date.getDay());
+                if(date.getDay() < 10)
+                    day = "0".concat(day); //날짜 클릭시 받아오는 일은 day 그대로
+
+                String calendarDate = String.valueOf(date.getYear()) + month + day; //캘린더의 날짜 클릭 시 이걸로 받아옴
+                System.out.println("클릭날짜 : " + calendarDate);
+
+
+                try {
+                    dateTable.get(calendarDate);
+                    System.out.println("136" + dateTable.get(calendarDate));
+                }catch (Exception e){
+                    dateTable.put(calendarDate, new ArrayList<gCalendarItem>());
+                    System.out.println("139" + dateTable);
+                }
+
+
+                //클릭한 날짜의 일정을 파베에서 불러와서 그 날에 해당하는 일정 리스트뷰 어댑터에 넣기
+                docref
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        if (document.exists()) {
+                                            if (String.valueOf(document.getData().get("date")).equals(calendarDate))  //선택 날짜와 파베 날짜가 동일할 경우
+                                            {
+                                                System.out.println("클릭날짜 : " + calendarDate);
+
+                                                String schedule = ((String) document.getData().get("schedule")); //그 일정을 가져오겠다
+                                                String date = ((String) document.getData().get("date"));
+                                                String time = ((String) document.getData().get("time"));
+                                                String docA = ((String) document.getId());
+                                                String place = ((String) document.getData().get("place"));
+
+                                                gCalendarItem data = new gCalendarItem(schedule, date, time, docA, place );
+                                                newArrayList.add(0, data);
+                                            }
+                                        }
+                                    }
+                                    try
+                                    { //키값 : 날짜 + 밸류값 : 어레이리스트(일정, 날짜, isdone)
+                                        if(!dateTable.get(calendarDate).equals(newArrayList))
+                                        {
+                                            dateTable.put(calendarDate, newArrayList); //날짜를 키값으로 밸류에 리스트 하나(newArr) 추가
+                                        }
+                                    }catch (Exception e){
+                                        dateTable.put(calendarDate, newArrayList); //날짜를 키값으로 밸류에 리스트 하나(newArr) 추가
+                                    }
+
+                                    for (gCalendarItem itr : dateTable.get(calendarDate)){ //이 날짜에 어떤 어레이리스트 있나 출력
+                                        Log.d(TAG,"item : "+itr.getDate()+" "+itr.getSchedule()+ " " + itr.getTime());
+                                    }
+                                    adapter = new gCalendarAdapter(dateTable.get(calendarDate)); //어댑터에 이 날짜 해당 데이터 다 넘겨줌
+                                    listview.setAdapter(adapter); //리스트뷰에 보이도록 함
+                                }
+                            }
+                        });
+
+
+
+//                //추가 버튼 -> 저장 버튼 로직으로
+//                add_Btn.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        //추가 눌리면 edit과 저장버튼만 보이게 해주는거..
+//                        //이전에 있던 일정이 edit에선 안보였다가 txtview에선 추가되어 보이도록
+//                        contextEditText.setVisibility(View.VISIBLE);
+//                        contextEditText.setText("");
+//                        diaryTextView.setVisibility(View.VISIBLE);
+//
+//                        listview.setVisibility(View.INVISIBLE);
+//                        save_Btn.setVisibility(View.VISIBLE);
+//                        add_Btn.setVisibility(View.INVISIBLE);
+//                    }
+//                });
+
+
+                add_Btn.setOnClickListener(new View.OnClickListener() {
+
+                    String Schedule;
+                    String Date;
+                    String time;
+                    String docA;
+                    String place;
+
+                    @Override //추가 버튼 클릭 시
+                    public void onClick(View view) {
+                        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit, null);
+                         EditText placeEdit = (EditText)dialogView.findViewById(R.id.placeEdit);
+                         EditText timeEdit = (EditText)dialogView.findViewById(R.id.timeEdit);
+                         EditText scheduleEdit = (EditText)dialogView.findViewById(R.id.scheduleEdit);
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogTheme));
+                        builder.setView(dialogView);
+
+
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int pos) {
+                                        Schedule = scheduleEdit.getText().toString();
+                                        time = timeEdit.getText().toString();
+                                        place = placeEdit.getText().toString();
+                                        Date = calendarDate; //일정 쓴 날짜겠지
+                                        docA = Date +" "+ Schedule;
+                                        Log.d("gfrag 1 - ", " schdule:" + Schedule +" time:"+ time + " place:"+ place);
+                                        gCalendarItem newItem = new gCalendarItem(Schedule, Date, time, docA, place);
+
+                                        docref
+                                                .document(Date +" "+ Schedule)
+                                                .set(newItem).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Log.d("gfrag 2 - ", " schdule:" + Schedule +" time:"+ time + " place:"+ place);
+                                                }
+                                            }
+                                        });
+                                        dateTable.get(calendarDate).add(newItem);
+                                    }
+                                });
+
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+
+
+//                        //컬렉션에 넣을 준비
+//                        Date = calendarDate; //일정 쓴 날짜겠지
+//                        docA = Date +" "+ Schedule;
+//                        Log.d("gfrag 228", "  " + Date + docA);
+
+
+                        //gCalendarItem newItem = new gCalendarItem(Schedule, Date, time, docA, place);
+
+                        //에딧텍스트 일정을 db 컬렉션에 넣음 - user 안 iSchedule 컬렉션에
+//                        docref
+//                                .document(Date +" "+ Schedule)
+//                                .set(newItem).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                if (task.isSuccessful()) {
+//                                    Log.d("gfrag 240", " schdule:" + Schedule +" time:"+ time + " place:"+ place);
+//                                }
+//                            }
+//                        });
+
+//                        dateTable.get(calendarDate).add(newItem);
+
+
+
+                        //저장 버튼을 클릭 한 후 - 저장버튼과 edittext 안보이고 / 수정, 삭제 버튼, 일정 보여주는 거 보이게함
+                        save_Btn.setVisibility(View.INVISIBLE);
+                        add_Btn.setVisibility(View.VISIBLE);
+                        contextEditText.setVisibility(View.INVISIBLE);
+                        listview.setVisibility(View.VISIBLE);
+                    }
+
+
+                });
             }
         });
-
-
-
         return rootView;
-
-    }
-
-
-    public void checkDay(int cYear, int cMonth, int cDay)
-    {
-        //받아온 연월일을 readday라는 스트링에 저장
-        readDay = "" + cYear + "-" + (cMonth + 1) + "" + "-" + cDay + ".txt";
-        //파일 내용 읽으려나 봄
-        FileInputStream fis;
-
-        try
-        {
-            //readday 스트링을 읽겠다
-            fis = getActivity().openFileInput(readDay);
-
-            byte[] fileData = new byte[fis.available()];
-            //readday를 무튼 fileData에 넣었음
-            fis.read(fileData);
-            fis.close();
-
-            //fileData의 연월일 정보를 str에 넣음
-            str = new String(fileData);
-
-            //일정 수정 또는 삽입 후 일정 보여주는 그 시점
-            contextEditText.setVisibility(View.INVISIBLE);
-            textView2.setVisibility(View.VISIBLE);
-            textView2.setText(str); //일정 보여주는 칸에 연월일 정보인 str 넣음
-            save_Btn.setVisibility(View.INVISIBLE);
-            cha_Btn.setVisibility(View.VISIBLE);
-            del_Btn.setVisibility(View.VISIBLE);
-
-            //수정 버튼 눌리면
-            cha_Btn.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    //원래 있던 일정(str)이 edittext에 그대로 나오고
-                    //마지막에 edit의 스트링을 text2에 넣어줌
-                    //마찬가지로 수정 눌리면 edit과 저장버튼만 보이게 해주는거..
-                    contextEditText.setVisibility(View.VISIBLE);
-                    textView2.setVisibility(View.INVISIBLE);
-                    contextEditText.setText(str);
-
-                    save_Btn.setVisibility(View.VISIBLE);
-                    cha_Btn.setVisibility(View.INVISIBLE);
-                    del_Btn.setVisibility(View.INVISIBLE);
-                    textView2.setText(contextEditText.getText());
-                }
-
-            });
-            //삭제 버튼 눌리면
-            del_Btn.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    //text2 안보이고 edit이 비게 되고,
-                    //edit과 저장버튼만 보이게됨
-                    //readDay의 스트링은 삭제됨
-                    textView2.setVisibility(View.INVISIBLE);
-                    contextEditText.setText("");
-                    contextEditText.setVisibility(View.VISIBLE);
-                    save_Btn.setVisibility(View.VISIBLE);
-                    cha_Btn.setVisibility(View.INVISIBLE);
-                    del_Btn.setVisibility(View.INVISIBLE);
-                    removeDiary(readDay);
-                }
-            });
-
-            //text2가 비어있다면 그냥 바로 edit과 저장버튼만 보이도록
-            if (textView2.getText() == null)
-            {
-                textView2.setVisibility(View.INVISIBLE);
-                diaryTextView.setVisibility(View.VISIBLE);
-                save_Btn.setVisibility(View.VISIBLE);
-                cha_Btn.setVisibility(View.INVISIBLE);
-                del_Btn.setVisibility(View.INVISIBLE);
-                contextEditText.setVisibility(View.VISIBLE);
-            }
-
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    @SuppressLint("WrongConstant")
-    public void removeDiary(String readDay)
-    {
-        FileOutputStream fos;
-        try
-        {
-            fos = getActivity().openFileOutput(readDay, MODE_NO_LOCALIZED_COLLATORS);
-            String content = "";
-            fos.write((content).getBytes());
-            fos.close();
-
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    @SuppressLint("WrongConstant")
-    public void saveDiary(String readDay)
-    {
-        FileOutputStream fos;
-        try
-        {
-            fos = getActivity().openFileOutput(readDay, MODE_NO_LOCALIZED_COLLATORS);
-            String content = contextEditText.getText().toString();
-            fos.write((content).getBytes());
-            fos.close();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
     }
 }
 

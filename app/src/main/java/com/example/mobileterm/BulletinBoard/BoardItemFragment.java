@@ -61,8 +61,6 @@ public class BoardItemFragment extends Fragment {
     SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     long mnow;
     Date mDate;
-    String commentId;
-    EditText commentEditText;
     TextView titleTextViewBoardItem;
     TextView timeTextView ;
     TextView nameTextViewBoardItem;
@@ -81,7 +79,6 @@ public class BoardItemFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_board_item_new, container, false);
         MainActivity mainActivity = (MainActivity)getActivity();
-//        selectedBoardItem = mainActivity.sendBoardItem();
         did = mainActivity.sendDid();
         userNickName = mainActivity.sendUserNickname();
         editItemDialog = new Dialog(getActivity());
@@ -101,7 +98,6 @@ public class BoardItemFragment extends Fragment {
         titleTextViewBoardItem = rootView.findViewById(R.id.titleTextViewBoardItem);
         tagTextViewBoardItem = rootView.findViewById(R.id.tagTextViewBoardItem);
         ImageButton likeButton = rootView.findViewById(R.id.likeButton);
-//        commentEditText = rootView.findViewById(R.id.commentEditText);
         likedCountTextViewBoardItem = rootView.findViewById(R.id.likedCountViewBoardItem);
         ImageButton addCommentButtonBoardItem = rootView.findViewById(R.id.addCommentButtonBoardItem);
 
@@ -116,6 +112,7 @@ public class BoardItemFragment extends Fragment {
                 if (task.isSuccessful()){
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()){
+                        Log.d(TAG,"nickname"+userNickName);
                         titleTextViewBoardItem.setText((String) document.getData().get("title"));
                         contentTextViewBoardItem.setText((String) document.getData().get("content"));
                         timeTextView.setText((String) document.getData().get("writtenTime"));
@@ -130,6 +127,8 @@ public class BoardItemFragment extends Fragment {
                             deleteItemButton.setOnClickListener(onClickListener);
                         }
 
+
+
                         ArrayList<CommentInfo> newArrayList = new ArrayList<CommentInfo>();
                         CollectionReference docRef = db.document("BulletinBoard/"+did).collection("Comments");
                         docRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -142,7 +141,18 @@ public class BoardItemFragment extends Fragment {
                                             String content = (String) document.getData().get("content");
                                             String writtenTime = (String) document.getData().get("writtenTime");
                                             CommentInfo data = new CommentInfo(content, name, writtenTime);
-                                            newArrayList.add(0,data);
+                                            boolean isSecret = (boolean) document.getData().get("secret");
+                                            if (isSecret){
+                                                if (userNickName.equals(name) || userNickName.equals(nameTextViewBoardItem.getText().toString())){
+                                                    newArrayList.add(0,data);
+                                                }else{
+                                                    CommentInfo secretComment = new CommentInfo("비밀 댓글입니다. 댓글, 게시글 작성자만 볼 수 있습니다.","unknown", writtenTime);
+                                                    newArrayList.add(0, secretComment);
+                                                }
+                                            }else{
+                                                newArrayList.add(0,data);
+                                            }
+
                                         }
                                     }
                                     if (!newArrayList.equals(arrayList)) {
@@ -246,38 +256,48 @@ public class BoardItemFragment extends Fragment {
                                         }
 
                                     }
-                                    batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                                    db.collection("BulletinBoard").document(did).collection("Comments").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                         @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                             if (task.isSuccessful()) {
-                                                Log.e(TAG, "tag add sucess");
-                                                titleTextViewBoardItem.setText(titleItemEditText.getText().toString());
-                                                contentTextViewBoardItem.setText(contentItemEditText.getText().toString());
-                                                tagTextViewBoardItem.setText(tagTextViewBoardItem.getText().toString()+" "+tagItemEditText.getText().toString());
-                                                titleItemEditText.setText("");
-                                                tagItemEditText.setText("");
-                                                contentItemEditText.setText("");
-                                                db.collection("BulletinBoard").document(did).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                QuerySnapshot tempResult = task.getResult();
+                                                for (DocumentSnapshot tempDocSnap : tempResult){
+                                                    CommentInfo tempUpdateComment = tempDocSnap.toObject(CommentInfo.class);
+                                                    DocumentReference tempDocRef = db.collection("BulletinBoard").document(newDid).collection("Comments").document(tempUpdateComment.getWrittenTime()+tempUpdateComment.getName());
+
+                                                    batch.set(tempDocRef, tempUpdateComment);
+                                                }
+                                                batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
-                                                    public void onSuccess(Void unused) {
-                                                        Log.d(TAG, "삭제 성공");
-                                                        editItemDialog.dismiss();
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            Log.e(TAG, "tag add sucess");
+                                                            titleTextViewBoardItem.setText(titleItemEditText.getText().toString());
+                                                            contentTextViewBoardItem.setText(contentItemEditText.getText().toString());
+                                                            tagTextViewBoardItem.setText(tagTextViewBoardItem.getText().toString()+" "+tagItemEditText.getText().toString());
+                                                            titleItemEditText.setText("");
+                                                            tagItemEditText.setText("");
+                                                            contentItemEditText.setText("");
+                                                            db.collection("BulletinBoard").document(did).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void unused) {
+                                                                    Log.d(TAG, "삭제 성공");
+                                                                    editItemDialog.dismiss();
+                                                                }
+                                                            });
+
+                                                        }
                                                     }
                                                 });
-
                                             }
                                         }
                                     });
-                                }
-                            });
-
-                            db.collection("BulletinBoard").document(did).update("title",titleItemEditText.getText().toString(), "content",contentItemEditText.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-
 
                                 }
                             });
+
+//
                         }
                     });
                     break;
@@ -286,8 +306,6 @@ public class BoardItemFragment extends Fragment {
                     newCommentDialog.show();
 
                     ImageButton newCommentDone = newCommentDialog.findViewById(R.id.newCommentDone);
-                    RadioButton secret = newCommentDialog.findViewById(R.id.secret);
-                    RadioButton notsecret = newCommentDialog.findViewById(R.id.notsecret);
                     RadioGroup secretGroup = newCommentDialog.findViewById(R.id.secretGroup);
                     EditText newCommentEditText= newCommentDialog.findViewById(R.id.newCommentEditText);
 
@@ -295,12 +313,12 @@ public class BoardItemFragment extends Fragment {
                         @Override
                         public void onClick(View view) {
                             String curTime = getTime();
-                            CommentInfo newComment = new CommentInfo(newCommentEditText.getText().toString(), nameTextViewBoardItem.getText().toString(), curTime);
+                            CommentInfo newComment = new CommentInfo(newCommentEditText.getText().toString(), userNickName, curTime);
                             if (secretGroup.getCheckedRadioButtonId() == R.id.secret){
                                 newComment.setSecret(true);
                             }
 
-                            db.collection("BulletinBoard").document(did).collection("Comments").document(curTime+nameTextViewBoardItem.getText().toString()).set(newComment).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            db.collection("BulletinBoard").document(timeTextView.getText().toString()+" "+titleTextViewBoardItem.getText().toString()).collection("Comments").document(curTime+nameTextViewBoardItem.getText().toString()).set(newComment).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     commentListViewAdapter.addComment(newComment);
@@ -323,7 +341,7 @@ public class BoardItemFragment extends Fragment {
                                 for (DocumentSnapshot document : documentSnapshot) {
                                     if (document.exists()) {
                                         Log.d(TAG,document.getId());
-                                        if (did.equals(document.getId())){
+                                        if ((timeTextView.getText().toString()+" "+titleTextViewBoardItem.getText().toString()).equals(document.getId())){
                                             notLiked = false;
                                             break;
                                         }
@@ -351,12 +369,12 @@ public class BoardItemFragment extends Fragment {
 
 
     public void addToLikedItem(String title){
-         db.collection("Users").document(curUser.getUid()).collection("likedBoardItem").document(did).set(new LikedBoardItem(title, did)).addOnCompleteListener(new OnCompleteListener<Void>() {
+         db.collection("Users").document(curUser.getUid()).collection("likedBoardItem").document(timeTextView.getText().toString()+" "+titleTextViewBoardItem.getText().toString()).set(new LikedBoardItem(title, titleTextViewBoardItem.getText().toString()+" "+titleTextViewBoardItem.getText().toString())).addOnCompleteListener(new OnCompleteListener<Void>() {
              @Override
              public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     Log.d(TAG, "successfully added");
-                    db.collection("BulletinBoard").document(did).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    db.collection("BulletinBoard").document(timeTextView.getText().toString()+" "+titleTextViewBoardItem.getText().toString()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if (task.isSuccessful()){
@@ -364,7 +382,7 @@ public class BoardItemFragment extends Fragment {
                                 if (documentSnapshot.exists()){
                                     curLike = (Long) documentSnapshot.getData().get("likedCount");
                                     updateLike = curLike+1;
-                                    db.collection("BulletinBoard").document(did).update("likedCount", updateLike).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    db.collection("BulletinBoard").document(timeTextView.getText().toString()+" "+titleTextViewBoardItem.getText().toString()).update("likedCount", updateLike).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             Log.d(TAG,"liked done");
