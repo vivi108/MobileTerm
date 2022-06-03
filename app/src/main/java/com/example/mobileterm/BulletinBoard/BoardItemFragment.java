@@ -368,7 +368,7 @@ public class BoardItemFragment extends Fragment {
 
 
     public void addToLikedItem(String title){
-         db.collection("Users").document(curUser.getUid()).collection("likedBoardItem").document(timeTextView.getText().toString()+" "+titleTextViewBoardItem.getText().toString()).set(new LikedBoardItem(title, titleTextViewBoardItem.getText().toString()+" "+titleTextViewBoardItem.getText().toString())).addOnCompleteListener(new OnCompleteListener<Void>() {
+         db.collection("Users").document(curUser.getUid()).collection("likedBoardItem").document(timeTextView.getText().toString()+" "+titleTextViewBoardItem.getText().toString()).set(new LikedBoardItem(title, timeTextView.getText().toString()+" "+titleTextViewBoardItem.getText().toString())).addOnCompleteListener(new OnCompleteListener<Void>() {
              @Override
              public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {

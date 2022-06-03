@@ -17,6 +17,8 @@ import androidx.annotation.Nullable;
 import com.example.mobileterm.R;
 import com.example.mobileterm.StudyGroup.vo.JoinedStudyVo;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,7 @@ public class JoinedStudyAdapter extends ArrayAdapter {
         public TextView tv_joined_study_name;
         public TextView tv_joined_study_member;
         public TextView tv_joined_tag;
+        public TextView studyDescription;
     }
 
     public JoinedStudyAdapter(Context context, ArrayList list){
@@ -51,12 +54,14 @@ public class JoinedStudyAdapter extends ArrayAdapter {
         viewHolder.tv_joined_study_name = (TextView) convertView.findViewById(R.id.tv_joined_study_name);
         viewHolder.tv_joined_study_member = (TextView) convertView.findViewById(R.id.tv_joined_study_member);
         viewHolder.tv_joined_tag = (TextView) convertView.findViewById(R.id.tv_joined_tag);
+        viewHolder.studyDescription = (TextView) convertView.findViewById(R.id.studyDescription);
 
         final JoinedStudyVo joinedStudy = (JoinedStudyVo) list.get(position);
         viewHolder.tv_joined_study_name.setText(joinedStudy.getStudyName());
         viewHolder.tv_joined_study_member.setText(joinedStudy.getStudyCapacity());
         viewHolder.tv_joined_tag.setText(joinedStudy.getTags());
         viewHolder.tv_joined_study_name.setTag(joinedStudy.getStudyName());
+        viewHolder.studyDescription.setText(joinedStudy.getDescription());
 
         return convertView;
     }

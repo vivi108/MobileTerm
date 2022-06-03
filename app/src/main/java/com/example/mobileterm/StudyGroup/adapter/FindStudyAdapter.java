@@ -5,6 +5,7 @@ import static android.view.View.GONE;
 import android.content.Context;
 import android.media.Image;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,88 +15,149 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.example.mobileterm.R;
+import com.example.mobileterm.StudyGroup.LikedStudyInfo;
+import com.example.mobileterm.StudyGroup.StudyInfo;
 import com.example.mobileterm.StudyGroup.vo.FindStudyVo;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FindStudyAdapter  extends ArrayAdapter {
+public class FindStudyAdapter  extends BaseAdapter {
 
     private Context context;
-    private List list;
+    private ArrayList<StudyInfo> dataList;
+    private ArrayList<StudyInfo> itemList;
+    private ArrayList<String> likedStudies;
 
-    class ViewHolder{
-        public TextView tv_find_study_name;
-        public TextView tv_find_study_member;
-        public TextView tv_find_study_tag;
-        public TextView tv_find_study_description;
-        public ImageView iv_find_study_locked;
-        public ImageButton btn_find_study_liked;
-    }
+    private String TAG = "find study adapter";
 
-    public FindStudyAdapter(Context context, ArrayList list){
-        super(context, 0, list);
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+    private FirebaseUser user;
+    public FindStudyAdapter(Context context, ArrayList<StudyInfo> list, ArrayList<String> likedStudies){
         this.context = context;
-        this.list = list;
+        this.dataList = new ArrayList<StudyInfo>();
+        this.dataList.addAll(list);
+        this.likedStudies = new ArrayList<String>();
+        this.likedStudies.addAll(likedStudies);
+        Log.d(TAG, "list size"+dataList.size());
+
     }
 
     @Override
+    public int getCount() {
+        return dataList.size();
+    }
+
+    @Override
+    public StudyInfo getItem(int i) {
+        return dataList.get(i);
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
+
     public View getView(int position, View convertView, ViewGroup parent) {
-        final ViewHolder viewHolder;
+        final Context context = parent.getContext();
         String ID;
-
-        if(convertView == null){
-            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+        if(convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.custom_item_study_find, parent, false);
+        }else{
+            View view = new View(context);
+            view = convertView;
+        }
+        TextView tv_find_study_name = convertView.findViewById(R.id.tv_find_study_name);
+        TextView tv_find_study_member = convertView.findViewById(R.id.tv_find_study_member);
+        TextView tv_find_study_tag = convertView.findViewById(R.id.tv_find_study_tag);
+        TextView tv_find_study_description = convertView.findViewById(R.id.tv_find_study_description);
+        ImageView iv_find_study_locked = convertView.findViewById(R.id.iv_find_study_locked);
+        ImageButton btn_find_study_liked = convertView.findViewById(R.id.btn_find_study_liked);
+
+
+
+        btn_find_study_liked.setFocusable(false);
+
+        StudyInfo findStudy = (StudyInfo) dataList.get(position);
+        tv_find_study_name.setText(findStudy.getStudyName());
+        tv_find_study_member.setText(Long.toString(findStudy.getMaxNumPeople()));
+        tv_find_study_tag.setText(findStudy.getTags());
+        tv_find_study_description.setText(findStudy.getDescription());
+        if(findStudy.isOpened()){
+            iv_find_study_locked.setVisibility(View.GONE);
+        }
+        else {
+            iv_find_study_locked.setVisibility(View.VISIBLE);
+        }
+        if (likedStudies.contains(findStudy.getStudyName())) {
+            btn_find_study_liked.setImageResource(R.drawable.ic_heart_filled);
+        }else{
+            btn_find_study_liked.setImageResource(R.drawable.ic_heart);
         }
 
-        viewHolder = new ViewHolder();
-        viewHolder.tv_find_study_name = convertView.findViewById(R.id.tv_find_study_name);
-        viewHolder.tv_find_study_member = convertView.findViewById(R.id.tv_find_study_member);
-        viewHolder.tv_find_study_tag = convertView.findViewById(R.id.tv_find_study_tag);
-        viewHolder.tv_find_study_description = convertView.findViewById(R.id.tv_find_study_description);
-        viewHolder.iv_find_study_locked = convertView.findViewById(R.id.iv_find_study_locked);
-        viewHolder.btn_find_study_liked = convertView.findViewById(R.id.btn_find_study_liked);
-
-        viewHolder.btn_find_study_liked.setFocusable(false);
-
-        final FindStudyVo findStudy = (FindStudyVo) list.get(position);
-        viewHolder.tv_find_study_name.setText(findStudy.getStudyName());
-        viewHolder.tv_find_study_member.setText(findStudy.getStudyCapacity());
-        viewHolder.tv_find_study_tag.setText(findStudy.getTags());
-        viewHolder.tv_find_study_description.setText(findStudy.getDescription());
-        if(findStudy.getIsOpened() == "open"){
-            viewHolder.iv_find_study_locked.setVisibility(View.GONE);
-        }
-        else if(findStudy.getIsOpened() == "closed"){
-            viewHolder.iv_find_study_locked.setVisibility(View.VISIBLE);
-        }
-
-        if(findStudy.getIsLiked() == "false"){
-            viewHolder.btn_find_study_liked.setImageResource(R.drawable.ic_heart);
-        }
-        else if(findStudy.getIsLiked() == "true"){
-            viewHolder.btn_find_study_liked.setImageResource(R.drawable.ic_heart_filled);
-        }
-
-        viewHolder.btn_find_study_liked.setOnClickListener(new View.OnClickListener() {
+        tv_find_study_name.setTag("xptmxm");
+        btn_find_study_liked.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(findStudy.getIsLiked() == "true"){
-                    viewHolder.btn_find_study_liked.setImageResource(R.drawable.ic_heart);
-                    findStudy.setIsLiked("false");
-                }
-                else if(findStudy.getIsLiked() == "false"){
-                    viewHolder.btn_find_study_liked.setImageResource(R.drawable.ic_heart_filled);
-                    findStudy.setIsLiked("true");
-                }
+                Log.d(TAG,position+" liked clicked");
+                if (!likedStudies.contains(findStudy.getStudyName())){
+                    btn_find_study_liked.setImageResource(R.drawable.ic_heart_filled);
+                    // 디비 업데이트하고 유저에 츄가해줘야함, 음 그냥 좋아요니까 유저에만 추가해주면 될듯하네
+                    String sid = "";
+                    if (findStudy.isOpened()) {
+                        sid = "open ";
+                    }else{
+                        sid = "close ";
+                    }
+                    sid += findStudy.getStudyName();
+                    LikedStudyInfo newLiked = new LikedStudyInfo(sid, findStudy.getStudyName());
+                    db.collection("Users").document(user.getUid()).collection("likedStudy").document(sid).set(newLiked).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Log.d(TAG,"관심스터디 등록성공");
+                        }
+                    });
+               }
             }
         });
 
-        ID = findStudy.getIsOpened() + " " + findStudy.getStudyName();
+//        if(findStudy.getIsLiked() == "false"){
+//            viewHolder.btn_find_study_liked.setImageResource(R.drawable.ic_heart);
+//        }
+//        else if(findStudy.getIsLiked() == "true"){
+//            viewHolder.btn_find_study_liked.setImageResource(R.drawable.ic_heart_filled);
+//        }
 
-        viewHolder.tv_find_study_name.setTag(ID);
+//        viewHolder.btn_find_study_liked.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(findStudy.getIsLiked() == "true"){
+//                    viewHolder.btn_find_study_liked.setImageResource(R.drawable.ic_heart);
+//                    findStudy.setIsLiked("false");
+//                }
+//                else if(findStudy.getIsLiked() == "false"){
+//                    viewHolder.btn_find_study_liked.setImageResource(R.drawable.ic_heart_filled);
+//                    findStudy.setIsLiked("true");
+//                }
+//            }
+//        });
+//
+//        ID = findStudy.getIsOpened() + " " + findStudy.getStudyName();
+
+//        viewHolder.tv_find_study_name.setTag(ID);
 
         return convertView;
     }

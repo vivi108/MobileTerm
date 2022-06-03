@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -16,8 +18,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
+import com.example.mobileterm.MainActivity;
 import com.example.mobileterm.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -29,14 +32,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-
-public class StudyMakeActivity extends AppCompatActivity {
+public class StudyMakeFragment extends Fragment {
     ImageButton imgbtn_make_study_cancel, btn_make_study_show_pw;
     EditText et_make_study_name, et_make_study_set_member, pt_entrance_pw, et_make_study_tag, et_make_study_description;
     RadioGroup rdg_make_study_open;
@@ -53,41 +52,42 @@ public class StudyMakeActivity extends AppCompatActivity {
     Activity activity;
     Intent intent = null;
     String myNickName;
-
+    MainActivity mainActivity;
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_study_new_study);
-        init();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.activity_study_new_study, container, false);
+        mainActivity = (MainActivity) getActivity();
+        myNickName = mainActivity.sendUserNickname();
+        imgbtn_make_study_cancel = rootView.findViewById(R.id.imgbtn_make_study_cancel);
+        btn_make_study_show_pw = rootView.findViewById(R.id.btn_make_study_show_pw);
+        et_make_study_name = rootView.findViewById(R.id.et_make_study_name);
+        et_make_study_set_member = rootView.findViewById(R.id.et_make_study_set_member);
+        pt_entrance_pw = rootView.findViewById(R.id.pt_entrance_pw);
+        et_make_study_tag = rootView.findViewById(R.id.et_make_study_tag);
+        et_make_study_description = rootView.findViewById(R.id.et_make_study_description);
+        rdg_make_study_open = rootView.findViewById(R.id.rdg_make_study_open);
+        btn_make_study_make = rootView.findViewById(R.id.btn_make_study_make);
+        btn_make_study_cancel = rootView.findViewById(R.id.btn_make_study_cancel);
+        ll_make_study_closed_pw = rootView.findViewById(R.id.ll_make_study_closed_pw);
+        user = FirebaseAuth.getInstance().getCurrentUser();
         setting();
         addListener();
+
+        return rootView;
     }
 
-    private void init(){
-        activity = this;
 
-        imgbtn_make_study_cancel = findViewById(R.id.imgbtn_make_study_cancel);
-        btn_make_study_show_pw = findViewById(R.id.btn_make_study_show_pw);
-        et_make_study_name = findViewById(R.id.et_make_study_name);
-        et_make_study_set_member = findViewById(R.id.et_make_study_set_member);
-        pt_entrance_pw = findViewById(R.id.pt_entrance_pw);
-        et_make_study_tag = findViewById(R.id.et_make_study_tag);
-        et_make_study_description = findViewById(R.id.et_make_study_description);
-        rdg_make_study_open = findViewById(R.id.rdg_make_study_open);
-        btn_make_study_make = findViewById(R.id.btn_make_study_make);
-        btn_make_study_cancel = findViewById(R.id.btn_make_study_cancel);
-        ll_make_study_closed_pw = findViewById(R.id.ll_make_study_closed_pw);
-        user = FirebaseAuth.getInstance().getCurrentUser();
-    }
 
     private void setting(){
         ll_make_study_closed_pw.setVisibility(View.GONE);
         btn_make_study_show_pw.setImageResource(R.drawable.ic_eye_opened);
         i = 0;
-        getName(user);
-        if(user != null){
-            uid = user.getUid();
-        }
     }
 
     private void addListener(){
@@ -101,7 +101,7 @@ public class StudyMakeActivity extends AppCompatActivity {
     private View.OnClickListener Listener_cancel_make_study = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            finish();
+            mainActivity.onFragmentChanged(300);
         }
     };
 
@@ -135,19 +135,23 @@ public class StudyMakeActivity extends AppCompatActivity {
         }
     };
 
+
     private View.OnClickListener Listener_make_study = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             String openORnot = null;
+            boolean isOpen = true;
             String password = null;
             String getStudyName = et_make_study_name.getText().toString();
             String getMembers = et_make_study_set_member.getText().toString();
             if (ll_make_study_closed_pw.getVisibility() == View.GONE){
                 openORnot = "open";
+
             }
             else if(ll_make_study_closed_pw.getVisibility() == View.VISIBLE){
                 openORnot = "close";
                 password = pt_entrance_pw.getText().toString();
+                isOpen = false;
             }
             String tags = et_make_study_tag.getText().toString();
             String description = et_make_study_description.getText().toString();
@@ -164,19 +168,21 @@ public class StudyMakeActivity extends AppCompatActivity {
             study.put("memberList", myNickName + "/");
             // study.put("studyID", ID);
             study.put("tags", tags);
+
+            StudyInfo newStudy = new StudyInfo(description, myNickName, Long.parseLong(getMembers), isOpen, getStudyName, tags);
             db.collection("Study").document(ID)
-                    .set(study).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused) {
-                    Log.d(TAG, "Make Study Success!");
-                    Toast.makeText(activity, "Make study success!", Toast.LENGTH_SHORT);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    e.printStackTrace();
-                }
-            });
+                    .set(newStudy).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Log.d(TAG, "Make Study Success!");
+//                            Toast.makeText(activity, "Make study success!", Toast.LENGTH_SHORT);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
 
             String[] tag = tags.split(" ");
             // 파이어베이스에서 태그 컬렉션 읽어오기 -> 태그와 일치하는 문서 필드에 스터디 이름 저장(구분자 : /)
@@ -189,8 +195,8 @@ public class StudyMakeActivity extends AppCompatActivity {
                     case "#대외활동":
                     case "#취업/면접":
                     case "#어학":
-                        db.collection("StudyTags").document(tag[i])
-                                .set(study).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        db.collection("StudyTags").document(tag[i]).collection("Studies").document(getStudyName)
+                                .set(newStudy).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
                                     }
@@ -203,27 +209,9 @@ public class StudyMakeActivity extends AppCompatActivity {
                         break;
                 }
             }
-            finish(); // 화면 재실행 가능하도록 구현
+            mainActivity.onFragmentChanged(300);
         }
     };
-
-    private void getName(FirebaseUser firebaseUser) {
-        DocumentReference documentReference = db.collection("Users").document(firebaseUser.getUid());
-        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document != null) {
-                        if (document.exists()) {
-                            String a = (String) document.getData().get("nickname");
-                            myNickName = a;
-                        }
-                    }
-                }
-            }
-        });
-    }
 
     public String sendStudyID(){
         String openORnot = null;
