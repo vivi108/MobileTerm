@@ -156,7 +156,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.btn_make_study_make:
                 intent = new Intent(getActivity(), StudyMakeActivity.class);
-                startActivity(intent);
+                startActivity(intent); // 생성 버튼 클릭 -> 자동 반영을 위한 코드 작성 필요
                 break;
         }
 

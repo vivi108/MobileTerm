@@ -179,7 +179,24 @@ public class StudyMakeActivity extends AppCompatActivity {
                 }
             });
 
-            //add2List(ID, myNickName);
+            String[] tag = tags.split(" ");
+            // 파이어베이스에서 태그 컬렉션 읽어오기 -> 태그와 일치하는 문서 필드에 스터디 이름 저장(구분자 : /)
+            for(int i = 0; i < tag.length; i++){
+                db.collection("Study").document("Study")
+                        .collection("Tags").document(tag[i])
+                        .set(study).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "Make Study Success!");
+                        Toast.makeText(activity, "Make study success!", Toast.LENGTH_SHORT);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                                e.printStackTrace();
+                            }
+                });
+            }
             finish();
         }
     };
