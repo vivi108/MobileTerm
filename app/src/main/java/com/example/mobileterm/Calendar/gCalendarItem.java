@@ -15,14 +15,8 @@ public class gCalendarItem {
         this.time = time;
         this.docA = docA;
         this.place = place;
-
     }
 
-    public gCalendarItem(String schedule, String date, String time) {
-        this.schedule = schedule;
-        this.date = date;
-        this.time = time;
-    }
 
 
     public gCalendarItem(String str) { this.schedule = str; } //일단 이걸로 테스ㅡ트

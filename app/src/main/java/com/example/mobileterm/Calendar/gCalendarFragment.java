@@ -2,12 +2,16 @@ package com.example.mobileterm.Calendar;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.nfc.Tag;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +57,7 @@ public class gCalendarFragment extends Fragment {
     private FirebaseUser curUser;
     private HashMap<String, ArrayList<gCalendarItem>> dateTable = new HashMap<String, ArrayList<gCalendarItem>>();
 
+
     private ListView listview;
     private gCalendarAdapter adapter;
 
@@ -76,7 +81,7 @@ public class gCalendarFragment extends Fragment {
         curUser = mAuth.getCurrentUser();
 
         //현재 들어와있는 그룹원만의 그룹스케줄
-        CollectionReference docref = db.collection("Study").document().collection("gSchedule");
+        CollectionReference docref = db.collection("Schedule").document("aGroup").collection("gSchedule");
 
         //위 라디오버튼
         ctype.check(radGroup.getId());
@@ -162,60 +167,100 @@ public class gCalendarFragment extends Fragment {
                                     for (gCalendarItem itr : dateTable.get(calendarDate)){ //이 날짜에 어떤 어레이리스트 있나 출력
                                         Log.d(TAG,"item : "+itr.getDate()+" "+itr.getSchedule()+ " " + itr.getTime());
                                     }
-
-                                    contextEditText.setText("");
+                                    adapter = new gCalendarAdapter(dateTable.get(calendarDate)); //어댑터에 이 날짜 해당 데이터 다 넘겨줌
+                                    listview.setAdapter(adapter); //리스트뷰에 보이도록 함
                                 }
                             }
                         });
 
 
 
-                //추가 버튼 -> 저장 버튼 로직으로
+//                //추가 버튼 -> 저장 버튼 로직으로
+//                add_Btn.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        //추가 눌리면 edit과 저장버튼만 보이게 해주는거..
+//                        //이전에 있던 일정이 edit에선 안보였다가 txtview에선 추가되어 보이도록
+//                        contextEditText.setVisibility(View.VISIBLE);
+//                        contextEditText.setText("");
+//                        diaryTextView.setVisibility(View.VISIBLE);
+//
+//                        listview.setVisibility(View.INVISIBLE);
+//                        save_Btn.setVisibility(View.VISIBLE);
+//                        add_Btn.setVisibility(View.INVISIBLE);
+//                    }
+//                });
+
+
                 add_Btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
+
+                    String Schedule;
+                    String Date;
+                    String time;
+                    String docA;
+                    String place;
+
+                    @Override //추가 버튼 클릭 시
                     public void onClick(View view) {
-                        //추가 눌리면 edit과 저장버튼만 보이게 해주는거..
-                        //이전에 있던 일정이 edit에선 안보였다가 txtview에선 추가되어 보이도록
-                        contextEditText.setVisibility(View.VISIBLE);
-                        contextEditText.setText("");
-                        diaryTextView.setVisibility(View.VISIBLE);
+                        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit, null);
+                         EditText placeEdit = (EditText)dialogView.findViewById(R.id.placeEdit);
+                         EditText timeEdit = (EditText)dialogView.findViewById(R.id.timeEdit);
+                         EditText scheduleEdit = (EditText)dialogView.findViewById(R.id.scheduleEdit);
 
-                        listview.setVisibility(View.INVISIBLE);
-                        save_Btn.setVisibility(View.VISIBLE);
-                        add_Btn.setVisibility(View.INVISIBLE);
-                    }
-                });
+                        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogTheme));
+                        builder.setView(dialogView);
 
 
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int pos) {
+                                        Schedule = scheduleEdit.getText().toString();
+                                        time = timeEdit.getText().toString();
+                                        place = placeEdit.getText().toString();
+                                        Date = calendarDate; //일정 쓴 날짜겠지
+                                        docA = Date +" "+ Schedule;
+                                        Log.d("gfrag 1 - ", " schdule:" + Schedule +" time:"+ time + " place:"+ place);
+                                        gCalendarItem newItem = new gCalendarItem(Schedule, Date, time, docA, place);
 
-                //저장 버튼 클릭 시 -> 에딧텍스트에 일정 넣고 저장하면 그 날에 일정에 당연히 추가되고 리스트뷰로 그 날에 있는 모든 일정 보여주기
-                add_Btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        str = contextEditText.getText().toString(); //일정을 쓰면 그 내용이 str로 할당
+                                        docref
+                                                .document(Date +" "+ Schedule)
+                                                .set(newItem).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Log.d("gfrag 2 - ", " schdule:" + Schedule +" time:"+ time + " place:"+ place);
+                                                }
+                                            }
+                                        });
+                                        dateTable.get(calendarDate).add(newItem);
+                                    }
+                                });
 
-                        //컬렉션에 넣을 준비
-                        String Schedule = str;
-                        String Date = calendarDate; //일정 쓴 날짜겠지
-                        String time = ""; //어떻게 받아올까
-                        String docA = Date +" "+ Schedule;
-                        String place = ""; //어떻게 받아올까
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
 
-                        gCalendarItem newItem = new gCalendarItem(Schedule, Date, time, docA, place);
+
+//                        //컬렉션에 넣을 준비
+//                        Date = calendarDate; //일정 쓴 날짜겠지
+//                        docA = Date +" "+ Schedule;
+//                        Log.d("gfrag 228", "  " + Date + docA);
+
+
+                        //gCalendarItem newItem = new gCalendarItem(Schedule, Date, time, docA, place);
 
                         //에딧텍스트 일정을 db 컬렉션에 넣음 - user 안 iSchedule 컬렉션에
-                        docref
-                                .document(Date +" "+ Schedule)
-                                .set(newItem).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "successfully added");
-                                }
-                            }
-                        });
+//                        docref
+//                                .document(Date +" "+ Schedule)
+//                                .set(newItem).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                if (task.isSuccessful()) {
+//                                    Log.d("gfrag 240", " schdule:" + Schedule +" time:"+ time + " place:"+ place);
+//                                }
+//                            }
+//                        });
 
-                        dateTable.get(calendarDate).add(newItem);
+//                        dateTable.get(calendarDate).add(newItem);
+
 
 
                         //저장 버튼을 클릭 한 후 - 저장버튼과 edittext 안보이고 / 수정, 삭제 버튼, 일정 보여주는 거 보이게함
@@ -224,6 +269,8 @@ public class gCalendarFragment extends Fragment {
                         contextEditText.setVisibility(View.INVISIBLE);
                         listview.setVisibility(View.VISIBLE);
                     }
+
+
                 });
             }
         });
