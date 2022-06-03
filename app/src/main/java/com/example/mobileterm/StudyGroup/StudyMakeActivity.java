@@ -164,8 +164,7 @@ public class StudyMakeActivity extends AppCompatActivity {
             study.put("memberList", myNickName + "/");
             // study.put("studyID", ID);
             study.put("tags", tags);
-            db.collection("Study").document("Study")
-                    .collection("StudyName").document(ID)
+            db.collection("Study").document(ID)
                     .set(study).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
@@ -182,22 +181,29 @@ public class StudyMakeActivity extends AppCompatActivity {
             String[] tag = tags.split(" ");
             // 파이어베이스에서 태그 컬렉션 읽어오기 -> 태그와 일치하는 문서 필드에 스터디 이름 저장(구분자 : /)
             for(int i = 0; i < tag.length; i++){
-                db.collection("Study").document("Study")
-                        .collection("Tags").document(tag[i])
-                        .set(study).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG, "Make Study Success!");
-                        Toast.makeText(activity, "Make study success!", Toast.LENGTH_SHORT);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                                e.printStackTrace();
-                            }
-                });
+                switch (tag[i]){
+                    case "#공무원":
+                    case "#자격증":
+                    case "#토익":
+                    case "#전공":
+                    case "#대외활동":
+                    case "#취업/면접":
+                    case "#어학":
+                        db.collection("StudyTags").document(tag[i])
+                                .set(study).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                });
+                        break;
+                }
             }
-            finish();
+            finish(); // 화면 재실행 가능하도록 구현
         }
     };
 
@@ -219,5 +225,17 @@ public class StudyMakeActivity extends AppCompatActivity {
         });
     }
 
+    public String sendStudyID(){
+        String openORnot = null;
+        if (ll_make_study_closed_pw.getVisibility() == View.GONE){
+            openORnot = "open";
+        }
+        else if(ll_make_study_closed_pw.getVisibility() == View.VISIBLE){
+            openORnot = "close";
+        }
+        String getStudyName = et_make_study_name.getText().toString();
+        String ID = openORnot + " " + getStudyName;
 
+        return ID;
+    }
 }

@@ -71,18 +71,17 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         studies = new ArrayList<>();
         joinedStudies = new ArrayList<>();
         myNickName = mainActivity.sendUserNickname();
-
+        StudyMakeFragment studyMakeFragment = new StudyMakeFragment();
+        String StudyID = studyMakeFragment.sendStudyID();
 
 
 
         Log.d(TAG, "myNickName : " + myNickName); // 닉네임 로그 출력시 에러 닉네임에 저장은 되어 있으나 출력은 안되는 것으로 확인됨
 
-        CollectionReference collectionReference = db.collection("Study").document("Study")
-                .collection("StudyName");
-
-        collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        DocumentReference documentReference = db.collection("Study").document(StudyID);
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         //document.getData() or document.getId() 등등 여러 방법으로
@@ -109,9 +108,11 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                     lv_study_joined.setAdapter(adapter);
                 }
             }
-        });
 
-        lv_study_joined = (ListView) rootView.findViewById(R.id.lv_study_joined);
+            });
+        })
+
+                lv_study_joined = (ListView) rootView.findViewById(R.id.lv_study_joined);
 
         btn_find_study = rootView.findViewById(R.id.btn_find_study);
         btn_make_study_make = rootView.findViewById(R.id.btn_make_study_make);
