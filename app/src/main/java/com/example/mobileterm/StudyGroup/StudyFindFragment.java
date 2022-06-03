@@ -38,8 +38,8 @@ public class StudyFindFragment extends Fragment {
     Button btn_tag0, btn_tag1, btn_tag2, btn_tag3, btn_tag4, btn_tag5, btn_tag6, btn_tag7;
 
     ListView lv_study_find;
-    private ArrayList<FindStudyVo> studies = new ArrayList<FindStudyVo>();
-    private ArrayList<FindStudyVo> showStudies;
+    private ArrayList<StudyInfo> studies = new ArrayList<StudyInfo>();
+    private ArrayList<StudyInfo> showStudies;
     private HashMap<Integer, String> buttonMap;
     private FindStudyAdapter adapter;
 

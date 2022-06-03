@@ -15,15 +15,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.mobileterm.R;
+import com.example.mobileterm.StudyGroup.StudyInfo;
 import com.example.mobileterm.StudyGroup.vo.FindStudyVo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FindStudyAdapter  extends ArrayAdapter {
+public class FindStudyAdapter  extends BaseAdapter {
 
     private Context context;
-    private List list;
+    private ArrayList<StudyInfo> datalist;
+    private ArrayList<StudyInfo> itemList;
 
     class ViewHolder{
         public TextView tv_find_study_name;
@@ -34,10 +36,10 @@ public class FindStudyAdapter  extends ArrayAdapter {
         public ImageButton btn_find_study_liked;
     }
 
-    public FindStudyAdapter(Context context, ArrayList list){
-        super(context, 0, list);
+    public FindStudyAdapter(Context context, ArrayList<StudyInfo> list){
         this.context = context;
-        this.list = list;
+        this.dataList = new ArrayList<StudyInfo>();
+        this.datalist.addAll(list);
     }
 
     @Override
