@@ -84,7 +84,7 @@ public class MyHomeFragment extends Fragment {
     String content ;
     String uName ;
     String wTime ;
-    FirebaseFirestore db;
+
     int[] cnt = new int[7]; //전체 할 일 개수
     int[] isDone_cnt = new int[7];
     //Firebase로 로그인한 사용자 정보 알기 위해
@@ -103,7 +103,7 @@ public class MyHomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_my_home, container, false);
-        db = FirebaseFirestore.getInstance();
+
         activity = (MainActivity) getActivity();
         joinStudy = new Dialog(getActivity());
         setting = (ImageView) rootView.findViewById(R.id.my_home_setting_iv);
@@ -238,8 +238,8 @@ public class MyHomeFragment extends Fragment {
     private ArrayList<String> memberList;
     //관심스터디의 child listview눌렀을때
     private void GetLikedStudyItem(FirebaseUser firebaseUser, String getID) {
-        //joinStudy = new Dialog(activity);
-        //myNickName = activity.sendUserNickname();
+        joinStudy = new Dialog(activity);
+
         Log.d("getchildid_getID", getID);
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
         DocumentReference documentReference = fb.collection("Study").document(getID);
@@ -283,7 +283,7 @@ public class MyHomeFragment extends Fragment {
                 public void onClick(View view) {
                     if ((maxNumPeople > newMem.size()) && !newMem.contains(myNickName)){
                         newMem.add(myNickName);
-                        db.collection("Study").document(getID).update("memberList", newMem).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        fb.collection("Study").document(getID).update("memberList", newMem).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 Log.d(TAG,"스터디조인성공함");
@@ -318,7 +318,7 @@ public class MyHomeFragment extends Fragment {
                 public void onClick(View view) {
                     if ((maxNumPeople > newMem.size()) && !newMem.contains(myNickName) && password.equals(pwd.getText().toString())){
                         newMem.add(myNickName);
-                        db.collection("Study").document(getID).update("memberList", newMem).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        fb.collection("Study").document(getID).update("memberList", newMem).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 Log.d(TAG,"스터디조인성공함");
@@ -326,7 +326,7 @@ public class MyHomeFragment extends Fragment {
                             }
                         });
                     }else{
-                        Toast.makeText(getContext(), "가득찬 스터디입니다.",Toast.LENGTH_LONG);
+                        Toast.makeText(requireActivity(), "가입할 수 없거나 이미 가입한 스터디입니다.",Toast.LENGTH_LONG);
                     }
                 }
             });
@@ -620,6 +620,7 @@ public class MyHomeFragment extends Fragment {
                         if (document.exists()) {
                             String a = (String) document.getData().get("nickname");
                             name.setText(a);
+                            myNickName=a;
                         }
                     }
                 }
