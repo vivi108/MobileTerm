@@ -67,6 +67,7 @@ public class gCalendarFragment extends Fragment {
     Dialog dialogShow;
     private ListView listview;
     private gCalendarAdapter adapter;
+    String TAG = "gCalendarFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup main_frame_layout, @Nullable Bundle savedInstanceState) {
@@ -118,10 +119,10 @@ public class gCalendarFragment extends Fragment {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 diaryTextView.setVisibility(View.VISIBLE);
-                save_Btn.setVisibility(View.INVISIBLE);
+                //save_Btn.setVisibility(View.INVISIBLE);
                 contextEditText.setVisibility(View.INVISIBLE);
                 listview.setVisibility(View.VISIBLE);
-                add_Btn.setVisibility(View.VISIBLE);
+                //add_Btn.setVisibility(View.VISIBLE);
                 diaryTextView.setText(String.format("%d / %d / %d", date.getYear(), date.getMonth() + 1, date.getDay())); //중간 일정 보여주는 텍스트뷰
                 ArrayList<gCalendarItem> newArrayList = new ArrayList<gCalendarItem>();
 
