@@ -56,15 +56,29 @@
             android:layout_margin="10dp"
             app:srcCompat="@drawable/ic_circle" />
 
-        <Button
+        <TextView
             android:id="@+id/btn_study_setting_groupCalender"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:text="공유 캘린더"
             android:textAlignment="textStart"
             android:textColor="@color/black"
             android:textSize="20dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="스케줄확인"
+            android:id="@+id/scheduleCheck"
+            android:layout_marginLeft="10dp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="스케줄 생성"
+            android:id="@+id/scheduleAdd"
+            android:layout_marginLeft="10dp"/>
 
     </LinearLayout>
 
@@ -89,6 +103,7 @@
             android:text="채팅"
             android:textAlignment="textStart"
             android:textColor="@color/black"
+            android:fontFamily="@font/kc_regular"
             android:textSize="20dp" />
 
     </LinearLayout>
