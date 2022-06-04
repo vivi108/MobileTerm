@@ -45,6 +45,7 @@ public class StudyFindFragment extends Fragment {
     ListView lv_study_find;
     private ArrayList<StudyInfo> studies = new ArrayList<StudyInfo>();
     private ArrayList<StudyInfo> showStudies;
+    private ArrayList<StudyInfo> notSameDis;
     private ArrayList<String> likedStudies;
     private HashMap<Integer, String> buttonMap;
     private FindStudyAdapter adapter;
@@ -64,6 +65,7 @@ public class StudyFindFragment extends Fragment {
     MainActivity activity;
     FirebaseAuth mAuth;
     String myNickName;
+    String uAddress;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,11 +80,13 @@ public class StudyFindFragment extends Fragment {
         joinStudy = new Dialog(activity);
         showStudies = new ArrayList<StudyInfo>();
         likedStudies = new ArrayList<String>();
+        notSameDis = new ArrayList<StudyInfo>();
         buttonMap = new HashMap<Integer, String>();
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
         myNickName = activity.sendUserNickname();
+        uAddress = activity.sendUserAddress();
         studySearchButton = rootView.findViewById(R.id.studySearchButton);
         btn_studyfind_back = rootView.findViewById(R.id.btn_studyfind_back);
         et_search_study = rootView.findViewById(R.id.et_search_study);
@@ -130,12 +134,18 @@ public class StudyFindFragment extends Fragment {
                 if (task.isSuccessful()) {
                     QuerySnapshot querySnapshot = task.getResult();
                     for (DocumentSnapshot document : querySnapshot){
-                        if (document.exists()) {
+                        if (document.exists() ) {
                             Log.d(TAG,"스터디 읽기"+((String) document.getData().get("studyName")));
                             StudyInfo tempStudy = document.toObject(StudyInfo.class);
-                            showStudies.add(tempStudy);
+                            if (tempStudy.getAddress().equals(uAddress)){
+                                showStudies.add(tempStudy);
+                            }else{
+                                notSameDis.add(tempStudy);
+                            }
+
                         }
                     }
+                    showStudies.addAll(notSameDis);
                     db.collection("Users").document(user.getUid()).collection("likedStudy").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {

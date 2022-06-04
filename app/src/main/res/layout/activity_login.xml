@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:ems="10"
-            android:hint="예) onoff@onoff.co.kr"
+            android:hint="예) swu@swu.co.kr"
             android:inputType="textEmailAddress" />
         <TextView
             android:layout_width="wrap_content"

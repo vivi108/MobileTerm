@@ -89,6 +89,7 @@ public class FindStudyAdapter  extends BaseAdapter {
         TextView tv_find_study_description = convertView.findViewById(R.id.tv_find_study_description);
         ImageView iv_find_study_locked = convertView.findViewById(R.id.iv_find_study_locked);
         ImageButton btn_find_study_liked = convertView.findViewById(R.id.btn_find_study_liked);
+        TextView tv_find_study_address = convertView.findViewById(R.id.tv_find_study_address);
 
 
 
@@ -99,6 +100,7 @@ public class FindStudyAdapter  extends BaseAdapter {
         tv_find_study_member.setText(Long.toString(findStudy.getMaxNumPeople()));
         tv_find_study_tag.setText(findStudy.getTags());
         tv_find_study_description.setText(findStudy.getDescription());
+        tv_find_study_address.setText(findStudy.getAddress());
         if(findStudy.isOpened()){
             iv_find_study_locked.setVisibility(View.GONE);
             tv_find_study_name.setTag("open "+findStudy.getStudyName());

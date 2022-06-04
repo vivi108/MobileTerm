@@ -44,11 +44,15 @@ import com.example.mobileterm.StudyGroup.StudyGroupFragment;
 import com.example.mobileterm.StudyGroup.StudyMakeFragment;
 import com.example.mobileterm.StudyGroup.StudyPostFragment;
 import com.example.mobileterm.StudyGroup.WritePostFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -80,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
     private File tempFile;
 
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
     private FirebaseUser currentUser;
     private FirebaseStorage mStorage;
 
@@ -94,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
     private String studyTitle;
     private String pid;
     private String groupSchedule;
+    private String userAddress = "";
     private Uri photoUrl;
     private String phone;
     private int token;
@@ -121,6 +127,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        db = FirebaseFirestore.getInstance();
         mStorage = FirebaseStorage.getInstance();
         initiate_fragment();
         initiate_nav_menu();
@@ -419,7 +427,22 @@ public class MainActivity extends AppCompatActivity {
         }else if (index == 301){
             getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, studyMakeFragment).addToBackStack(null).commit();
         }else if (index == 302) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, studyFindFragment).addToBackStack(null).commit();
+            if (userAddress.length() > 0 ){
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, studyFindFragment).addToBackStack(null).commit();
+            }else{
+                db.collection("Users").document(currentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()){
+                            DocumentSnapshot document = task.getResult();
+                            userAddress = (String) document.getData().get("address");
+                            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, studyFindFragment).addToBackStack(null).commit();
+                        }
+                    }
+                });
+            }
+
+
         }else if (index == 400){
             getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, writePostFragment).addToBackStack(null).commit();
         }
@@ -492,6 +515,8 @@ public class MainActivity extends AppCompatActivity {
     public String sendGroupSchedule(){
         return groupSchedule;
     }
+
+    public String sendUserAddress() { return userAddress; }
 
 }
 
