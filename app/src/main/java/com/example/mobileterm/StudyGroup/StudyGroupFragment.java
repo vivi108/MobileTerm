@@ -126,12 +126,13 @@ public class StudyGroupFragment extends Fragment {
                         buttonEndGschedule.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                GScheduleInfo newSchedule = new GScheduleInfo(title, gscheduleTitleEditText.getText().toString(), gschedulePlaceEditText.getText().toString(), gscheduleTimeEditText.getText().toString(), gscheduleDayEditText.getText().toString());
+                                GScheduleInfo newSchedule = new GScheduleInfo(title, gscheduleTitleEditText.getText().toString(), gschedulePlaceEditText.getText().toString(), gscheduleTimeEditText.getText().toString(), gscheduleDayEditText.getText().toString(), title+gscheduleTitleEditText.getText().toString());
 
-                                db.collection("GSchedule").document().set(newSchedule).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                db.collection("GSchedule").document(title+gscheduleTitleEditText.getText().toString()).set(newSchedule).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         Log.d("그룹 스케줄 추가","성공");
+                                        newSchedule.setDocA(title+gscheduleTitleEditText.getText().toString());
                                         activity.onFragmentChanged(1,title);
                                         settingDialog.dismiss();
                                         gScheduleDialog.dismiss();

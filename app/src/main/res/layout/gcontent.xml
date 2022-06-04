@@ -7,12 +7,20 @@
     android:id="@+id/eachlist">
 
     <TextView
+        android:id="@+id/text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:text="스터디명"
+        android:textSize="20dp"
+        android:textColor="@color/black"/>
+
+    <TextView
         android:id="@+id/text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="일정명"
         android:textSize="20dp"
         android:textColor="@color/black"/>
-
 
 </LinearLayout>

@@ -6,6 +6,7 @@ public class GScheduleInfo {
     String place;
     String meetingTime;
     String meetingDay;
+    String DocA;
 
     public String getMeetingDay() {
         return meetingDay;
@@ -15,12 +16,13 @@ public class GScheduleInfo {
         this.meetingDay = meetingDay;
     }
 
-    public GScheduleInfo(String studyName, String scheduleName, String place, String meetingTime, String meetingDay) {
+    public GScheduleInfo(String studyName, String scheduleName, String place, String meetingTime, String meetingDay, String DocA) {
         this.studyName = studyName;
         this.scheduleName = scheduleName;
         this.place = place;
         this.meetingTime = meetingTime;
         this.meetingDay = meetingDay;
+        this.DocA = DocA;
     }
 
     public GScheduleInfo() {
@@ -57,4 +59,14 @@ public class GScheduleInfo {
     public void setMeetingTime(String meetingTime) {
         this.meetingTime = meetingTime;
     }
+
+    public String getDocA() {
+        return DocA;
+    }
+
+    public void setDocA (String DocA) {
+        this.DocA = DocA;
+    }
+
+
 }
