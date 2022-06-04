@@ -211,6 +211,13 @@ public class StudyMakeFragment extends Fragment {
                         break;
                 }
             }
+            et_make_study_name.setText("");
+            et_make_study_set_member.setText("");
+            pt_entrance_pw.setText("");
+            et_make_study_tag.setText("");
+            rdg_make_study_open.clearCheck();
+            et_make_study_description.setText("");
+            et_make_study_address.setText("");
             mainActivity.onFragmentChanged(300);
         }
     };
