@@ -204,7 +204,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:id="@+id/addCommentButtonBoardItem"
-            android:background="@drawable/write_icon"
+            android:background="@drawable/editing"
             android:layout_marginLeft="10dp"/>
 
 
