@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -90,7 +91,6 @@ public class gCalendarAdapter extends BaseAdapter {
 
         scheduleText.setText(a.getSchedule());
 
-
         LinearLayout eachlist = (LinearLayout) convertView.findViewById(R.id.eachlist);
         eachlist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,11 +102,39 @@ public class gCalendarAdapter extends BaseAdapter {
                 TextView placeText = (TextView)dialogShow.findViewById(R.id.placeText);
                 TextView timeText = (TextView)dialogShow.findViewById(R.id.timeText);
                 TextView scheduleText = (TextView)dialogShow.findViewById(R.id.scheduleText);
+                Button del_btn = (Button) dialogShow.findViewById(R.id.del_btn);
+                Button ok_btn = (Button) dialogShow.findViewById(R.id.ok_btn);
 
                 placeText.setText("장소 : " + a.getPlace());
                 timeText.setText("시간 : " +a.getTime());
                 scheduleText.setText("일정 : " +a.getSchedule());
 
+                del_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.d(TAG, "button delete");
+                        docref.document(docAA).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "successfully delete");
+                                    //더이상 이거 안보이도록
+                                    scheduleList.remove(a);
+                                    notifyDataSetChanged();
+                                    dialogShow.dismiss();
+                                    Toast.makeText(view.getContext(), "삭제 처리되었습니다", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                });
+
+                ok_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialogShow.dismiss();
+                    }
+                });
             }
         });
 

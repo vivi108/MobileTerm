@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/timeEdit"
-        android:hint="만날 시간을 입력하세요"
+        android:hint="만날 시간을 입력하세요 ex) 0830"
         android:inputType="textMultiLine"/>
 
 <!--    <ImageButton-->
