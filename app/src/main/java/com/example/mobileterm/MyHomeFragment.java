@@ -238,7 +238,7 @@ public class MyHomeFragment extends Fragment {
     private ArrayList<String> memberList;
     //관심스터디의 child listview눌렀을때
     private void GetLikedStudyItem(FirebaseUser firebaseUser, String getID) {
-        joinStudy = new Dialog(activity);
+        joinStudy = new Dialog(requireActivity());
 
         Log.d("getchildid_getID", getID);
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
@@ -259,16 +259,23 @@ public class MyHomeFragment extends Fragment {
                             Log.d("getchildid_tempTitle", tempTitle);
                             Log.d("getchildid _study", leader);
                             Log.d("getchildid _study", "" +maxNumPeople);
-                            Log.d("getchildid _study", ""+ opened);
+                            Log.d("getchildid _study", opened+"");
                             Log.d("getchildid _study", password);
                             Log.d("getchildid _study", memberList.toString());
-
+                            ApplyLikedStudy(user,getID);
                         }
                     }
                 }
             }
         });
 
+
+
+
+
+    }
+    private void ApplyLikedStudy(FirebaseUser firebaseUser, String getID){
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
         if (opened){
             joinStudy.setContentView(R.layout.dialog_join_open_study);
             joinStudy.show();
@@ -338,11 +345,7 @@ public class MyHomeFragment extends Fragment {
                 }
             });
         }
-
-
-
     }
-
     private void GetLikedBoardItem(FirebaseUser firebaseUser, String did) {
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
         fb.collection("BulletinBoard").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
