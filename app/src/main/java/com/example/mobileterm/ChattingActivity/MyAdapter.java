@@ -15,6 +15,7 @@ import com.example.mobileterm.ChattingActivity.DataItem;
 import com.example.mobileterm.R;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<DataItem> myDataList = null;
@@ -46,10 +47,12 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         else if(getItemViewType(position)== Code.ViewType.LEFT_CONTENT){
             ((LeftViewHolder)viewHolder).textv_nicname.setText(myDataList.get(position).getName());
             ((LeftViewHolder)viewHolder).textv_msg.setText(myDataList.get(position).getContent());
+            ((LeftViewHolder)viewHolder).textv_time.setText(myDataList.get(position).getTime().toString());
 
         }
         else {
             ((RightViewHolder)viewHolder).textv_msg.setText(myDataList.get(position).getContent());
+            ((RightViewHolder)viewHolder).textv_time.setText(myDataList.get(position).getTime().toString());;
         }
     }
     @Override
@@ -82,6 +85,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             textv_nicname = (TextView)itemView.findViewById(R.id.textv_nicname);
             textv_msg = (TextView)itemView.findViewById(R.id.textv_msg);
             textv_time = (TextView)itemView.findViewById(R.id.textv_time);
+
 
         }
     }
