@@ -1,11 +1,13 @@
 package com.example.mobileterm.StudyGroup;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -14,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.mobileterm.ChattingActivity.ChattingActivity;
 import com.example.mobileterm.MainActivity;
 import com.example.mobileterm.R;
 import com.example.mobileterm.StudyGroup.adapter.PostAdapter;
@@ -90,6 +93,16 @@ public class StudyGroupFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 settingDialog.show();
+                Button btn_study_setting_groupCalendar = settingDialog.findViewById(R.id.btn_study_setting_groupCalender);
+                Button btn_study_chatting = settingDialog.findViewById(R.id.btn_study_chatting);
+                btn_study_chatting.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getContext(), ChattingActivity.class);
+                        startActivity(intent);
+                        settingDialog.dismiss();
+                    }
+                });
             }
         });
 
