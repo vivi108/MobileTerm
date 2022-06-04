@@ -45,8 +45,8 @@ public class WritePostActivity extends AppCompatActivity {
         studyName = studyMakeActivity.sendStudyID();
 //        btn_studypost_back = findViewById(R.id.btn_studypost_back);
         btn_finish_writing = findViewById(R.id.btn_finish_writing);
-        btn_study_fileupload = findViewById(R.id.btn_study_fileupload);
-        tv_study_file_name = findViewById(R.id.tv_study_file_name);
+//        btn_study_fileupload = findViewById(R.id.btn_study_fileupload);
+//        tv_study_file_name = findViewById(R.id.tv_study_file_name);
         et_study_post_title = findViewById(R.id.et_study_post_title);
         et_study_post_tag = findViewById(R.id.et_study_post_tag);
         et_study_post_body = findViewById(R.id.et_study_post_body);

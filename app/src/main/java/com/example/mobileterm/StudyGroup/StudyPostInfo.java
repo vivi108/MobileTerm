@@ -1,5 +1,7 @@
 package com.example.mobileterm.StudyGroup;
 
+import java.util.ArrayList;
+
 public class StudyPostInfo {
     private String title;
     private String content;
@@ -10,6 +12,7 @@ public class StudyPostInfo {
     private Long downLoad;
     private float rating;
     private String tags;
+    private ArrayList<String> likedUser;
 
     public String getTags() {
         return tags;
@@ -17,6 +20,14 @@ public class StudyPostInfo {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public ArrayList<String> getLikedUser() {
+        return likedUser;
+    }
+
+    public void setLikedUser(ArrayList<String> likedUser) {
+        this.likedUser = likedUser;
     }
 
     public StudyPostInfo(String title, String content, String name, String did, String writtenTime, Long likedCount, Long downLoad, float rating, String tags) {
@@ -29,6 +40,7 @@ public class StudyPostInfo {
         this.downLoad = downLoad;
         this.rating = rating;
         this.tags = tags;
+        this.likedUser = new ArrayList<>();
     }
 
     public StudyPostInfo() {

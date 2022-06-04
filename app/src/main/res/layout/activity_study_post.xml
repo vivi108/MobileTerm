@@ -120,14 +120,23 @@
                     android:layout_height="match_parent"
                     android:background="?android:attr/listDivider" />
 
-                <Button
-                    android:id="@+id/button7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageButton
+                    android:id="@+id/likePostButton"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="9dp"
-                    android:text="평가하기"
+                    android:background="@drawable/ic_heart"
                     android:visibility="visible" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/postLikeCount"
+                    android:text = "0"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="25dp"/>
 
             </LinearLayout>
 
@@ -162,18 +171,7 @@
                     android:id="@+id/postAddComment"/>
 
 
-                <RatingBar
-                    android:id="@+id/rb_mean_rate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:contentDescription="동료 평가"
-                    android:isIndicator="false"
-                    android:max="5"
-                    android:numStars="5"
-                    android:rating="3"
-                    android:stepSize="0.5" />
+
 
             </LinearLayout>
 

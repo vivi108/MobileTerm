@@ -27,8 +27,7 @@
             android:id="@+id/btn_finish_writing"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_gravity="right|center_vertical"
-            android:layout_marginLeft="185dp"
+            android:layout_marginLeft="200dp"
             android:background="@drawable/ic_bulletin"
             android:contentDescription="작성 완료 버튼"
             android:scaleType="fitXY"
@@ -57,38 +56,14 @@
     <EditText
         android:id="@+id/et_study_post_body"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="400dp"
         android:layout_marginTop="15dp"
-        android:layout_weight="2"
         android:hint="내용을 입력하세요"
         android:inputType="textMultiLine"
-        android:maxLines="10" />
+        android:maxLines="10"
+        android:paddingBottom="30dp"/>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/btn_study_fileupload"
-            android:layout_width="60dp"
-            android:layout_height="70dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="출처 및 자료 업로드 버튼"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_post_clip" />
-
-        <TextView
-            android:id="@+id/tv_study_file_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:textSize="20dp"
-            android:layout_marginLeft="10dp"
-            android:text="Name" />
-
-
-    </LinearLayout>
 
 </LinearLayout>
