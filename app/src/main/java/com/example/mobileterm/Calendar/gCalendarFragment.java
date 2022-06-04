@@ -1,18 +1,12 @@
 package com.example.mobileterm.Calendar;
 
-import static android.content.ContentValues.TAG;
-
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.nfc.Tag;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,10 +28,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -59,9 +51,9 @@ public class gCalendarFragment extends Fragment {
     private gCalendarFragment gCalendarFragment;
     private FirebaseAuth mAuth;
     private FirebaseUser curUser;
-    private HashMap<String, ArrayList<gCalendarItem>> dateTable = new HashMap<String, ArrayList<gCalendarItem>>();
+    private HashMap<String, ArrayList<GScheduleInfo>> dateTable = new HashMap<String, ArrayList<GScheduleInfo>>();
     ArrayList<String> joinedStudy;
-    ArrayList<GScheduleInfo> gSchedules;
+    ArrayList<com.example.mobileterm.StudyGroup.GScheduleInfo> gSchedules;
     MainActivity activity;
     String myNickname;
     Dialog dialogShow;
@@ -124,7 +116,7 @@ public class gCalendarFragment extends Fragment {
                 listview.setVisibility(View.VISIBLE);
                 //add_Btn.setVisibility(View.VISIBLE);
                 diaryTextView.setText(String.format("%d / %d / %d", date.getYear(), date.getMonth() + 1, date.getDay())); //중간 일정 보여주는 텍스트뷰
-                ArrayList<gCalendarItem> newArrayList = new ArrayList<gCalendarItem>();
+                ArrayList<GScheduleInfo> newArrayList = new ArrayList<GScheduleInfo>();
 
                 String month = String.valueOf(date.getMonth() + 1);
                 if(date.getMonth()+1 < 10)
@@ -141,12 +133,12 @@ public class gCalendarFragment extends Fragment {
                     dateTable.get(calendarDate);
                     System.out.println("136" + dateTable.get(calendarDate));
                 }catch (Exception e){
-                    dateTable.put(calendarDate, new ArrayList<gCalendarItem>());
+                    dateTable.put(calendarDate, new ArrayList<GScheduleInfo>());
                     System.out.println("139" + dateTable);
                 }
 
                 joinedStudy = new ArrayList<String>();
-                gSchedules = new ArrayList<GScheduleInfo>();
+                gSchedules = new ArrayList<com.example.mobileterm.StudyGroup.GScheduleInfo>();
                 db.collection("Study").
                         get().
                         addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -171,13 +163,13 @@ public class gCalendarFragment extends Fragment {
                                                                           String studyName = (String) doc.getData().get("studyName");
                                                                           String studyDay = (String) doc.getData().get("meetingDay");
                                                                           if (joinedStudy.contains(studyName) && studyDay.equals(calendarDate)) {
-                                                                              GScheduleInfo temp = doc.toObject(GScheduleInfo.class);
+                                                                              com.example.mobileterm.StudyGroup.GScheduleInfo temp = doc.toObject(com.example.mobileterm.StudyGroup.GScheduleInfo.class);
                                                                               gSchedules.add(temp);
                                                                               Log.d(TAG,temp.getStudyName()+" "+temp.getScheduleName());
                                                                           }
                                                                       }
-
-
+                                                                      adapter = new gCalendarAdapter(dateTable.get(calendarDate), dialogShow); //어댑터에 이 날짜 해당 데이터 다 넘겨줌
+                                                                      listview.setAdapter(adapter);
                                                                   }
                                                               }
                                                           });

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.mobileterm.R;
+import com.example.mobileterm.StudyGroup.GScheduleInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,10 +38,10 @@ public class gCalendarAdapter extends BaseAdapter {
     CollectionReference docref = db.collection("Schedule").document("aGroup").collection("gSchedule");
 
     LayoutInflater inflater;
-    private ArrayList<gCalendarItem> scheduleList;
+    private ArrayList<GScheduleInfo> scheduleList;
 
-    public gCalendarAdapter(ArrayList<gCalendarItem> arrayList, Dialog dialogShow) {
-        this.scheduleList = new ArrayList<gCalendarItem>();
+    public gCalendarAdapter(ArrayList<GScheduleInfo> arrayList, Dialog dialogShow) {
+        this.scheduleList = new ArrayList<GScheduleInfo>();
         this.scheduleList.addAll(arrayList);
         this.dialogShow = dialogShow;
         this.dialogShow.setContentView(R.layout.dialog_show);
@@ -57,12 +58,12 @@ public class gCalendarAdapter extends BaseAdapter {
     }
 
     @Override
-    public gCalendarItem getItem(int position) {
+    public GScheduleInfo getItem(int position) {
         return scheduleList.get(position);
     }
 
 
-    public void addItem(gCalendarItem newItem) // 일단 스케줄만 add 하도록 테스트
+    public void addItem(GScheduleInfo newItem) // 일단 스케줄만 add 하도록 테스트
     {
         scheduleList.add(newItem);
         notifyDataSetChanged();
@@ -82,57 +83,57 @@ public class gCalendarAdapter extends BaseAdapter {
 
         TextView scheduleText = (TextView) convertView.findViewById(R.id.text1);
 
-        gCalendarItem a = scheduleList.get(position);
-        String docAA = a.getStudy();
+        GScheduleInfo a = scheduleList.get(position);
+        //String docAA = a.getStudy();
 
-        scheduleText.setText(a.getSchedule());
+        scheduleText.setText(a.getScheduleName());
 
-        LinearLayout eachlist = (LinearLayout) convertView.findViewById(R.id.eachlist);
-        eachlist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialogShow.show();
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogTheme));
-
-                TextView placeText = (TextView)dialogShow.findViewById(R.id.placeText);
-                TextView timeText = (TextView)dialogShow.findViewById(R.id.timeText);
-                TextView scheduleText = (TextView)dialogShow.findViewById(R.id.scheduleText);
-                Button del_btn = (Button) dialogShow.findViewById(R.id.del_btn);
-                Button ok_btn = (Button) dialogShow.findViewById(R.id.ok_btn);
-
-                placeText.setText("장소 : " + a.getPlace());
-                timeText.setText("시간 : " +a.getTime());
-                scheduleText.setText("일정 : " +a.getSchedule());
-
-                del_btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.d(TAG, "button delete");
-                        docref.document(docAA).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "successfully delete");
-                                    //더이상 이거 안보이도록
-                                    scheduleList.remove(a);
-                                    notifyDataSetChanged();
-                                    dialogShow.dismiss();
-                                    Toast.makeText(view.getContext(), "삭제 처리되었습니다", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    }
-                });
-
-                ok_btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialogShow.dismiss();
-                    }
-                });
-            }
-        });
+//        LinearLayout eachlist = (LinearLayout) convertView.findViewById(R.id.eachlist);
+//        eachlist.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                dialogShow.show();
+//
+//                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AlertDialogTheme));
+//
+//                TextView placeText = (TextView)dialogShow.findViewById(R.id.placeText);
+//                TextView timeText = (TextView)dialogShow.findViewById(R.id.timeText);
+//                TextView scheduleText = (TextView)dialogShow.findViewById(R.id.scheduleText);
+//                Button del_btn = (Button) dialogShow.findViewById(R.id.del_btn);
+//                Button ok_btn = (Button) dialogShow.findViewById(R.id.ok_btn);
+//
+//                placeText.setText("장소 : " + a.getPlace());
+//                timeText.setText("시간 : " +a.getTime());
+//                scheduleText.setText("일정 : " +a.getSchedule());
+//
+//                del_btn.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        Log.d(TAG, "button delete");
+//                        docref.document(docAA).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                if (task.isSuccessful()) {
+//                                    Log.d(TAG, "successfully delete");
+//                                    //더이상 이거 안보이도록
+//                                    scheduleList.remove(a);
+//                                    notifyDataSetChanged();
+//                                    dialogShow.dismiss();
+//                                    Toast.makeText(view.getContext(), "삭제 처리되었습니다", Toast.LENGTH_SHORT).show();
+//                                }
+//                            }
+//                        });
+//                    }
+//                });
+//
+//                ok_btn.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        dialogShow.dismiss();
+//                    }
+//                });
+//            }
+//        });
 
         return convertView;
 
