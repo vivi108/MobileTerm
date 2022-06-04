@@ -94,7 +94,7 @@ public class ChattingActivity extends AppCompatActivity {
         chatDTO chatDTO = dataSnapshot.getValue(chatDTO.class);
         adapter.add(chatDTO.getUserName() + " : " + chatDTO.getMessage() + " : " + chatDTO.getTime().toString());
         if(!chatDTO.getUserName().equals(USER_NAME))       {
-            dataList.add(new DataItem(chatDTO.getMessage(), chatDTO.getUserName() ,Code.ViewType.LEFT_CONTENT, new Date()));
+            dataList.add(new DataItem(chatDTO.getMessage(), chatDTO.getUserName() ,Code.ViewType.LEFT_CONTENT, chatDTO.getTime()));
         }
         else if(chatDTO.getUserName().equals(USER_NAME) && chatDTO.getTime().before(TIME)){
             dataList.add(new DataItem(chatDTO.getMessage(), chatDTO.getUserName() ,Code.ViewType.RIGHT_CONTENT, chatDTO.getTime()));
