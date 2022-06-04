@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -55,6 +56,8 @@ public class BoardFragment extends Fragment {
     TextView appliedTagsTextView;
     RadioButton orderRecent, orderLike, orderOld;
     RadioGroup radioGroup;
+    FirebaseAuth mAuth;
+    FirebaseUser user;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +73,8 @@ public class BoardFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_board_main, container, false);
         searchEditText = rootView.findViewById(R.id.searchEditText);
         listView = rootView.findViewById(R.id.listView);
-
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
         ArrayList<BoardInfo> newArrayList = new ArrayList<BoardInfo>();
 
         tagSearchEditText = filterDialog.findViewById(R.id.tagSearchEditText);
@@ -197,7 +201,22 @@ public class BoardFragment extends Fragment {
                     break;
                 case R.id.startWriteButton:
                     MainActivity activity = (MainActivity) getActivity();
-                    activity.onFragmentChanged(201);
+                    db.collection("Users").document(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot documentSnapshot = task.getResult();
+                                String curT = (String) documentSnapshot.getData().get("token");
+                                if (Integer.parseInt(curT) > 0 ){
+                                    activity.onFragmentChanged(201);
+                                }else{
+                                    Toast.makeText(getActivity(), "토큰 부족으로 게시글 작성 제한", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }
+                    });
+
+
                     break;
             }
         }

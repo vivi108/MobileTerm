@@ -6,7 +6,7 @@
         <item name="colorPrimaryVariant">#CDC2AE</item>
         <item name="colorOnPrimary">#C2DED1</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">#ECE5C7</item>
+        <item name="colorSecondary">#354259</item>
         <item name="colorSecondaryVariant">#C2DED1</item>
         <item name="colorOnSecondary">#354259</item>
         <item name="android:windowBackground">#ECE5C7</item>

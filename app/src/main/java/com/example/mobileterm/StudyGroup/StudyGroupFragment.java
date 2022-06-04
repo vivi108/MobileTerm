@@ -81,7 +81,7 @@ public class StudyGroupFragment extends Fragment {
                     lv_studygroup_posts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            activity.onFragmentChanged(i, adapter.getItem(i).getWrittenTime()+" "+adapter.getItem(i).getTitle());
+                            activity.onFragmentChanged(i+100, adapter.getItem(i).getWrittenTime()+" "+adapter.getItem(i).getTitle());
                         }
                     });
                 }
@@ -132,7 +132,7 @@ public class StudyGroupFragment extends Fragment {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         Log.d("그룹 스케줄 추가","성공");
-                                        activity.onFragmentChanged(1);
+                                        activity.onFragmentChanged(1,title);
                                         settingDialog.dismiss();
                                         gScheduleDialog.dismiss();
                                     }
