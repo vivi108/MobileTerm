@@ -95,6 +95,7 @@ public class iCalendarAdapter extends BaseAdapter {
                                     //더이상 이거 안보이도록
                                     scheduleList.remove(a);
                                     notifyDataSetChanged();
+                                    Toast.makeText(view.getContext(), "삭제 처리 되었습니다", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -105,7 +106,7 @@ public class iCalendarAdapter extends BaseAdapter {
                     @Override
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        Log.d(TAG, "취소" + docAA);
+                        Log.d(TAG, "삭제 취소 되었습니다" + docAA);
                     }
                 });
 

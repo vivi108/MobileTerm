@@ -103,12 +103,15 @@ public class iCalendarFragment extends Fragment {
         radGroup.setOnClickListener(new View.OnClickListener() { //그룹버튼 누르면 그룹캘린더로 전환
             @Override
             public void onClick(View view) {
-                ctype.check(radGroup.getId());
-                int radioId = ctype.getCheckedRadioButtonId();
-                if (radGroup.getId() == radioId) {
-                    MainActivity activity = (MainActivity) getActivity();
-                    activity.onFragmentChanged(1);
-                }
+                MainActivity activity = (MainActivity) getActivity();
+                activity.onFragmentChanged(1);
+                Toast.makeText(view.getContext(), "그룹 캘린더입니다", Toast.LENGTH_SHORT).show();
+//                ctype.check(radGroup.getId());
+//                int radioId = ctype.getCheckedRadioButtonId();
+//                if (radGroup.getId() == radioId) {
+//                    MainActivity activity = (MainActivity) getActivity();
+//                    activity.onFragmentChanged(1);
+//                }
             }
         });
 

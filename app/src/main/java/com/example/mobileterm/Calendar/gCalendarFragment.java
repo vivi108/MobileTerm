@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -94,11 +95,15 @@ public class gCalendarFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ctype.check(radIndividual.getId());
-                int radioId = ctype.getCheckedRadioButtonId();
-                if(radIndividual.getId()==radioId) {
-                    MainActivity activity = (MainActivity) getActivity();
-                    activity.onFragmentChanged(0);
-                }
+                MainActivity activity = (MainActivity) getActivity();
+                activity.onFragmentChanged(0);
+                Toast.makeText(view.getContext(), "개인 캘린더입니다", Toast.LENGTH_SHORT).show();
+//                ctype.check(radIndividual.getId());
+//                int radioId = ctype.getCheckedRadioButtonId();
+//                if(radIndividual.getId()==radioId) {
+//                    MainActivity activity = (MainActivity) getActivity();
+//                    activity.onFragmentChanged(0);
+//                }
             }
         });
 
@@ -184,11 +189,11 @@ public class gCalendarFragment extends Fragment {
 
                     String Schedule;
                     String Date;
-                    String time;
+                    String time, atime;
                     String docA;
                     String place;
 
-                    @Override //추가 버튼 클릭 시
+                    @Override //추가 버튼 클릭 시 - 그룹일정 저장
                     public void onClick(View view) {
                          View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit, null);
                          EditText placeEdit = (EditText)dialogView.findViewById(R.id.placeEdit);
@@ -202,7 +207,8 @@ public class gCalendarFragment extends Fragment {
                         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int pos) {
                                         Schedule = scheduleEdit.getText().toString();
-                                        time = timeEdit.getText().toString();
+                                        atime = timeEdit.getText().toString();
+                                        time = atime.substring(0,2) + ":" + atime.substring(2,4);
                                         place = placeEdit.getText().toString();
                                         Date = calendarDate; //일정 쓴 날짜겠지
                                         docA = Date +" "+ Schedule;
