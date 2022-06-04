@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="110dp"
+    android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <View
@@ -14,7 +14,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="8"
         android:orientation="vertical">
 
@@ -105,6 +105,14 @@
                 android:text="스터디 간략 설명"
                 android:textSize="15dp"
                 tools:ignore="TouchTargetSizeCheck" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_find_study_address"
+                android:text="주소"
+                android:textSize="15dp"
+                android:layout_marginTop="15dp"/>
 
         </LinearLayout>
 
