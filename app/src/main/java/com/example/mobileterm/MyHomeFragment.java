@@ -84,7 +84,7 @@ public class MyHomeFragment extends Fragment {
     String content ;
     String uName ;
     String wTime ;
-
+    FirebaseFirestore db;
     int[] cnt = new int[7]; //전체 할 일 개수
     int[] isDone_cnt = new int[7];
     //Firebase로 로그인한 사용자 정보 알기 위해
@@ -103,7 +103,9 @@ public class MyHomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_my_home, container, false);
+        db = FirebaseFirestore.getInstance();
         activity = (MainActivity) getActivity();
+        joinStudy = new Dialog(getActivity());
         setting = (ImageView) rootView.findViewById(R.id.my_home_setting_iv);
         listview = (ExpandableListView) rootView.findViewById(R.id.my_home_listview);
         profile = (ImageView) rootView.findViewById(R.id.my_home_profile_iv);
@@ -230,7 +232,7 @@ public class MyHomeFragment extends Fragment {
     }
     private String tempTitle;
     private String leader;
-    private int maxNumPeople;
+    private long maxNumPeople;
     private boolean opened;
     private String password;
     private ArrayList<String> memberList;
@@ -250,7 +252,7 @@ public class MyHomeFragment extends Fragment {
                         if (document.exists()) {
                             tempTitle = (String) document.getData().get("studyName");
                             leader = (String) document.getData().get("leader");
-                            maxNumPeople = (int) document.getData().get("maxNumPeople");
+                            maxNumPeople = (long) document.getData().get("maxNumPeople");
                             opened = (Boolean) document.getData().get("opened");
                             password = (String) document.getData().get("password");
                             memberList = (ArrayList<String>) document.getData().get("memberList");
@@ -267,76 +269,76 @@ public class MyHomeFragment extends Fragment {
             }
         });
 
-//        if (opened){
-//            joinStudy.setContentView(R.layout.dialog_join_open_study);
-//            joinStudy.show();
-//            Button joinButton = joinStudy.findViewById(R.id.openJoinButton);
-//            Button cancelButton = joinStudy.findViewById(R.id.openCancelButton);
-//            ArrayList<String> newMem = memberList;
-//            for (String itr : newMem){
-//                Log.d(TAG,itr);
-//            }
-//            joinButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if ((maxNumPeople > newMem.size()) && !newMem.contains(myNickName)){
-//                        newMem.add(myNickName);
-//                        db.collection("Study").document(getID).update("memberList", newMem).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<Void> task) {
-//                                Log.d(TAG,"스터디조인성공함");
-//                                joinStudy.dismiss();
-//                            }
-//                        });
-//                    }else{
-//                        Toast.makeText(getContext(), "가득찬 스터디입니다.",Toast.LENGTH_LONG);
-//                    }
-//
-//                }
-//            });
-//
-//            cancelButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    joinStudy.dismiss();
-//                }
-//            });
-//
-//        }else{
-//            joinStudy.setContentView(R.layout.dialog_join_closed_study);
-//            joinStudy.show();
-//            Button joinButton = joinStudy.findViewById(R.id.closeJoinButton);
-//            Button cancelButton = joinStudy.findViewById(R.id.closeCancelButton);
-//            EditText pwd = joinStudy.findViewById(R.id.closedPassword);
-//
-//            ArrayList<String> newMem = memberList;
-//
-//            joinButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if ((maxNumPeople > newMem.size()) && !newMem.contains(myNickName) && password.equals(pwd.getText().toString())){
-//                        newMem.add(myNickName);
-//                        db.collection("Study").document(getID).update("memberList", newMem).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<Void> task) {
-//                                Log.d(TAG,"스터디조인성공함");
-//                                joinStudy.dismiss();
-//                            }
-//                        });
-//                    }else{
-//                        Toast.makeText(getContext(), "가득찬 스터디입니다.",Toast.LENGTH_LONG);
-//                    }
-//                }
-//            });
-//
-//            cancelButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    joinStudy.dismiss();
-//                }
-//            });
-//        }
-//
+        if (opened){
+            joinStudy.setContentView(R.layout.dialog_join_open_study);
+            joinStudy.show();
+            Button joinButton = joinStudy.findViewById(R.id.openJoinButton);
+            Button cancelButton = joinStudy.findViewById(R.id.openCancelButton);
+            ArrayList<String> newMem = memberList;
+            for (String itr : newMem){
+                Log.d(TAG,itr);
+            }
+            joinButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if ((maxNumPeople > newMem.size()) && !newMem.contains(myNickName)){
+                        newMem.add(myNickName);
+                        db.collection("Study").document(getID).update("memberList", newMem).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Log.d(TAG,"스터디조인성공함");
+                                joinStudy.dismiss();
+                            }
+                        });
+                    }else{
+                        Toast.makeText(getContext(), "가득찬 스터디입니다.",Toast.LENGTH_LONG);
+                    }
+
+                }
+            });
+
+            cancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    joinStudy.dismiss();
+                }
+            });
+
+        }else{
+            joinStudy.setContentView(R.layout.dialog_join_closed_study);
+            joinStudy.show();
+            Button joinButton = joinStudy.findViewById(R.id.closeJoinButton);
+            Button cancelButton = joinStudy.findViewById(R.id.closeCancelButton);
+            EditText pwd = joinStudy.findViewById(R.id.closedPassword);
+
+            ArrayList<String> newMem = memberList;
+
+            joinButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if ((maxNumPeople > newMem.size()) && !newMem.contains(myNickName) && password.equals(pwd.getText().toString())){
+                        newMem.add(myNickName);
+                        db.collection("Study").document(getID).update("memberList", newMem).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Log.d(TAG,"스터디조인성공함");
+                                joinStudy.dismiss();
+                            }
+                        });
+                    }else{
+                        Toast.makeText(getContext(), "가득찬 스터디입니다.",Toast.LENGTH_LONG);
+                    }
+                }
+            });
+
+            cancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    joinStudy.dismiss();
+                }
+            });
+        }
+
 
 
     }
