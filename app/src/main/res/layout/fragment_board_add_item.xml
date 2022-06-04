@@ -13,7 +13,7 @@
         android:id="@+id/endWriteButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/write_icon"
+        android:background="@drawable/editing"
         android:contentDescription="end writte button"
         android:scaleType="fitXY" />
 
@@ -59,7 +59,7 @@
             android:layout_height="70dp"
             android:contentDescription="adding reference button"
             android:scaleType="fitXY"
-            android:background="@drawable/reference_icon" />
+            android:background="@drawable/ic_post_clip" />
 
 
 
