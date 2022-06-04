@@ -103,6 +103,13 @@ public class StudyGroupFragment extends Fragment {
                         settingDialog.dismiss();
                     }
                 });
+
+                btn_study_setting_groupCalendar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        activity.onFragmentChanged(1);
+                    }
+                });
             }
         });
 
