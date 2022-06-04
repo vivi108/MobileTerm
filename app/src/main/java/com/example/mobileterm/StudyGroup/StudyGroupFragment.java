@@ -99,7 +99,8 @@ public class StudyGroupFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 settingDialog.show();
-                Button btn_study_setting_groupCalendar = settingDialog.findViewById(R.id.btn_study_setting_groupCalender);
+                Button scheduleCheck = settingDialog.findViewById(R.id.scheduleCheck);
+                Button scheduleAdd = settingDialog.findViewById(R.id.scheduleAdd);
                 Button btn_study_chatting = settingDialog.findViewById(R.id.btn_study_chatting);
                 btn_study_chatting.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -112,7 +113,15 @@ public class StudyGroupFragment extends Fragment {
                     }
                 });
 
-                btn_study_setting_groupCalendar.setOnClickListener(new View.OnClickListener() {
+                scheduleCheck.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        activity.onFragmentChanged(1,title);
+                        settingDialog.dismiss();
+                    }
+                });
+
+                scheduleAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         gScheduleDialog.show();
