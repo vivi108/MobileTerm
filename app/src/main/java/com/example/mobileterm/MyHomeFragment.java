@@ -76,7 +76,7 @@ public class MyHomeFragment extends Fragment {
     ExpandableListView listview;
     ArrayList<myGroup> DataList;
     ExpandAdapter adapter;
-    String[][] childids = new String[999][999];
+    String[][] childids = new String[99][99];
     String uid;
     BarChart barChart;
     MainActivity activity ;
@@ -211,7 +211,7 @@ public class MyHomeFragment extends Fragment {
                 switch (groupPosition) {
                     case 0://관심스터디
                         Log.e("StudyItemClicked", "by setOnItemCLick from LikedStudyItem");
-                        String getchild = childids[0][childPosition];
+                        String getchild = childids[2][childPosition];
                         Log.d("getchildid", getchild + "가 선택됨");
                         GetLikedStudyItem(user, getchild);
                         break;
@@ -388,7 +388,7 @@ public class MyHomeFragment extends Fragment {
                         String childid_study = (String) document.getData().get("sid");
                         // temp.childId.add(childid);
                         temp.child.add(childTitle);
-                        childids[0][i] = childid_study;
+                        childids[2][i] = childid_study;
                         i++;
 
                     }
