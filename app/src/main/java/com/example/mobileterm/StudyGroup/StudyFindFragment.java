@@ -133,7 +133,7 @@ public class StudyFindFragment extends Fragment {
                         if (document.exists()) {
                             Log.d(TAG,"스터디 읽기"+((String) document.getData().get("studyName")));
                             StudyInfo tempStudy = document.toObject(StudyInfo.class);
-                            studies.add(tempStudy);
+                            showStudies.add(tempStudy);
                         }
                     }
                     db.collection("Users").document(user.getUid()).collection("likedStudy").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -143,6 +143,9 @@ public class StudyFindFragment extends Fragment {
                                 QuerySnapshot querySnapshot1 = task.getResult();
                                 for (DocumentSnapshot document1 : querySnapshot1){
                                     likedStudies.add((String) document1.getData().get("name"));
+                                }
+                                if (!studies.equals(showStudies)){
+                                    studies = showStudies;
                                 }
                                 adapter = new FindStudyAdapter(rootView.getContext(), studies, likedStudies);
                                 lv_study_find.setAdapter(adapter);

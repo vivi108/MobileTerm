@@ -59,6 +59,9 @@ public class WritePostFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Log.d("WritePostFrag","sucess");
+                        et_study_post_title.setText("");
+                        et_study_post_body.setText("");
+                        et_study_post_tag.setText("");
                         activity.onFragmentChanged(studyName,101);
                     }
                 });
