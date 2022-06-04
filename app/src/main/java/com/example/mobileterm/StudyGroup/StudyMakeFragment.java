@@ -37,7 +37,7 @@ import java.util.Map;
 
 public class StudyMakeFragment extends Fragment {
     ImageButton imgbtn_make_study_cancel, btn_make_study_show_pw;
-    EditText et_make_study_name, et_make_study_set_member, pt_entrance_pw, et_make_study_tag, et_make_study_description;
+    EditText et_make_study_name, et_make_study_set_member, pt_entrance_pw, et_make_study_tag, et_make_study_description, et_make_study_address;
     RadioGroup rdg_make_study_open;
     Button btn_make_study_make, btn_make_study_cancel;
     LinearLayout ll_make_study_closed_pw;
@@ -64,13 +64,14 @@ public class StudyMakeFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.activity_study_new_study, container, false);
         mainActivity = (MainActivity) getActivity();
         myNickName = mainActivity.sendUserNickname();
-        imgbtn_make_study_cancel = rootView.findViewById(R.id.imgbtn_make_study_cancel);
+//        imgbtn_make_study_cancel = rootView.findViewById(R.id.imgbtn_make_study_cancel);
         btn_make_study_show_pw = rootView.findViewById(R.id.btn_make_study_show_pw);
         et_make_study_name = rootView.findViewById(R.id.et_make_study_name);
         et_make_study_set_member = rootView.findViewById(R.id.et_make_study_set_member);
         pt_entrance_pw = rootView.findViewById(R.id.pt_entrance_pw);
         et_make_study_tag = rootView.findViewById(R.id.et_make_study_tag);
         et_make_study_description = rootView.findViewById(R.id.et_make_study_description);
+        et_make_study_address = rootView.findViewById(R.id.et_make_study_address);
         rdg_make_study_open = rootView.findViewById(R.id.rdg_make_study_open);
         btn_make_study_make = rootView.findViewById(R.id.btn_make_study_make);
         btn_make_study_cancel = rootView.findViewById(R.id.btn_make_study_cancel);
@@ -91,7 +92,7 @@ public class StudyMakeFragment extends Fragment {
     }
 
     private void addListener(){
-        imgbtn_make_study_cancel.setOnClickListener(Listener_cancel_make_study);
+//        imgbtn_make_study_cancel.setOnClickListener(Listener_cancel_make_study);
         btn_make_study_cancel.setOnClickListener(Listener_cancel_make_study);
         btn_make_study_show_pw.setOnClickListener(Listener_pw_show);
         rdg_make_study_open.setOnCheckedChangeListener(Listener_study_openedORnot);
@@ -155,6 +156,7 @@ public class StudyMakeFragment extends Fragment {
             }
             String tags = et_make_study_tag.getText().toString();
             String description = et_make_study_description.getText().toString();
+            String address = et_make_study_address.getText().toString();
 
             String ID = openORnot + " " + getStudyName;
 
@@ -169,7 +171,7 @@ public class StudyMakeFragment extends Fragment {
             // study.put("studyID", ID);
             study.put("tags", tags);
 
-            StudyInfo newStudy = new StudyInfo(description, myNickName, Long.parseLong(getMembers), isOpen, getStudyName, tags, password);
+            StudyInfo newStudy = new StudyInfo(description, myNickName, Long.parseLong(getMembers), isOpen, getStudyName, tags, password, address);
             db.collection("Study").document(ID)
                     .set(newStudy).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -193,7 +195,7 @@ public class StudyMakeFragment extends Fragment {
                     case "#토익":
                     case "#전공":
                     case "#대외활동":
-                    case "#취업/면접":
+                    case "#취업&면접":
                     case "#어학":
                         db.collection("StudyTags").document(tag[i]).collection("Studies").document(getStudyName)
                                 .set(newStudy).addOnSuccessListener(new OnSuccessListener<Void>() {

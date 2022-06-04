@@ -11,6 +11,15 @@ public class StudyInfo {
     private String studyName;
     private String tags;
     private String password;
+    private String address;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getDescription() {
         return description;
@@ -79,7 +88,7 @@ public class StudyInfo {
     public StudyInfo() {
     }
 
-    public StudyInfo(String description, String leader, long maxNumPeople, boolean isOpened, String studyName, String tags, String password) {
+    public StudyInfo(String description, String leader, long maxNumPeople, boolean isOpened, String studyName, String tags, String password, String address) {
         this.description = description;
         this.leader = leader;
         this.maxNumPeople = maxNumPeople;
@@ -89,5 +98,6 @@ public class StudyInfo {
         this.studyName = studyName;
         this.tags = tags;
         this.password = password;
+        this.address = address;
     }
 }
