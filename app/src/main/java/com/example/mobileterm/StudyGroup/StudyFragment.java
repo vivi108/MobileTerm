@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.ListFragment;
 
 import com.example.mobileterm.BulletinBoard.BoardInfo;
+import com.example.mobileterm.MainActivity;
 import com.example.mobileterm.R;
 import com.example.mobileterm.StudyGroup.adapter.JoinedStudyAdapter;
 import com.example.mobileterm.StudyGroup.vo.JoinedStudyVo;
@@ -33,6 +34,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -57,62 +59,40 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     private String TAG = "MyStudyGroup";
     String studyName;
     String maxNumPeople;
-    String memberList;
+    ArrayList<String> memberList;
     String[] members;
     String tags;
-
+    String description;
+    MainActivity mainActivity;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_study_main, container, false);
+        mainActivity = (MainActivity)getActivity();
         studies = new ArrayList<>();
         joinedStudies = new ArrayList<>();
-        //db =
-
-        if(user != null){
-            uid = user.getUid();
-            Log.d(TAG, "uid : " + uid);
-            DocumentReference documentReference = db.collection("Users").document(uid);
-            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document != null) {
-                            if (document.exists()) {
-                                String a = (String) document.getData().get("nickname");
-                                myNickName = a;
-                            }
-                        }
-                    }
-                }
-            });
-        }
+        myNickName = mainActivity.sendUserNickname();
 
         Log.d(TAG, "myNickName : " + myNickName); // 닉네임 로그 출력시 에러 닉네임에 저장은 되어 있으나 출력은 안되는 것으로 확인됨
 
-        CollectionReference collectionReference = db.collection("Study").document("Study")
-                .collection("StudyName");
-
-        collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("Study").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        //document.getData() or document.getId() 등등 여러 방법으로
-                        //데이터를 가져올 수 있다.
-
+                    QuerySnapshot querySnapshot = task.getResult();
+                    for(DocumentSnapshot document:querySnapshot){
                         studyName = (String) document.getData().get("studyName");
-                        maxNumPeople = (String) document.getData().get("maxNumPeople");
-                        memberList = (String) document.getData().get("memberList");
-                        members = (String[]) memberList.split("/");
+                        maxNumPeople = Long.toString((Long) document.getData().get("maxNumPeople"));
+                        memberList = (ArrayList<String>) document.getData().get("memberList");
+                        members = memberList.toArray(new String[0]);
                         tags = (String) document.getData().get("tags");
-
+                        description = (String) document.getData().get("description");
                         Log.d(TAG, studyName + " " + maxNumPeople + " " + members[0] + " " + tags);
 
-                        studies.add(new JoinedStudyVo(studyName, maxNumPeople, members, tags));
+                        studies.add(new JoinedStudyVo(studyName, maxNumPeople, members, tags, description));
+                        Log.d(TAG, "study size : " + studies.size());
+
                     }
-                    Log.d(TAG, "study size : " + studies.size());
                     for (int i = 0; i < studies.size(); i++){
                         String[] getMembers = studies.get(i).getMembers();
                         if(Arrays.asList(getMembers).contains(myNickName)){
@@ -137,10 +117,11 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String studyName = (String) view.findViewById(R.id.tv_joined_study_name).getTag().toString();
-                Bundle bundle = new Bundle();
-                intent = new Intent(getActivity(), StudyGroupActivity.class);
-                intent.putExtra("JoinedStudy", studyName);
-                startActivity(intent);
+//                Bundle bundle = new Bundle();
+//                intent = new Intent(getActivity(), StudyGroupActivity.class);
+//                intent.putExtra("JoinedStudy", studyName);
+//                startActivity(intent);
+                mainActivity.onFragmentChanged(studyName,101);
             }
         });
 
@@ -151,15 +132,17 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_find_study:
-                intent = new Intent(getActivity(), StudyFindActivity.class);
-                startActivity(intent);
+                mainActivity.onFragmentChanged(302);
                 break;
             case R.id.btn_make_study_make:
-                intent = new Intent(getActivity(), StudyMakeActivity.class);
-                startActivity(intent);
+                mainActivity.onFragmentChanged(301);
                 break;
         }
 
+    }
+
+    public String sendStudyName(){
+        return studyName;
     }
 
 }

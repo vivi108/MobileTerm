@@ -3,15 +3,25 @@ package com.example.mobileterm.StudyGroup;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.mobileterm.MainActivity;
 import com.example.mobileterm.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class WritePostActivity extends AppCompatActivity {
     Activity activity;
@@ -19,13 +29,21 @@ public class WritePostActivity extends AppCompatActivity {
     ImageButton btn_studypost_back, btn_finish_writing, btn_study_fileupload;
     TextView tv_study_file_name;
     EditText et_study_post_title, et_study_post_tag, et_study_post_body;
+    FirebaseFirestore db;
+    String writer;
+    String studyName;
+    String TAG = "WritePost";
+    MainActivity mainActivity = new MainActivity();
+    StudyMakeActivity studyMakeActivity = new StudyMakeActivity();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study_write_post);
 
-        btn_studypost_back = findViewById(R.id.btn_studypost_back);
+        writer = mainActivity.sendUserNickname();
+        studyName = studyMakeActivity.sendStudyID();
+//        btn_studypost_back = findViewById(R.id.btn_studypost_back);
         btn_finish_writing = findViewById(R.id.btn_finish_writing);
         btn_study_fileupload = findViewById(R.id.btn_study_fileupload);
         tv_study_file_name = findViewById(R.id.tv_study_file_name);
@@ -49,8 +67,37 @@ public class WritePostActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             //작성 내용 및 파일 파이어베이스에 업로드 후 그룹으로 복귀
-            intent = new Intent(activity, StudyGroupActivity.class);
-            startActivity(intent);
+            String fileName = tv_study_file_name.getText().toString();
+            String postTitle = et_study_post_title.getText().toString();
+            String postTag = et_study_post_tag.getText().toString();
+            String postBody = et_study_post_body.getText().toString();
+            String ID = writer + postTitle;
+            String StudyID = studyMakeActivity.sendStudyID();
+
+            Map<String, Object> post = new HashMap<>();
+            post.put("fileName", fileName);
+            post.put("postTitle", postTitle);
+            post.put("postTag", postTag);
+            post.put("postBody", postBody);
+
+            db.collection("Study").document(StudyID)
+                    .collection("Posts").document(ID)
+                    .set(post).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Log.d(TAG, "Write Post Success!");
+                    Toast.makeText(activity, "Write post success!", Toast.LENGTH_SHORT);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
+            // 파일 업로드 추가
+
+            finish();
         }
     };
 

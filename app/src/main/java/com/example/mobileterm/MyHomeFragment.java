@@ -72,8 +72,14 @@ public class MyHomeFragment extends Fragment {
     ArrayList<myGroup> DataList;
     ExpandAdapter adapter;
     String[][] childids = new String[999][999];
+
     String uid;
     BarChart barChart;
+    MainActivity activity ;
+    String title ;
+    String content ;
+    String uName ;
+    String wTime ;
 
     int[] cnt = new int[7]; //전체 할 일 개수
     int[] isDone_cnt = new int[7];
@@ -89,6 +95,7 @@ public class MyHomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_my_home, container, false);
+        activity = (MainActivity) getActivity();
         setting = (ImageView) rootView.findViewById(R.id.my_home_setting_iv);
         listview = (ExpandableListView) rootView.findViewById(R.id.my_home_listview);
         profile = (ImageView) rootView.findViewById(R.id.my_home_profile_iv);
@@ -132,18 +139,16 @@ public class MyHomeFragment extends Fragment {
         int width = newDisplay.getWidth();
         DataList = new ArrayList<myGroup>();
         myGroup temp = new myGroup("관심스터디");
-        temp.child.add("여");
-        temp.child.add("기");
-        temp.child.add("도");
-        DataList.add(temp);
-        temp = new myGroup("관심게시글");
+        addChildListView_Study(temp, user);
 
+        temp = new myGroup("관심게시글");
         addChildListView_Board(temp, user);
+
         adapter = new ExpandAdapter(requireActivity(), R.layout.expandable_liistview_parent, R.layout.expandable_listview_child, DataList);
         listview.setIndicatorBounds(width - 50, width); //이 코드를 지우면 화살표 위치가 바뀐다.
         listview.setAdapter(adapter);
 
-        //톱니바퀴, 설정 그림 눌렀을 때
+        //톱니바퀴, 설정 그림 눌렀을 때 ->완성
         setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -153,7 +158,7 @@ public class MyHomeFragment extends Fragment {
                         .commit();
             }
         });
-        //여기를 눌러서 오늘의 할일을 지정해주세요 -> 캘린더 fragment로 이동
+        //여기를 눌러서 오늘의 할일을 지정해주세요 -> 캘린더 fragment로 이동 ->완성
         beforetodo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,7 +173,7 @@ public class MyHomeFragment extends Fragment {
 
             }
         });
-        // 프로필 이미지 눌렀을 때.
+        // 프로필 이미지 눌렀을 때.->완성
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -196,7 +201,10 @@ public class MyHomeFragment extends Fragment {
                 MainActivity activity = (MainActivity) getActivity();
                 switch (groupPosition) {
                     case 0://관심스터디
-
+                        Log.e("StudyItemClicked", "by setOnItemCLick from LikedStudyItem");
+                        String getchild = childids[0][childPosition];
+                        Log.d("getchildid", getchild + "가 선택됨");
+                        GetLikedStudyItem(user, getchild);
                         break;
                     case 1:
                         Log.e("boardItemClicked", "by setOnItemCLick from LikedBoardItem");
@@ -211,11 +219,10 @@ public class MyHomeFragment extends Fragment {
         });
         return rootView;
     }
-
-
-    private void GetLikedBoardItem(FirebaseUser firebaseUser, String did) {
+    //관심스터디의 child listview눌렀을때
+    private void GetLikedStudyItem(FirebaseUser firebaseUser, String sid) {
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
-        DocumentReference documentReference = fb.collection("BulletinBoard").document(did);
+        DocumentReference documentReference = fb.collection("경로설정").document(sid);
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -223,16 +230,6 @@ public class MyHomeFragment extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document != null) {
                         if (document.exists()) {
-                            MainActivity activity = (MainActivity) getActivity();
-                            String title = (String) document.getData().get("title");
-                            String content = (String) document.getData().get("content");
-                            String uName = (String) document.getData().get("name");
-                            String wTime = (String) document.getData().get("writtenTime");
-                            Log.d("getchildid", title);
-                            Log.d("getchildid", content);
-                            Log.d("getchildid", uName);
-                            Log.d("getchildid", wTime);
-                            activity.onFragmentChanged(title, content, uName, wTime);
 
                         }
                     }
@@ -242,6 +239,88 @@ public class MyHomeFragment extends Fragment {
 
     }
 
+    private void GetLikedBoardItem(FirebaseUser firebaseUser, String did) {
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+//        DocumentReference documentReference = fb.collection("BulletinBoard").document(did);
+//        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document != null) {
+//                        if (document.exists()) {
+//                            MainActivity activity = (MainActivity) getActivity();
+//                            String title = (String) document.getData().get("title");
+//                            String content = (String) document.getData().get("content");
+//                            String uName = (String) document.getData().get("name");
+//                            String wTime = (String) document.getData().get("writtenTime");
+//                            Log.d("getchildid", title);
+//                            Log.d("getchildid", content);
+//                            Log.d("getchildid", uName);
+//                            Log.d("getchildid", wTime);
+//                            activity.onFragmentChanged(title, content, uName, wTime);
+//
+//                        }
+//                    }
+//                }
+//            }
+//        });
+
+        fb.collection("BulletinBoard").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    for (DocumentSnapshot document : querySnapshot){
+                        if (document.exists()){
+                            String tempTitle = (String) document.getData().get("title");
+                            if (tempTitle.equals(did)) {
+                                title = (String) document.getData().get("title");
+                                content = (String) document.getData().get("content");
+                                uName = (String) document.getData().get("name");
+                                wTime = (String) document.getData().get("writtenTime");
+                                Log.d("getchildid", title);
+                                Log.d("getchildid", content);
+                                Log.d("getchildid", uName);
+                                Log.d("getchildid", wTime);
+
+                                break;
+                            }
+                        }
+                    }
+                    activity.onFragmentChanged(title, content, uName, wTime);
+                }
+            }
+        });
+    }
+    //확장 리스트뷰 차일드 정보 가져오기 by likedStudyItem-->완성
+    private void addChildListView_Study(myGroup temp, FirebaseUser firebaseUser) {
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+        CollectionReference collectionReference = fb.collection("Users").document(firebaseUser.getUid()).collection("likedStudy");
+
+        collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    int i = 0;
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        //document.getData() or document.getId() 등등 여러 방법으로
+                        //데이터를 가져올 수 있다.
+
+                        String childTitle = (String) document.getData().get("name");
+                        String childid = (String) document.getData().get("sid");
+                        // temp.childId.add(childid);
+                        temp.child.add(childTitle);
+                        childids[0][i] = childid;
+                        i++;
+
+                    }
+                }
+            }
+        });
+
+        DataList.add(temp);
+    }
     //확장 리스트뷰 차일드 정보 가져오기 by likedBoardItem-->완성
     private void addChildListView_Board(myGroup temp, FirebaseUser firebaseUser) {
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
@@ -260,7 +339,7 @@ public class MyHomeFragment extends Fragment {
                         String childid = (String) document.getData().get("did");
                         // temp.childId.add(childid);
                         temp.child.add(childTitle);
-                        childids[1][i] = childid;
+                        childids[1][i] = childTitle;
                         i++;
 
                     }

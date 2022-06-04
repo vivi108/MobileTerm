@@ -105,7 +105,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="여기를 눌러서 오늘의 할일을 정해주세요"
-        app:layout_constraintTop_toBottomOf="@id/my_home_line"
+        app:layout_constraintTop_toBottomOf="@id/my_home_todo_tv"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="15dp"
         android:textSize="15sp" />
