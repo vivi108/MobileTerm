@@ -168,6 +168,7 @@ public class gCalendarFragment extends Fragment {
                                                                               Log.d(TAG,temp.getStudyName()+" "+temp.getScheduleName());
                                                                           }
                                                                       }
+                                                                      dateTable.put(calendarDate, gSchedules);
                                                                       adapter = new gCalendarAdapter(dateTable.get(calendarDate), dialogShow); //어댑터에 이 날짜 해당 데이터 다 넘겨줌
                                                                       listview.setAdapter(adapter);
                                                                   }
