@@ -61,6 +61,7 @@ public class StudyPostFragment extends Fragment {
         TextView tv_post_title = rootView.findViewById(R.id.tv_post_title);
         TextView tv_post_description = rootView.findViewById(R.id.tv_post_description);
         TextView tv_post_tags = rootView.findViewById(R.id.tv_post_tags);
+        TextView tv_post_comments_count = rootView.findViewById(R.id.tv_post_comments_count);
         ImageButton postAddComment = rootView.findViewById(R.id.postAddComment);
         postAddComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +79,7 @@ public class StudyPostFragment extends Fragment {
                             public void onComplete(@NonNull Task<Void> task) {
                                 Log.d("스터디 게시판", "댓글 추가함");
                                 adapter.addComment(newComment);
+                                tv_post_comments_count.setText(Integer.toString(Integer.parseInt(tv_post_comments_count.getText().toString())+1));
                                 addComment.dismiss();
                             }
                         });
@@ -109,6 +111,7 @@ public class StudyPostFragment extends Fragment {
                                 if (!arrayList.equals(itemList)){
                                     arrayList = itemList;
                                 }
+                                tv_post_comments_count.setText(Integer.toString(itemList.size()));
                                 adapter = new CommentAdapter(rootView.getContext(), arrayList);
                                 postCommentView.setAdapter(adapter);
                             }

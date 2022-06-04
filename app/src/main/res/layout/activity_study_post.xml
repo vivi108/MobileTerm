@@ -78,30 +78,7 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center_vertical"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/ic_post_clip" />
-
-                    <Button
-                        android:id="@+id/btn_post_file_down"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:text="파일 이름"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/black"
-                        tools:layout_weight="8" />
-
-                </LinearLayout>
 
             </LinearLayout>
 
@@ -134,42 +111,9 @@
                     android:layout_marginRight="10dp"
                     android:text="횟수" />
 
-                <ImageButton
-                    android:id="@+id/btn_post_like"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="좋아요 버튼"
-                    android:src="@drawable/ic_heart"
-                    tools:ignore="TouchTargetSizeCheck" />
 
-                <TextView
-                    android:id="@+id/tv_post_likes_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="10dp"
-                    android:text="횟수" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
-                    android:text="다운로드 수"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_post_download_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="30dp"
-                    android:text="횟수" />
 
                 <View
                     android:layout_width="2dp"
