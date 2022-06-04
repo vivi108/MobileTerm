@@ -66,7 +66,7 @@ public class StudyMakeActivity extends AppCompatActivity {
     private void init(){
         activity = this;
 
-        imgbtn_make_study_cancel = findViewById(R.id.imgbtn_make_study_cancel);
+//        imgbtn_make_study_cancel = findViewById(R.id.imgbtn_make_study_cancel);
         btn_make_study_show_pw = findViewById(R.id.btn_make_study_show_pw);
         et_make_study_name = findViewById(R.id.et_make_study_name);
         et_make_study_set_member = findViewById(R.id.et_make_study_set_member);

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -64,6 +65,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     String[] members;
     String tags;
     String description;
+    String address;
     MainActivity mainActivity;
     @Nullable
     @Override
@@ -73,6 +75,8 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
         studies = new ArrayList<>();
         joinedStudies = new ArrayList<>();
         myNickName = mainActivity.sendUserNickname();
+        TextView tv_header = rootView.findViewById(R.id.tv_header);
+        tv_header.setText(myNickName+" 님이 가입하신 스터디");
 
         Log.d(TAG, "myNickName : " + myNickName); // 닉네임 로그 출력시 에러 닉네임에 저장은 되어 있으나 출력은 안되는 것으로 확인됨
 
@@ -88,9 +92,10 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                         members = memberList.toArray(new String[0]);
                         tags = (String) document.getData().get("tags");
                         description = (String) document.getData().get("description");
+                        address = (String) document.getData().get("address");
                         Log.d(TAG, studyName + " " + maxNumPeople + " " + members[0] + " " + tags);
 
-                        studies.add(new JoinedStudyVo(studyName, maxNumPeople, members, tags, description));
+                        studies.add(new JoinedStudyVo(studyName, maxNumPeople, members, tags, description, address));
                         Log.d(TAG, "study size : " + studies.size());
 
                     }

@@ -8,6 +8,15 @@ public class JoinedStudyVo {
     private String tags;
     private String studyCapacity;
     private String description;
+    private String address;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getDescription() {
         return description;
@@ -17,12 +26,13 @@ public class JoinedStudyVo {
         this.description = description;
     }
 
-    public JoinedStudyVo( String studyName, String studyCapacity,String[] members, String tags,  String description) {
+    public JoinedStudyVo( String studyName, String studyCapacity,String[] members, String tags,  String description, String address) {
         this.members = members;
         this.studyName = studyName;
         this.tags = tags;
         this.studyCapacity = studyCapacity;
         this.description = description;
+        this.address = address;
     }
 
     public JoinedStudyVo(String studyName, String studyCapacity, String[] members, String tags) {

@@ -23,22 +23,9 @@
             android:textSize="25dp"
             android:textStyle="bold" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
 
-        <ImageButton
-            android:id="@+id/imgbtn_make_study_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="취소 버튼"
-            app:srcCompat="@android:drawable/btn_dialog"
-            tools:ignore="TouchTargetSizeCheck" />
+
+
     </LinearLayout>
 
     <ScrollView
@@ -448,6 +435,7 @@
 
                         </LinearLayout>
 
+
                         <View
                             android:layout_width="3dp"
                             android:layout_height="match_parent"
@@ -455,6 +443,79 @@
                             android:background="@color/dark_gray" />
 
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="스터디 지역"
+                            android:textColor="@color/black"
+                            android:textSize="18dp" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="55dp"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+
+                            <View
+                                android:layout_width="3dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="@color/dark_gray" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="8"
+                                android:orientation="vertical">
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="3dp"
+                                    android:layout_weight="1"
+                                    android:background="@color/dark_gray" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_margin="3dp"
+                                    android:layout_weight="8"
+                                    android:orientation="vertical">
+
+                                    <EditText
+                                        android:id="@+id/et_make_study_address"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:ems="10"
+                                        android:hint="스터디 주소"
+                                        tools:ignore="TouchTargetSizeCheck" />
+                                </LinearLayout>
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="3dp"
+                                    android:layout_weight="1"
+                                    android:background="@color/dark_gray" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="3dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="@color/dark_gray" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
 
                 </LinearLayout>
 
