@@ -169,7 +169,8 @@ public class gCalendarFragment extends Fragment {
                                                                       QuerySnapshot querySnapshot1 = task.getResult();
                                                                       for (DocumentSnapshot doc : querySnapshot1) {
                                                                           String studyName = (String) doc.getData().get("studyName");
-                                                                          if (joinedStudy.contains(studyName)) {
+                                                                          String studyDay = (String) doc.getData().get("meetingDay");
+                                                                          if (joinedStudy.contains(studyName) && studyDay.equals(calendarDate)) {
                                                                               GScheduleInfo temp = doc.toObject(GScheduleInfo.class);
                                                                               gSchedules.add(temp);
                                                                               Log.d(TAG,temp.getStudyName()+" "+temp.getScheduleName());
