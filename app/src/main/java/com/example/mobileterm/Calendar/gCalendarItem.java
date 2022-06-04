@@ -5,15 +5,15 @@ public class gCalendarItem {
     private String schedule;
     private String date;
     private String time;
-    private String docA;
+    private String study;
     private String place;
 
 
-    public gCalendarItem(String schedule, String date, String time, String docA, String place) {
+    public gCalendarItem(String schedule, String date, String time, String study, String place) {
         this.schedule = schedule;
         this.date = date;
         this.time = time;
-        this.docA = docA;
+        this.study = study;
         this.place = place;
     }
 
@@ -23,8 +23,8 @@ public class gCalendarItem {
 
     public gCalendarItem() {    }
 
-    public String getDocA() {
-        return docA;
+    public String getStudy() {
+        return study;
     }
 
     public String getDate() {
@@ -51,8 +51,8 @@ public class gCalendarItem {
         this.time = time;
     }
 
-    public void setDocA(String docA) {
-        this.docA = docA;
+    public void setStudy(String study) {
+        this.study = study;
     }
 
     public void setPlace(String place) { this.place = place;}

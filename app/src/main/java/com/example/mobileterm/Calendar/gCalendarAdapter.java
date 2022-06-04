@@ -3,7 +3,6 @@ package com.example.mobileterm.Calendar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -11,9 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -87,7 +83,7 @@ public class gCalendarAdapter extends BaseAdapter {
         TextView scheduleText = (TextView) convertView.findViewById(R.id.text1);
 
         gCalendarItem a = scheduleList.get(position);
-        String docAA = a.getDocA();
+        String docAA = a.getStudy();
 
         scheduleText.setText(a.getSchedule());
 
