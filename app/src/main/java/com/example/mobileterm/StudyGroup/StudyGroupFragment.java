@@ -75,7 +75,7 @@ public class StudyGroupFragment extends Fragment {
                             arrayList.add(temp);
                         }
                     }
-                    adapter = new PostAdapter(rootView.getContext(), arrayList);
+                    adapter = new PostAdapter(rootView.getContext(), arrayList, title);
                     lv_studygroup_posts.setAdapter(adapter);
 
                     lv_studygroup_posts.setOnItemClickListener(new AdapterView.OnItemClickListener() {

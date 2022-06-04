@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="247dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:descendantFocusability="blocksDescendants">
 
@@ -96,22 +96,7 @@
                     android:layout_marginTop="20dp"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center_vertical"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/ic_post_clip" />
 
-                    <TextView
-                        android:id="@+id/btn_post_file_down"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:text="파일 이름"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/black"
-                        tools:layout_weight="8" />
 
                 </LinearLayout>
 
@@ -127,25 +112,7 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/btn_post_comments"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="댓글 버튼"
-                    app:srcCompat="@drawable/ic_comment"
-                    tools:ignore="TouchTargetSizeCheck" />
 
-                <TextView
-                    android:id="@+id/tv_post_comments_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="10dp"
-                    android:text="횟수" />
 
                 <ImageView
                     android:id="@+id/btn_post_like"
@@ -167,49 +134,8 @@
                     android:layout_marginRight="10dp"
                     android:text="횟수" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
-                    android:text="다운로드 수"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_post_download_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="30dp"
-                    android:text="횟수" />
 
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="?android:attr/listDivider" />
-
-                <RatingBar
-                    android:id="@+id/rb_study_score"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
-                    android:contentDescription="동료 평가"
-                    android:isIndicator="true"
-                    android:max="1"
-                    android:numStars="1"
-                    android:rating="0"
-                    android:stepSize="0.1" />
-
-                <EditText
-                    android:id="@+id/et_study_score_rate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="0.00"
-                    tools:ignore="TouchTargetSizeCheck" />
 
 
             </LinearLayout>
@@ -229,6 +155,7 @@
         android:layout_width="match_parent"
         android:layout_height="3dp"
         android:layout_weight="1"
+        android:layout_marginTop="5dp"
         android:background="?android:attr/listDivider" />
 
 </LinearLayout>
