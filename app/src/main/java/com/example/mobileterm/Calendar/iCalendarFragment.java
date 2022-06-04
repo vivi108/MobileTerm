@@ -104,7 +104,7 @@ public class iCalendarFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 MainActivity activity = (MainActivity) getActivity();
-                activity.onFragmentChanged(1);
+                activity.onFragmentChanged(1,"default");
                 Toast.makeText(view.getContext(), "그룹 캘린더입니다", Toast.LENGTH_SHORT).show();
 //                ctype.check(radGroup.getId());
 //                int radioId = ctype.getCheckedRadioButtonId();
