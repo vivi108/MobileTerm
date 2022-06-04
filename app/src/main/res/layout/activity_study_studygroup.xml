@@ -29,10 +29,9 @@
                 android:id="@+id/btn_studygroup_write_post"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@color/white"
                 android:contentDescription="개시글 작성 버튼"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_bulletin"
+                android:background="@drawable/ic_bulletin"
                 android:layout_marginRight="30dp"/>
 
             <ImageButton

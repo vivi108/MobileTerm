@@ -27,7 +27,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ChattingActivity extends AppCompatActivity {
     private ArrayList<DataItem> dataList;
@@ -37,6 +39,7 @@ public class ChattingActivity extends AppCompatActivity {
 
     private String CHAT_NAME = "testchatting"; // 스터디 그룹 이름
     private String USER_NAME ; // 사용자 이름
+    private Date TIME;
 
     private RecyclerView chat_view; //채팅내용
     private EditText chat_edit; //보낼내용쓰기
@@ -57,10 +60,10 @@ public class ChattingActivity extends AppCompatActivity {
         uid = user.getUid();
         //GetInfo(user);//닉네임 받아옴, 발화자와 같으면  Code.ViewType.RIGHT_CONTENT
         Intent intent = getIntent();
-
+        TIME = new Date();// 입장시각
         USER_NAME = intent.getStringExtra("nickname");
         CHAT_NAME = intent.getStringExtra("studyName");
-        Log.d("CHATTING", "USER_NAME " +USER_NAME+" CHAT_NAME"+CHAT_NAME);
+        Log.d("CHATTING", "USER_NAME : " +USER_NAME+" / CHAT_NAME : "+CHAT_NAME);
 
         initData();
         openChat(CHAT_NAME);
@@ -68,12 +71,13 @@ public class ChattingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 send_msg = chat_edit.getText().toString();
+                Date chattingnow = new Date();
                 if (send_msg != null) {
-                    chatDTO chat = new chatDTO(USER_NAME, chat_edit.getText().toString()); //ChatDTO를 이용하여 데이터를 묶는다.
+                    chatDTO chat = new chatDTO(USER_NAME, chat_edit.getText().toString(), chattingnow); //ChatDTO를 이용하여 데이터를 묶는다.
                     databaseReference.child("chat").child(CHAT_NAME).push().setValue(chat); // 데이터 푸쉬
                     chat_edit.setText("");//입력창 초기화
 
-                    dataList.add(new DataItem(send_msg, USER_NAME, Code.ViewType.RIGHT_CONTENT)); //레이아웃에 보여주는 리스트
+                    dataList.add(new DataItem(send_msg, USER_NAME, Code.ViewType.RIGHT_CONTENT, chattingnow)); //레이아웃에 보여주는 리스트
                 } else return;
             }
         });
@@ -83,14 +87,17 @@ public class ChattingActivity extends AppCompatActivity {
 
     private void initData() {
         dataList = new ArrayList<>();
-        dataList.add(new DataItem(USER_NAME + " 님이 입장하셨습니다", USER_NAME, Code.ViewType.CENTER_CONTENT));
+        dataList.add(new DataItem(USER_NAME + " 님이 입장하셨습니다", USER_NAME, Code.ViewType.CENTER_CONTENT, new Date()));
     }
 
     private void addMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
         chatDTO chatDTO = dataSnapshot.getValue(chatDTO.class);
-        adapter.add(chatDTO.getUserName() + " : " + chatDTO.getMessage());
+        adapter.add(chatDTO.getUserName() + " : " + chatDTO.getMessage() + " : " + chatDTO.getTime().toString());
         if(!chatDTO.getUserName().equals(USER_NAME))       {
-            dataList.add(new DataItem(chatDTO.getMessage(), chatDTO.getUserName() ,Code.ViewType.LEFT_CONTENT));
+            dataList.add(new DataItem(chatDTO.getMessage(), chatDTO.getUserName() ,Code.ViewType.LEFT_CONTENT, chatDTO.getTime()));
+        }
+        else if(chatDTO.getUserName().equals(USER_NAME) && chatDTO.getTime().before(TIME)){
+            dataList.add(new DataItem(chatDTO.getMessage(), chatDTO.getUserName() ,Code.ViewType.RIGHT_CONTENT, chatDTO.getTime()));
         }
     }
 
@@ -137,22 +144,5 @@ public class ChattingActivity extends AppCompatActivity {
             }
         });
     }
-//        public void GetInfo(FirebaseUser firebaseUser) {
-//        FirebaseFirestore fb = FirebaseFirestore.getInstance();
-//        DocumentReference documentReference = fb.collection("Users").document(firebaseUser.getUid());
-//        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot document = task.getResult();
-//                    if (document != null) {
-//                        if (document.exists()) {
-//                            nickname = (String) document.getData().get("nickname");
-//
-//                        }
-//                    }
-//                }
-//            }
-//        });
-//    }
+
 }
