@@ -2,6 +2,7 @@ package com.example.mobileterm;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -15,6 +16,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -32,6 +35,8 @@ import com.example.mobileterm.Calendar.iCalendarFragment;
 import com.example.mobileterm.ProfileSettingFragment;
 import com.example.mobileterm.R;
 import com.example.mobileterm.SettingFragment;
+import com.example.mobileterm.StudyGroup.StudyInfo;
+import com.example.mobileterm.StudyGroup.adapter.FindStudyAdapter;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -72,7 +77,6 @@ public class MyHomeFragment extends Fragment {
     ArrayList<myGroup> DataList;
     ExpandAdapter adapter;
     String[][] childids = new String[999][999];
-
     String uid;
     BarChart barChart;
     MainActivity activity ;
@@ -86,6 +90,10 @@ public class MyHomeFragment extends Fragment {
     //Firebase로 로그인한 사용자 정보 알기 위해
     private FirebaseAuth mAuth;
     private FirebaseUser user;
+
+    //관심스터디 다이얼로그 띄우는 용도
+    Dialog joinStudy;
+    String myNickName;
 
     public MyHomeFragment() {
         // Required empty public constructor
@@ -104,6 +112,7 @@ public class MyHomeFragment extends Fragment {
         aftertodo = (TextView) rootView.findViewById(R.id.my_home_todo_tv);
         token = (TextView) rootView.findViewById(R.id.my_home_profile_token_num_tv);
         barChart = (BarChart) rootView.findViewById(R.id.my_home_bar_chart);
+
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -219,10 +228,19 @@ public class MyHomeFragment extends Fragment {
         });
         return rootView;
     }
+    private String tempTitle;
+    private String leader;
+    private int maxNumPeople;
+    private boolean opened;
+    private String password;
+    private ArrayList<String> memberList;
     //관심스터디의 child listview눌렀을때
-    private void GetLikedStudyItem(FirebaseUser firebaseUser, String sid) {
+    private void GetLikedStudyItem(FirebaseUser firebaseUser, String getID) {
+        //joinStudy = new Dialog(activity);
+        //myNickName = activity.sendUserNickname();
+        Log.d("getchildid_getID", getID);
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
-        DocumentReference documentReference = fb.collection("경로설정").document(sid);
+        DocumentReference documentReference = fb.collection("Study").document(getID);
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -230,6 +248,18 @@ public class MyHomeFragment extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document != null) {
                         if (document.exists()) {
+                            tempTitle = (String) document.getData().get("studyName");
+                            leader = (String) document.getData().get("leader");
+                            maxNumPeople = (int) document.getData().get("maxNumPeople");
+                            opened = (Boolean) document.getData().get("opened");
+                            password = (String) document.getData().get("password");
+                            memberList = (ArrayList<String>) document.getData().get("memberList");
+                            Log.d("getchildid_tempTitle", tempTitle);
+                            Log.d("getchildid _study", leader);
+                            Log.d("getchildid _study", "" +maxNumPeople);
+                            Log.d("getchildid _study", ""+ opened);
+                            Log.d("getchildid _study", password);
+                            Log.d("getchildid _study", memberList.toString());
 
                         }
                     }
@@ -237,35 +267,82 @@ public class MyHomeFragment extends Fragment {
             }
         });
 
+//        if (opened){
+//            joinStudy.setContentView(R.layout.dialog_join_open_study);
+//            joinStudy.show();
+//            Button joinButton = joinStudy.findViewById(R.id.openJoinButton);
+//            Button cancelButton = joinStudy.findViewById(R.id.openCancelButton);
+//            ArrayList<String> newMem = memberList;
+//            for (String itr : newMem){
+//                Log.d(TAG,itr);
+//            }
+//            joinButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if ((maxNumPeople > newMem.size()) && !newMem.contains(myNickName)){
+//                        newMem.add(myNickName);
+//                        db.collection("Study").document(getID).update("memberList", newMem).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                Log.d(TAG,"스터디조인성공함");
+//                                joinStudy.dismiss();
+//                            }
+//                        });
+//                    }else{
+//                        Toast.makeText(getContext(), "가득찬 스터디입니다.",Toast.LENGTH_LONG);
+//                    }
+//
+//                }
+//            });
+//
+//            cancelButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    joinStudy.dismiss();
+//                }
+//            });
+//
+//        }else{
+//            joinStudy.setContentView(R.layout.dialog_join_closed_study);
+//            joinStudy.show();
+//            Button joinButton = joinStudy.findViewById(R.id.closeJoinButton);
+//            Button cancelButton = joinStudy.findViewById(R.id.closeCancelButton);
+//            EditText pwd = joinStudy.findViewById(R.id.closedPassword);
+//
+//            ArrayList<String> newMem = memberList;
+//
+//            joinButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if ((maxNumPeople > newMem.size()) && !newMem.contains(myNickName) && password.equals(pwd.getText().toString())){
+//                        newMem.add(myNickName);
+//                        db.collection("Study").document(getID).update("memberList", newMem).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                Log.d(TAG,"스터디조인성공함");
+//                                joinStudy.dismiss();
+//                            }
+//                        });
+//                    }else{
+//                        Toast.makeText(getContext(), "가득찬 스터디입니다.",Toast.LENGTH_LONG);
+//                    }
+//                }
+//            });
+//
+//            cancelButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    joinStudy.dismiss();
+//                }
+//            });
+//        }
+//
+
+
     }
 
     private void GetLikedBoardItem(FirebaseUser firebaseUser, String did) {
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
-//        DocumentReference documentReference = fb.collection("BulletinBoard").document(did);
-//        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot document = task.getResult();
-//                    if (document != null) {
-//                        if (document.exists()) {
-//                            MainActivity activity = (MainActivity) getActivity();
-//                            String title = (String) document.getData().get("title");
-//                            String content = (String) document.getData().get("content");
-//                            String uName = (String) document.getData().get("name");
-//                            String wTime = (String) document.getData().get("writtenTime");
-//                            Log.d("getchildid", title);
-//                            Log.d("getchildid", content);
-//                            Log.d("getchildid", uName);
-//                            Log.d("getchildid", wTime);
-//                            activity.onFragmentChanged(title, content, uName, wTime);
-//
-//                        }
-//                    }
-//                }
-//            }
-//        });
-
         fb.collection("BulletinBoard").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -308,10 +385,10 @@ public class MyHomeFragment extends Fragment {
                         //데이터를 가져올 수 있다.
 
                         String childTitle = (String) document.getData().get("name");
-                        String childid = (String) document.getData().get("sid");
+                        String childid_study = (String) document.getData().get("sid");
                         // temp.childId.add(childid);
                         temp.child.add(childTitle);
-                        childids[0][i] = childid;
+                        childids[0][i] = childid_study;
                         i++;
 
                     }
