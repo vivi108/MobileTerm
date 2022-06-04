@@ -41,7 +41,8 @@ public class StudyPostFragment extends Fragment {
     long mnow;
     Date mDate;
 
-    ArrayList<PostComment> arrayList;
+    ArrayList<PostComment> arrayList = new ArrayList<PostComment>();
+    ArrayList<PostComment> itemList;
     CommentAdapter adapter;
     @Nullable
     @Override
@@ -54,7 +55,7 @@ public class StudyPostFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         addComment = new Dialog(getActivity());
         addComment.setContentView(R.layout.dialog_post_comment);
-        arrayList = new ArrayList<PostComment>();
+        itemList = new ArrayList<PostComment>();
         TextView tv_posted_user_name = rootView.findViewById(R.id.tv_posted_user_name);
         TextView tv_posted_wdate = rootView.findViewById(R.id.tv_post_upload_date);
         TextView tv_post_title = rootView.findViewById(R.id.tv_post_title);
@@ -103,7 +104,10 @@ public class StudyPostFragment extends Fragment {
                                 QuerySnapshot querySnapshot = task.getResult();
                                 for (DocumentSnapshot doc : querySnapshot){
                                     PostComment tempComment = doc.toObject(PostComment.class);
-                                    arrayList.add(tempComment);
+                                    itemList.add(tempComment);
+                                }
+                                if (!arrayList.equals(itemList)){
+                                    arrayList = itemList;
                                 }
                                 adapter = new CommentAdapter(rootView.getContext(), arrayList);
                                 postCommentView.setAdapter(adapter);

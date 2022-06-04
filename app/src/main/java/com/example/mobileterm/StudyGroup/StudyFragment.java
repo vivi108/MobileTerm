@@ -50,6 +50,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
     ListView lv_study_joined;
     ArrayList<JoinedStudyVo> studies;
     ArrayList<JoinedStudyVo> joinedStudies;
+    ArrayList<JoinedStudyVo> itemStudies = new ArrayList<JoinedStudyVo>();
     private JoinedStudyAdapter adapter;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -99,7 +100,10 @@ public class StudyFragment extends Fragment implements View.OnClickListener {
                             joinedStudies.add(studies.get(i));
                         }
                     }
-                    adapter = new JoinedStudyAdapter(getContext(), joinedStudies);
+                    if (!itemStudies.equals(joinedStudies)){
+                        itemStudies = joinedStudies;
+                    }
+                    adapter = new JoinedStudyAdapter(getContext(), itemStudies);
                     lv_study_joined.setAdapter(adapter);
                 }
             }
