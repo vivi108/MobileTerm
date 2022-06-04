@@ -15,25 +15,39 @@
         android:orientation="vertical"
         >
 
-        <RadioGroup
-            android:id="@+id/ctype"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
-            <RadioButton
-                android:id="@+id/radIndividual"
+            android:orientation="horizontal">
+            <RadioGroup
+                android:id="@+id/ctype"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <RadioButton
+                    android:id="@+id/radIndividual"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Indiv">
+                </RadioButton>
+                <RadioButton
+                    android:id="@+id/radGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Group">
+                </RadioButton>
+            </RadioGroup>
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Indiv">
-            </RadioButton>
-            <RadioButton
-                android:id="@+id/radGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Group">
-            </RadioButton>
-        </RadioGroup>
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="그룹 스케줄 캘린더"/>
+        </LinearLayout>
+
 
         <com.prolificinteractive.materialcalendarview.MaterialCalendarView
             xmlns:app="http://schemas.android.com/apk/res-auto"

@@ -88,11 +88,19 @@ public class gCalendarFragment extends Fragment {
 //        CollectionReference docref = db.collection("GSchedule");
 
         //위 라디오버튼
-        ctype.check(radGroup.getId());
+//        ctype.check(radGroup.getId());
+//        ctype.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+//                MainActivity activity = (MainActivity) getActivity();
+//                activity.onFragmentChanged(0);
+////                Toast.makeText(view.getContext(), "개인 캘린더입니다", Toast.LENGTH_SHORT).show();
+//            }
+//        });
         radIndividual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ctype.check(radIndividual.getId());
+                ctype.check(radGroup.getId());
                 MainActivity activity = (MainActivity) getActivity();
                 activity.onFragmentChanged(0);
                 Toast.makeText(view.getContext(), "개인 캘린더입니다", Toast.LENGTH_SHORT).show();

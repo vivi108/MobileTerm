@@ -94,15 +94,22 @@ public class iCalendarFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         curUser = mAuth.getCurrentUser();
 
-        ctype.check(radIndividual.getId()); //처음 실행 시에 indiv에 체크돼있도록
+//        ctype.check(radIndividual.getId()); //처음 실행 시에 indiv에 체크돼있도록
 
         //현재 로그인한 유저 users의 iSchedule 컬렉션
         CollectionReference docref = db.collection("Users").document(curUser.getUid()).collection("iSchedule");
 
-
+//        ctype.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+//                MainActivity activity = (MainActivity) getActivity();
+//                activity.onFragmentChanged(1,"default");
+//            }
+//        });
         radGroup.setOnClickListener(new View.OnClickListener() { //그룹버튼 누르면 그룹캘린더로 전환
             @Override
             public void onClick(View view) {
+                ctype.check(radIndividual.getId());
                 MainActivity activity = (MainActivity) getActivity();
                 activity.onFragmentChanged(1,"default");
                 Toast.makeText(view.getContext(), "그룹 캘린더입니다", Toast.LENGTH_SHORT).show();
