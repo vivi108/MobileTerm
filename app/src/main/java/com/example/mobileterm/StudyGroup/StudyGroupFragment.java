@@ -126,7 +126,7 @@ public class StudyGroupFragment extends Fragment {
                         buttonEndGschedule.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                GScheduleInfo newSchedule = new GScheduleInfo(title, gscheduleTitleEditText.getText().toString(), gschedulePlaceEditText.getText().toString(), gscheduleTimeEditText.getText().toString(), gscheduleDayEditText.getText().toString());
+                                GScheduleInfo newSchedule = new GScheduleInfo(title, gscheduleTitleEditText.getText().toString(), gschedulePlaceEditText.getText().toString(), gscheduleTimeEditText.getText().toString(), gscheduleDayEditText.getText().toString(), null);
 
                                 db.collection("GSchedule").document().set(newSchedule).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
