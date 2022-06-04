@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import com.example.mobileterm.R;
 import com.example.mobileterm.StudyGroup.GScheduleInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -112,21 +113,20 @@ public class gCalendarAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View view) {
                         Log.d(TAG, "button delete");
-                        docref.document(docAA).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        db.collection("GSchedule").document(docAA).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "successfully delete");
-                                    //더이상 이거 안보이도록
-                                    scheduleList.remove(a);
-                                    notifyDataSetChanged();
-                                    dialogShow.dismiss();
-                                    Toast.makeText(view.getContext(), "삭제 처리되었습니다", Toast.LENGTH_SHORT).show();
-                                }
+                            public void onSuccess(Void unused) {
+                                Log.d(TAG, "successfully delete");
+                                //더이상 이거 안보이도록
+                                scheduleList.remove(a);
+                                notifyDataSetChanged();
+                                dialogShow.dismiss();
+                                Toast.makeText(view.getContext(), "삭제 처리되었습니다", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
                 });
+
 
                 ok_btn.setOnClickListener(new View.OnClickListener() {
                     @Override
