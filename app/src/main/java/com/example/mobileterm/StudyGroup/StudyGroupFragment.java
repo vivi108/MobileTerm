@@ -3,11 +3,13 @@ package com.example.mobileterm.StudyGroup;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,20 +37,24 @@ public class StudyGroupFragment extends Fragment {
     ArrayList<StudyPostInfo> arrayList;
     private PostAdapter adapter;
     String title;
+    String myNickname;
     MainActivity activity;
     FirebaseFirestore db ;
     Dialog settingDialog ;
+    Dialog gScheduleDialog;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.activity_study_studygroup, container, false);
         activity = (MainActivity) getActivity();
         title = activity.sendStudyTitle();
+        myNickname = activity.sendUserNickname();
         db = FirebaseFirestore.getInstance();
         arrayList = new ArrayList<StudyPostInfo>();
         settingDialog = new Dialog(getActivity());
         settingDialog.setContentView(R.layout.activity_study_setting);
-
+        gScheduleDialog = new Dialog(getActivity());
+        gScheduleDialog.setContentView(R.layout.dialog_gschedule);
 //        btn_studygroup_back = rootView.findViewById(R.id.btn_studygroup_back);
         btn_studygroup_setting = rootView.findViewById(R.id.btn_studygroup_setting);
         btn_studygroup_write_post = rootView.findViewById(R.id.btn_studygroup_write_post);
@@ -99,6 +105,8 @@ public class StudyGroupFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(getContext(), ChattingActivity.class);
+                        intent.putExtra("nickname",myNickname);
+                        intent.putExtra("studyName",title);
                         startActivity(intent);
                         settingDialog.dismiss();
                     }
@@ -107,7 +115,32 @@ public class StudyGroupFragment extends Fragment {
                 btn_study_setting_groupCalendar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        activity.onFragmentChanged(1);
+                        gScheduleDialog.show();
+                        EditText gscheduleTitleEditText = gScheduleDialog.findViewById(R.id.gscheduleTitleEditText);
+                        EditText gschedulePlaceEditText = gScheduleDialog.findViewById(R.id.gschedulePlaceEditText);
+                        EditText gscheduleTimeEditText = gScheduleDialog.findViewById(R.id.gscheduleTimeEditText);
+                        EditText gscheduleDayEditText = gScheduleDialog.findViewById(R.id.gscheduleDayEditText);
+
+                        ImageButton buttonEndGschedule = gScheduleDialog.findViewById(R.id.buttonEndGschedule);
+
+                        buttonEndGschedule.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                GScheduleInfo newSchedule = new GScheduleInfo(title, gscheduleTitleEditText.getText().toString(), gschedulePlaceEditText.getText().toString(), gscheduleTimeEditText.getText().toString(), gscheduleDayEditText.getText().toString());
+
+                                db.collection("GSchedule").document().set(newSchedule).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Log.d("그룹 스케줄 추가","성공");
+                                        activity.onFragmentChanged(1);
+                                        settingDialog.dismiss();
+                                        gScheduleDialog.dismiss();
+                                    }
+                                });
+                            }
+                        });
+
+
                     }
                 });
             }

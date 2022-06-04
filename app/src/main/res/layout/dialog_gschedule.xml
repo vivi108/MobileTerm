@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    android:layout_height="400dp"
+    android:layout_gravity="center"
+    android:padding="10dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="그룹스케줄 생성"
+        android:textSize="30dp"
+        android:gravity="center"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/gscheduleTitleEditText"
+        android:hint="스케줄이름을 입력하세요"
+        android:layout_marginTop="10dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/gschedulePlaceEditText"
+        android:hint="스케줄 장소를 입력하세요"
+        android:layout_marginTop="10dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/gscheduleTimeEditText"
+        android:hint="스케줄 시간을 입력하세요"
+        android:layout_marginTop="10dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/gscheduleDayEditText"
+        android:hint="스케줄 날짜를 입력하세요"
+        android:layout_marginTop="10dp"/>
+
+    <ImageButton
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:id="@+id/buttonEndGschedule"
+        android:layout_gravity="center"
+        android:background="@drawable/editing"
+        android:layout_marginTop="20dp"/>
+
+
+
+</LinearLayout>
