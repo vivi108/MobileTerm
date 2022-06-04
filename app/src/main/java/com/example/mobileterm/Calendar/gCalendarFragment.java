@@ -29,6 +29,7 @@ import androidx.annotation.NonNull;
 
 import com.example.mobileterm.MainActivity;
 import com.example.mobileterm.R;
+import com.example.mobileterm.StudyGroup.GScheduleInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -59,8 +60,10 @@ public class gCalendarFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseUser curUser;
     private HashMap<String, ArrayList<gCalendarItem>> dateTable = new HashMap<String, ArrayList<gCalendarItem>>();
-
-
+    ArrayList<String> joinedStudy;
+    ArrayList<GScheduleInfo> gSchedules;
+    MainActivity activity;
+    String myNickname;
     Dialog dialogShow;
     private ListView listview;
     private gCalendarAdapter adapter;
@@ -68,7 +71,8 @@ public class gCalendarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup main_frame_layout, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_g_calendar, main_frame_layout, false);
-
+        activity = (MainActivity) getActivity();
+        myNickname = activity.sendUserNickname();
         calendarView = rootView.findViewById(R.id.calendarView);
         diaryTextView = rootView.findViewById(R.id.diaryTextView); //중간에 몇월 몇일 보여주는
         save_Btn = rootView.findViewById(R.id.save_Btn);
@@ -88,7 +92,7 @@ public class gCalendarFragment extends Fragment {
         dialogShow.setContentView(R.layout.dialog_show);
 
         //현재 들어와있는 그룹원만의 그룹스케줄
-        CollectionReference docref = db.collection("GSchedule");
+//        CollectionReference docref = db.collection("GSchedule");
 
         //위 라디오버튼
         ctype.check(radGroup.getId());
@@ -140,7 +144,8 @@ public class gCalendarFragment extends Fragment {
                     System.out.println("139" + dateTable);
                 }
 
-
+                joinedStudy = new ArrayList<String>();
+                gSchedules = new ArrayList<GScheduleInfo>();
                 db.collection("Study").
                         get().
                         addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -151,12 +156,32 @@ public class gCalendarFragment extends Fragment {
                                                           for(DocumentSnapshot document : querySnapshot){
                                                               String studyName = (String) document.getData().get("studyName");
                                                               ArrayList<String> memberList = (ArrayList<String>) document.getData().get("memberList");
-                                                              String[] members = memberList.toArray(new String[0]);
+                                                              if (memberList.contains(myNickname)){
+                                                                  joinedStudy.add(studyName);
+                                                              }
 
                                                           }
+                                                          db.collection("GSchedule").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                              @Override
+                                                              public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                  if (task.isSuccessful()) {
+                                                                      QuerySnapshot querySnapshot1 = task.getResult();
+                                                                      for (DocumentSnapshot doc : querySnapshot1) {
+                                                                          String studyName = (String) doc.getData().get("studyName");
+                                                                          if (joinedStudy.contains(studyName)) {
+                                                                              GScheduleInfo temp = doc.toObject(GScheduleInfo.class);
+                                                                              gSchedules.add(temp);
+                                                                              Log.d(TAG,temp.getStudyName()+" "+temp.getScheduleName());
+                                                                          }
+                                                                      }
+
+
+                                                                  }
+                                                              }
+                                                          });
                                                       }
                                                   }
-                                              }
+                                              });
 
 
                                 //클릭한 날짜의 일정을 파베에서 불러와서 그 날에 해당하는 일정 리스트뷰 어댑터에 넣기
