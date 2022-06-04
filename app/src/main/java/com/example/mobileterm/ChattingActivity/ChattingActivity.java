@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -29,8 +31,12 @@ import java.util.ArrayList;
 
 public class ChattingActivity extends AppCompatActivity {
     private ArrayList<DataItem> dataList;
+    private String uid;
+
+    private String send_msg;
+
     private String CHAT_NAME = "testchatting"; // 스터디 그룹 이름
-    private String USER_NAME = "chatter1"; // 사용자 이름
+    private String USER_NAME ; // 사용자 이름
 
     private RecyclerView chat_view; //채팅내용
     private EditText chat_edit; //보낼내용쓰기
@@ -39,9 +45,6 @@ public class ChattingActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
     private FirebaseUser user;
-    private String uid;
-    private String nickname;
-    private String send_msg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +55,12 @@ public class ChattingActivity extends AppCompatActivity {
         chat_send = (ImageButton) findViewById(R.id.chat_send_btn);
         user = FirebaseAuth.getInstance().getCurrentUser();
         uid = user.getUid();
-        GetInfo(user);//닉네임 받아옴, 발화자와 같으면  Code.ViewType.RIGHT_CONTENT
+        //GetInfo(user);//닉네임 받아옴, 발화자와 같으면  Code.ViewType.RIGHT_CONTENT
+        Intent intent = getIntent();
+
+        USER_NAME = intent.getStringExtra("nickname");
+        CHAT_NAME = intent.getStringExtra("studyName");
+        Log.d("CHATTING", "USER_NAME " +USER_NAME+" CHAT_NAME"+CHAT_NAME);
 
         initData();
         openChat(CHAT_NAME);
@@ -65,7 +73,7 @@ public class ChattingActivity extends AppCompatActivity {
                     databaseReference.child("chat").child(CHAT_NAME).push().setValue(chat); // 데이터 푸쉬
                     chat_edit.setText("");//입력창 초기화
 
-                    dataList.add(new DataItem(send_msg, nickname, Code.ViewType.RIGHT_CONTENT)); //레이아웃에 보여주는 리스트
+                    dataList.add(new DataItem(send_msg, USER_NAME, Code.ViewType.RIGHT_CONTENT)); //레이아웃에 보여주는 리스트
                 } else return;
             }
         });
@@ -75,13 +83,15 @@ public class ChattingActivity extends AppCompatActivity {
 
     private void initData() {
         dataList = new ArrayList<>();
-        dataList.add(new DataItem(nickname + " 님이 입장하셨습니다", nickname, Code.ViewType.CENTER_CONTENT));
+        dataList.add(new DataItem(USER_NAME + " 님이 입장하셨습니다", USER_NAME, Code.ViewType.CENTER_CONTENT));
     }
 
     private void addMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
         chatDTO chatDTO = dataSnapshot.getValue(chatDTO.class);
         adapter.add(chatDTO.getUserName() + " : " + chatDTO.getMessage());
-        dataList.add(new DataItem(chatDTO.getMessage(), chatDTO.getUserName(), Code.ViewType.LEFT_CONTENT));
+        if(!chatDTO.getUserName().equals(USER_NAME))       {
+            dataList.add(new DataItem(chatDTO.getMessage(), chatDTO.getUserName() ,Code.ViewType.LEFT_CONTENT));
+        }
     }
 
     private void removeMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
@@ -127,22 +137,22 @@ public class ChattingActivity extends AppCompatActivity {
             }
         });
     }
-        public void GetInfo(FirebaseUser firebaseUser) {
-        FirebaseFirestore fb = FirebaseFirestore.getInstance();
-        DocumentReference documentReference = fb.collection("Users").document(firebaseUser.getUid());
-        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document != null) {
-                        if (document.exists()) {
-                            nickname = (String) document.getData().get("nickname");
-
-                        }
-                    }
-                }
-            }
-        });
-    }
+//        public void GetInfo(FirebaseUser firebaseUser) {
+//        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+//        DocumentReference documentReference = fb.collection("Users").document(firebaseUser.getUid());
+//        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document != null) {
+//                        if (document.exists()) {
+//                            nickname = (String) document.getData().get("nickname");
+//
+//                        }
+//                    }
+//                }
+//            }
+//        });
+//    }
 }
