@@ -17,6 +17,9 @@ import com.example.mobileterm.MainActivity;
 import com.example.mobileterm.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -30,6 +33,8 @@ public class WritePostFragment extends Fragment {
     SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     MainActivity activity;
     FirebaseFirestore db;
+    FirebaseAuth mAuth;
+    FirebaseUser user;
     String myNickname;
     String studyName;
     long mnow;
@@ -40,6 +45,8 @@ public class WritePostFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.activity_study_write_post, container, false);
         activity = (MainActivity) getActivity();
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
         myNickname = activity.sendUserNickname();
         studyName = activity.sendStudyTitle();
 //        btn_studypost_back = rootView.findViewById(R.id.btn_studypost_back);
@@ -62,7 +69,23 @@ public class WritePostFragment extends Fragment {
                         et_study_post_title.setText("");
                         et_study_post_body.setText("");
                         et_study_post_tag.setText("");
-                        activity.onFragmentChanged(studyName,101);
+                        db.collection("Users").document(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot documentSnapshot = task.getResult();
+                                    String token = (String) documentSnapshot.getData().get("token");
+                                    String newT = Integer.toString(Integer.parseInt(token)+1);
+                                    db.collection("Users").document(user.getUid()).update("token",newT).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            activity.onFragmentChanged(studyName,101);
+                                        }
+                                    });
+                                }
+                            }
+                        });
+
                     }
                 });
             }

@@ -25,7 +25,7 @@
             android:id="@+id/searchButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/search_icon"
+            android:background="@drawable/new_search"
             android:contentDescription="search button"
             android:scaleType="fitXY" />
 
@@ -47,7 +47,7 @@
             android:id="@+id/startWriteButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/write_icon"
+            android:background="@drawable/editing"
             android:contentDescription="start writing button"
             android:scaleType="fitXY" />
 

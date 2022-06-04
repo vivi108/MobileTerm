@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
     private String nickname;
     private String studyTitle;
     private String pid;
+    private String groupSchedule;
     private Uri photoUrl;
     private String phone;
     private int token;
@@ -425,8 +426,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onFragmentChanged(int index, String postid){
-        pid = postid;
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, studyPostFragment).addToBackStack(null).commit();
+        if (index == 1) {
+            groupSchedule = postid;
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, gCalendarFragment).addToBackStack(null).commit();
+        }else{
+            pid = postid;
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_frame_layout, studyPostFragment).addToBackStack(null).commit();
+        }
+
     }
 
     public void onFragmentChanged(String title, int index){
@@ -480,6 +487,10 @@ public class MainActivity extends AppCompatActivity {
 
     public String sendPid() {
         return pid;
+    }
+
+    public String sendGroupSchedule(){
+        return groupSchedule;
     }
 
 }

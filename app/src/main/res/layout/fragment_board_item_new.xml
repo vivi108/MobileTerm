@@ -127,25 +127,7 @@
                     android:layout_height="match_parent"
                     android:background="?android:attr/listDivider" />
 
-                <RatingBar
-                    android:id="@+id/rb_study_score"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
-                    android:contentDescription="동료 평가"
-                    android:isIndicator="true"
-                    android:max="1"
-                    android:numStars="1"
-                    android:rating="0"
-                    android:stepSize="0.1" />
 
-                <EditText
-                    android:id="@+id/et_study_score_rate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="0.00" />
 
                 <ImageButton
                     android:layout_width="40dp"
