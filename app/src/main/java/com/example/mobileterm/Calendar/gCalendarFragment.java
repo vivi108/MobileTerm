@@ -60,12 +60,14 @@ public class gCalendarFragment extends Fragment {
     private ListView listview;
     private gCalendarAdapter adapter;
     String TAG = "gCalendarFragment";
+    String groupSchedule;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup main_frame_layout, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_g_calendar, main_frame_layout, false);
         activity = (MainActivity) getActivity();
         myNickname = activity.sendUserNickname();
+        groupSchedule = activity.sendGroupSchedule();
         calendarView = rootView.findViewById(R.id.calendarView);
         diaryTextView = rootView.findViewById(R.id.diaryTextView); //중간에 몇월 몇일 보여주는
         save_Btn = rootView.findViewById(R.id.save_Btn);
@@ -162,26 +164,49 @@ public class gCalendarFragment extends Fragment {
                                                               }
 
                                                           }
-                                                          db.collection("GSchedule").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                              @Override
-                                                              public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                                  if (task.isSuccessful()) {
-                                                                      QuerySnapshot querySnapshot1 = task.getResult();
-                                                                      for (DocumentSnapshot doc : querySnapshot1) {
-                                                                          String studyName = (String) doc.getData().get("studyName");
-                                                                          String studyDay = (String) doc.getData().get("meetingDay");
-                                                                          if (joinedStudy.contains(studyName) && studyDay.equals(calendarDate)) {
-                                                                              com.example.mobileterm.StudyGroup.GScheduleInfo temp = doc.toObject(com.example.mobileterm.StudyGroup.GScheduleInfo.class);
-                                                                              gSchedules.add(temp);
-                                                                              Log.d(TAG,temp.getStudyName()+" "+temp.getScheduleName());
+                                                          if (groupSchedule.equals("default")){
+                                                              db.collection("GSchedule").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                  @Override
+                                                                  public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                      if (task.isSuccessful()) {
+                                                                          QuerySnapshot querySnapshot1 = task.getResult();
+                                                                          for (DocumentSnapshot doc : querySnapshot1) {
+                                                                              String studyName = (String) doc.getData().get("studyName");
+                                                                              String studyDay = (String) doc.getData().get("meetingDay");
+                                                                              if (joinedStudy.contains(studyName) && studyDay.equals(calendarDate)) {
+                                                                                  com.example.mobileterm.StudyGroup.GScheduleInfo temp = doc.toObject(com.example.mobileterm.StudyGroup.GScheduleInfo.class);
+                                                                                  gSchedules.add(temp);
+                                                                                  Log.d(TAG,temp.getStudyName()+" "+temp.getScheduleName());
+                                                                              }
                                                                           }
+                                                                          dateTable.put(calendarDate, gSchedules);
+                                                                          adapter = new gCalendarAdapter(dateTable.get(calendarDate), dialogShow); //어댑터에 이 날짜 해당 데이터 다 넘겨줌
+                                                                          listview.setAdapter(adapter);
                                                                       }
-                                                                      dateTable.put(calendarDate, gSchedules);
-                                                                      adapter = new gCalendarAdapter(dateTable.get(calendarDate), dialogShow); //어댑터에 이 날짜 해당 데이터 다 넘겨줌
-                                                                      listview.setAdapter(adapter);
                                                                   }
-                                                              }
-                                                          });
+                                                              });
+                                                          }else{
+                                                              db.collection("GSchedule").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                  @Override
+                                                                  public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                      if (task.isSuccessful()) {
+                                                                          QuerySnapshot querySnapshot1 = task.getResult();
+                                                                          for (DocumentSnapshot doc : querySnapshot1) {
+                                                                              String studyName = (String) doc.getData().get("studyName");
+                                                                              String studyDay = (String) doc.getData().get("meetingDay");
+                                                                              if (joinedStudy.contains(studyName) && studyDay.equals(calendarDate) && studyName.equals(groupSchedule)) {
+                                                                                  com.example.mobileterm.StudyGroup.GScheduleInfo temp = doc.toObject(com.example.mobileterm.StudyGroup.GScheduleInfo.class);
+                                                                                  gSchedules.add(temp);
+                                                                                  Log.d(TAG,temp.getStudyName()+" "+temp.getScheduleName());
+                                                                              }
+                                                                          }
+                                                                          dateTable.put(calendarDate, gSchedules);
+                                                                          adapter = new gCalendarAdapter(dateTable.get(calendarDate), dialogShow); //어댑터에 이 날짜 해당 데이터 다 넘겨줌
+                                                                          listview.setAdapter(adapter);
+                                                                      }
+                                                                  }
+                                                              });
+                                                          }
                                                       }
                                                   }
                                               });

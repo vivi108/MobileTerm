@@ -63,6 +63,7 @@ public class ChattingActivity extends AppCompatActivity {
         TIME = new Date();// 입장시각
         USER_NAME = intent.getStringExtra("nickname");
         CHAT_NAME = intent.getStringExtra("studyName");
+        CHAT_NAME = "발표용";
         Log.d("CHATTING", "USER_NAME : " +USER_NAME+" / CHAT_NAME : "+CHAT_NAME);
 
         initData();
@@ -74,10 +75,15 @@ public class ChattingActivity extends AppCompatActivity {
                 Date chattingnow = new Date();
                 if (send_msg != null) {
                     chatDTO chat = new chatDTO(USER_NAME, chat_edit.getText().toString(), chattingnow); //ChatDTO를 이용하여 데이터를 묶는다.
-                    databaseReference.child("chat").child(CHAT_NAME).push().setValue(chat); // 데이터 푸쉬
-                    chat_edit.setText("");//입력창 초기화
+                    databaseReference.child("chat").child(CHAT_NAME).push().setValue(chat).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            chat_edit.setText("");//입력창 초기화
 
-                    dataList.add(new DataItem(send_msg, USER_NAME, Code.ViewType.RIGHT_CONTENT, chattingnow)); //레이아웃에 보여주는 리스트
+                            dataList.add(new DataItem(send_msg, USER_NAME, Code.ViewType.RIGHT_CONTENT, chattingnow)); //레이아웃에 보여주는 리스트
+                        }
+                    }); // 데이터 푸쉬
+
                 } else return;
             }
         });
